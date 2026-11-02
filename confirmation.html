@@ -4,7 +4,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Order Confirmation | Kikis Amber Touch</title>
 
 <style>
@@ -19,6 +18,8 @@
     --gold: #c6a15b;
     --cream: #f8f5ef;
     --white: #fff;
+    --green: #27834c;
+    --red: #b33b3b;
 }
 
 body {
@@ -40,6 +41,7 @@ header {
     font-family: Georgia, serif;
     font-size: 21px;
     color: var(--gold);
+    text-decoration: none;
 }
 
 .logo span {
@@ -71,7 +73,7 @@ nav a:hover {
     background: linear-gradient(90deg, #17130e, #51402a);
     text-align: center;
     color: white;
-    padding: 55px 20px;
+    padding: 45px 20px;
 }
 
 .banner small {
@@ -82,21 +84,25 @@ nav a:hover {
 .banner h1 {
     font-family: Georgia, serif;
     font-weight: normal;
-    font-size: 38px;
+    font-size: 36px;
     margin-top: 15px;
 }
 
 .container {
     max-width: 850px;
-    padding: 40px 15px;
+    padding: 35px 15px;
     margin: auto;
 }
 
-.confirmation-card {
+.confirmation-card,
+.details {
     background: white;
-    padding: 35px;
     border: 1px solid #eee;
     text-align: center;
+}
+
+.confirmation-card {
+    padding: 35px;
 }
 
 .success-icon {
@@ -141,6 +147,7 @@ nav a:hover {
     color: #947039;
     font-size: 20px;
     letter-spacing: 1px;
+    overflow-wrap: anywhere;
 }
 
 .status {
@@ -152,13 +159,201 @@ nav a:hover {
     margin-top: 15px;
     border-radius: 3px;
     font-weight: bold;
+    text-transform: uppercase;
 }
 
-.details {
+.status.verified,
+.status.completed {
+    background: #e0f4e6;
+    color: #237541;
+}
+
+.status.rejected,
+.status.cancelled {
+    background: #ffe5e5;
+    color: #a52c2c;
+}
+
+.status.processing,
+.status.shipped {
+    background: #e3edff;
+    color: #315b9a;
+}
+
+/* TRACKING */
+
+.tracking-card {
     background: white;
     border: 1px solid #eee;
     margin-top: 25px;
+    padding: 28px;
+}
+
+.tracking-heading {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.tracking-heading h2 {
+    font-family: Georgia, serif;
+    font-size: 25px;
+    font-weight: normal;
+    margin-bottom: 8px;
+}
+
+.tracking-heading p {
+    font-size: 13px;
+    color: #777;
+    line-height: 1.7;
+}
+
+.tracking-list {
+    max-width: 570px;
+    margin: auto;
+}
+
+.track-step {
+    display: flex;
+    gap: 16px;
+    position: relative;
+    min-height: 88px;
+}
+
+.track-step:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    left: 16px;
+    top: 35px;
+    height: calc(100% - 20px);
+    width: 2px;
+    background: #e5e0d7;
+}
+
+.track-step.done:not(:last-child)::before {
+    background: var(--gold);
+}
+
+.track-icon {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border: 2px solid #ded8ce;
+    border-radius: 50%;
+    background: white;
+    color: #aaa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 1;
+}
+
+.track-step.done .track-icon {
+    border-color: var(--gold);
+    background: var(--gold);
+    color: white;
+}
+
+.track-step.current .track-icon {
+    border-color: var(--gold);
+    color: #987035;
+    box-shadow: 0 0 0 4px #f7f0e3;
+}
+
+.track-text {
+    padding: 3px 0 25px;
+}
+
+.track-text h3 {
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.track-text p {
+    font-size: 12px;
+    color: #888;
+    line-height: 1.6;
+}
+
+.track-step:not(.done):not(.current) .track-text h3 {
+    color: #999;
+}
+
+.tracking-updated {
+    text-align: center;
+    color: #999;
+    font-size: 11px;
+    margin-top: 10px;
+}
+
+.cancelled-message {
+    display: none;
+    padding: 16px;
+    background: #fff0f0;
+    color: #a52c2c;
+    font-size: 13px;
+    line-height: 1.7;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.lookup {
+    margin-top: 25px;
+    padding: 22px;
+    background: white;
+    border: 1px solid #eee;
+}
+
+.lookup h3 {
+    font-family: Georgia, serif;
+    font-weight: normal;
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.lookup p {
+    color: #777;
+    font-size: 12px;
+    line-height: 1.7;
+    margin-bottom: 15px;
+}
+
+.lookup input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.lookup button {
+    width: 100%;
+    padding: 14px;
+    background: var(--black);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+.lookup button:disabled {
+    opacity: .6;
+    cursor: wait;
+}
+
+.lookup-error {
+    color: #b33b3b;
+    font-size: 12px;
+    margin-top: 12px;
+}
+
+.details {
+    margin-top: 25px;
     padding: 25px;
+    text-align: left;
 }
 
 .details h3 {
@@ -281,12 +476,31 @@ footer strong {
         padding: 25px 15px;
     }
 
+    .tracking-card,
     .details {
         padding: 18px;
     }
 
     .detail-row {
         font-size: 12px;
+    }
+
+    .track-step {
+        min-height: 95px;
+    }
+}
+
+@media print {
+    header, .banner, .lookup, .actions, footer {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+    }
+
+    .container {
+        padding: 0;
     }
 }
 </style>
@@ -317,10 +531,10 @@ footer strong {
 
         <div class="success-icon">✓</div>
 
-        <h2>Thank You for Your Order!</h2>
+        <h2 id="confirmation-title">Thank You for Your Order!</h2>
 
         <p class="description" id="message">
-            Your order details have been prepared.
+            Your order details are being retrieved.
         </p>
 
         <div class="reference">
@@ -329,10 +543,116 @@ footer strong {
         </div>
 
         <div class="status" id="payment-status">
-            PENDING VERIFICATION
+            CHECKING PAYMENT
         </div>
 
     </section>
+
+    <!-- LIVE TRACKING -->
+
+    <section class="tracking-card" id="tracking-card">
+
+        <div class="tracking-heading">
+            <h2>Track Your Order</h2>
+            <p>
+                Follow your order from payment verification
+                to delivery. This tracking information updates
+                automatically.
+            </p>
+        </div>
+
+        <div class="tracking-list" id="tracking-list">
+
+            <div class="track-step current">
+                <div class="track-icon">1</div>
+                <div class="track-text">
+                    <h3>Order Received</h3>
+                    <p>Your order has been received successfully.</p>
+                </div>
+            </div>
+
+            <div class="track-step">
+                <div class="track-icon">2</div>
+                <div class="track-text">
+                    <h3>Payment Verification</h3>
+                    <p>Waiting for payment confirmation.</p>
+                </div>
+            </div>
+
+            <div class="track-step">
+                <div class="track-icon">3</div>
+                <div class="track-text">
+                    <h3>Preparing Your Order</h3>
+                    <p>Your items will be prepared for dispatch.</p>
+                </div>
+            </div>
+
+            <div class="track-step">
+                <div class="track-icon">4</div>
+                <div class="track-text">
+                    <h3>Order Shipped</h3>
+                    <p>Your order is on its way.</p>
+                </div>
+            </div>
+
+            <div class="track-step">
+                <div class="track-icon">5</div>
+                <div class="track-text">
+                    <h3>Delivered</h3>
+                    <p>Your order has been delivered.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="cancelled-message" id="cancelled-message">
+            This order has been cancelled. Please contact Kikis Amber Touch if you need assistance.
+        </div>
+
+        <div class="tracking-updated" id="tracking-updated">
+            Waiting for tracking information...
+        </div>
+
+    </section>
+
+    <!-- LOOK UP ORDER ON ANOTHER DEVICE -->
+
+    <section class="lookup">
+
+        <h3>Track an Existing Order</h3>
+
+        <p>
+            Using another phone or device? Enter your order reference
+            and the phone number used when placing the order.
+        </p>
+
+        <form id="lookup-form">
+
+            <input
+                type="text"
+                id="lookup-reference"
+                placeholder="Enter your order reference"
+                required
+            >
+
+            <input
+                type="tel"
+                id="lookup-phone"
+                placeholder="Enter your phone number"
+                required
+            >
+
+            <button type="submit" id="lookup-button">
+                TRACK MY ORDER
+            </button>
+
+            <div class="lookup-error" id="lookup-error"></div>
+
+        </form>
+
+    </section>
+
+    <!-- CUSTOMER INFORMATION -->
 
     <section class="details">
 
@@ -349,21 +669,18 @@ footer strong {
         </div>
 
         <div class="detail-row">
-            <span>Delivery Region</span>
-            <strong id="customer-region">-</strong>
-        </div>
-
-        <div class="detail-row">
-            <span>Town / City</span>
-            <strong id="customer-city">-</strong>
-        </div>
-
-        <div class="detail-row">
             <span>Payment Method</span>
             <strong id="payment-method">-</strong>
         </div>
 
+        <div class="detail-row">
+            <span>Order Date</span>
+            <strong id="order-date">-</strong>
+        </div>
+
     </section>
+
+    <!-- ORDER ITEMS -->
 
     <section class="details">
 
@@ -383,8 +700,9 @@ footer strong {
         <h3>What Happens Next?</h3>
 
         <p id="next-steps">
-            The administrator will review your order and confirm payment.
-            You will be contacted regarding delivery arrangements.
+            Your payment will be reviewed by our administrator.
+            Once verified, your order will move into preparation.
+            You can follow every update using the tracking section above.
         </p>
 
     </section>
@@ -404,7 +722,7 @@ footer strong {
             CHAT WITH US
         </a>
 
-        <button class="btn" onclick="window.print()">
+        <button class="btn" id="print-button">
             PRINT ORDER
         </button>
 
@@ -419,112 +737,511 @@ footer strong {
     <p>© <span id="year"></span> Kikis Amber Touch. All Rights Reserved.</p>
 </footer>
 
-<script>
+<script type="module">
+
+import { createClient } from
+"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const SUPABASE_URL =
+"https://mgxeyjyhuzbsgnbpbkst.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_ANZvxJnS89wrYo0MTx6LRA_Nu2XPss5";
+
+const supabase = createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+let currentReference = "";
+let currentPhone = "";
+let refreshTimer = null;
+
+const $ = id => document.getElementById(id);
+
+
+/* =========================
+   GENERAL HELPERS
+========================= */
 
 function money(amount) {
-    return "GH₵ " + Number(amount).toFixed(2);
+    return "GH₵ " + Number(amount || 0).toFixed(2);
 }
 
-function loadConfirmation() {
+function normalise(value) {
+    return String(value || "pending")
+        .trim()
+        .toLowerCase();
+}
 
-    const savedOrder = localStorage.getItem("kikisCurrentOrder");
+function formatDate(value) {
+    if (!value) return "-";
 
-    if (!savedOrder) {
+    const date = new Date(value);
 
-        document.querySelector(".confirmation-card").innerHTML = `
-            <h2>No Recent Order Found</h2>
-            <p class="description">
-                We could not find a recent order on this device.
-            </p>
-            <br>
-            <a href="shop.html" class="btn gold">
-                RETURN TO SHOP
-            </a>
-        `;
+    return Number.isNaN(date.getTime())
+        ? "-"
+        : date.toLocaleString();
+}
 
-        document.querySelectorAll(".details, .instructions, .actions")
-            .forEach(element => element.style.display = "none");
+function showError(message) {
+    $("lookup-error").textContent = message;
+}
 
-        return;
-    }
 
-    const order = JSON.parse(savedOrder);
+/* =========================
+   ORDER TRACKING
+========================= */
 
-    document.getElementById("reference").textContent =
-        order.reference || "-";
+function renderTracking(order) {
 
-    document.getElementById("customer-name").textContent =
-        order.customer.name;
+    const payment = normalise(order.payment_status);
 
-    document.getElementById("customer-phone").textContent =
-        order.customer.phone;
+    const fulfilment = normalise(order.fulfillment_status);
 
-    document.getElementById("customer-region").textContent =
-        order.customer.region;
+    const cancelled =
+        ["rejected", "failed"].includes(payment) ||
+        ["cancelled"].includes(fulfilment);
 
-    document.getElementById("customer-city").textContent =
-        order.customer.city;
+    const paymentVerified =
+        ["verified", "paid", "approved"].includes(payment);
 
-    document.getElementById("payment-method").textContent =
-        order.payment;
+    const steps = [
+        {
+            title: "Order Received",
+            description: "Your order has been received successfully.",
+            done: true,
+            current: false
+        },
+        {
+            title: "Payment Verification",
+            description: paymentVerified
+                ? "Your payment has been verified successfully."
+                : cancelled
+                ? "Payment was not approved."
+                : "Your Mobile Money payment is awaiting verification.",
+            done: paymentVerified,
+            current: !paymentVerified && !cancelled
+        },
+        {
+            title: "Preparing Your Order",
+            description: fulfilment === "pending"
+                ? "Your order will be prepared after payment verification."
+                : "Your order is being prepared for dispatch.",
+            done: ["processing", "shipped", "completed"].includes(fulfilment),
+            current: fulfilment === "processing"
+        },
+        {
+            title: "Order Shipped",
+            description: ["shipped", "completed"].includes(fulfilment)
+                ? "Your order has been marked as shipped."
+                : "Your order has not yet been dispatched.",
+            done: ["shipped", "completed"].includes(fulfilment),
+            current: fulfilment === "shipped"
+        },
+        {
+            title: "Delivered",
+            description: fulfilment === "completed"
+                ? "Your order has been marked as delivered. Thank you for shopping with us."
+                : "Waiting for delivery confirmation.",
+            done: fulfilment === "completed",
+            current: fulfilment === "completed"
+        }
+    ];
 
-    document.getElementById("order-total").textContent =
-        money(order.total);
+    const list = $("tracking-list");
 
-    const status = order.paymentStatus || "Pending verification";
+    list.innerHTML = "";
 
-    document.getElementById("payment-status").textContent =
-        status.toUpperCase();
+    steps.forEach((step, index) => {
 
-    if (order.payment === "Mobile Money") {
+        const element = document.createElement("div");
 
-        document.getElementById("message").textContent =
-            "Your order has been prepared. Your MoMo payment is awaiting administrator verification.";
+        element.className =
+            "track-step" +
+            (step.done ? " done" : "") +
+            (step.current ? " current" : "");
 
-        document.getElementById("next-steps").textContent =
-            "Our administrator will verify your MoMo payment and contact you to confirm your order and arrange delivery. Please keep your transaction receipt.";
+        const icon = document.createElement("div");
+
+        icon.className = "track-icon";
+
+        icon.textContent = step.done ? "✓" : index + 1;
+
+        const content = document.createElement("div");
+
+        content.className = "track-text";
+
+        const title = document.createElement("h3");
+
+        title.textContent = step.title;
+
+        const description = document.createElement("p");
+
+        description.textContent = step.description;
+
+        content.append(title, description);
+
+        element.append(icon, content);
+
+        list.appendChild(element);
+    });
+
+    $("cancelled-message").style.display =
+        cancelled ? "block" : "none";
+
+    if (cancelled) {
+
+        $("payment-status").className = "status rejected";
+
+        $("payment-status").textContent =
+            payment === "rejected" || payment === "failed"
+                ? "PAYMENT REJECTED"
+                : "ORDER CANCELLED";
+
+        $("message").textContent =
+            "Your order could not proceed. Please contact our team if you need assistance.";
+
+        $("next-steps").textContent =
+            "Your order has been cancelled or payment was rejected. Please contact Kikis Amber Touch on WhatsApp for assistance.";
 
     } else {
 
-        document.getElementById("message").textContent =
-            "Your order details are available below. Payment confirmation must be received before processing.";
+        $("payment-status").className =
+            "status " + (
+                paymentVerified
+                    ? "verified"
+                    : "pending"
+            );
 
-        document.getElementById("next-steps").textContent =
-            "Your Paystack payment must be verified by the payment server before your order can be processed.";
+        $("payment-status").textContent =
+            paymentVerified
+                ? "PAYMENT VERIFIED"
+                : "PENDING VERIFICATION";
 
+        $("message").textContent =
+            paymentVerified
+                ? "Your payment has been verified. You can follow your order progress below."
+                : "Your order has been received. Your Mobile Money payment is awaiting administrator verification.";
+
+        if (fulfilment === "completed") {
+
+            $("next-steps").textContent =
+                "Your order has been marked as delivered. Thank you for choosing Kikis Amber Touch.";
+
+        } else if (fulfilment === "shipped") {
+
+            $("next-steps").textContent =
+                "Your order has been dispatched. Please follow the tracking updates above.";
+
+        } else if (fulfilment === "processing") {
+
+            $("next-steps").textContent =
+                "Your payment has been verified and your order is being prepared for delivery.";
+
+        } else {
+
+            $("next-steps").textContent =
+                "Your payment is awaiting verification. Once confirmed, your order will move into preparation.";
+        }
     }
 
-    const productsContainer = document.getElementById("products");
+    $("tracking-updated").textContent =
+        "Last checked: " + new Date().toLocaleTimeString();
+}
 
-    productsContainer.innerHTML = "";
 
-    order.products.forEach(item => {
+/* =========================
+   DISPLAY ORDER DETAILS
+========================= */
+
+function displayOrder(order) {
+
+    currentReference = order.reference;
+
+    $("reference").textContent =
+        order.reference || "-";
+
+    $("customer-name").textContent =
+        order.customer_name || "-";
+
+    $("customer-phone").textContent =
+        order.phone || "-";
+
+    $("payment-method").textContent =
+        order.payment_method || "-";
+
+    $("order-date").textContent =
+        formatDate(order.created_at);
+
+    $("order-total").textContent =
+        money(order.total);
+
+    $("products").innerHTML = "";
+
+    (order.items || []).forEach(item => {
 
         const row = document.createElement("div");
+
         row.className = "product-item";
 
         const name = document.createElement("span");
 
         name.textContent =
-            item.name + " × " + item.quantity;
+            item.product_name + " × " + item.quantity;
 
         const price = document.createElement("strong");
 
         price.textContent =
-            money(item.price * item.quantity);
+            money(item.line_total);
 
         row.append(name, price);
 
-        productsContainer.appendChild(row);
-
+        $("products").appendChild(row);
     });
 
+    if (!order.items || !order.items.length) {
+
+        const empty = document.createElement("p");
+
+        empty.textContent = "No product details available.";
+
+        $("products").appendChild(empty);
+    }
+
+    renderTracking(order);
 }
 
-document.getElementById("year").textContent =
-    new Date().getFullYear();
 
-loadConfirmation();
+/* =========================
+   SECURE SUPABASE LOOKUP
+========================= */
+
+async function trackOrder(reference, phone) {
+
+    const button = $("lookup-button");
+
+    button.disabled = true;
+
+    button.textContent = "CHECKING ORDER...";
+
+    showError("");
+
+    try {
+
+        const { data, error } = await supabase.rpc(
+            "track_customer_order",
+            {
+                p_order_reference: reference.trim(),
+                p_phone: phone.trim()
+            }
+        );
+
+        if (error) throw error;
+
+        if (!data || !data.success) {
+
+            throw new Error(
+                data?.message ||
+                "No order matches those details."
+            );
+        }
+
+        currentReference = data.reference;
+        currentPhone = phone.trim();
+
+        displayOrder(data);
+
+        $("lookup-reference").value =
+            data.reference;
+
+        $("lookup-phone").value =
+            phone.trim();
+
+        localStorage.setItem(
+            "kikisTrackingReference",
+            data.reference
+        );
+
+        localStorage.setItem(
+            "kikisTrackingPhone",
+            phone.trim()
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.error("Tracking error:", error);
+
+        showError(
+            error.message ||
+            "Unable to retrieve your order. Please try again."
+        );
+
+        return false;
+
+    } finally {
+
+        button.disabled = false;
+
+        button.textContent = "TRACK MY ORDER";
+    }
+}
+
+
+/* =========================
+   LOOKUP FORM
+========================= */
+
+$("lookup-form").addEventListener("submit", async event => {
+
+    event.preventDefault();
+
+    const reference =
+        $("lookup-reference").value.trim();
+
+    const phone =
+        $("lookup-phone").value.trim();
+
+    if (!reference || !phone) {
+
+        showError(
+            "Please enter your order reference and phone number."
+        );
+
+        return;
+    }
+
+    const success = await trackOrder(reference, phone);
+
+    if (success) {
+
+        if (refreshTimer) {
+            clearInterval(refreshTimer);
+        }
+
+        refreshTimer = setInterval(() => {
+
+            if (currentReference && currentPhone) {
+
+                trackOrder(
+                    currentReference,
+                    currentPhone
+                );
+            }
+
+        }, 20000);
+
+        $("tracking-card").scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+});
+
+
+/* =========================
+   INITIALISE FROM CHECKOUT
+========================= */
+
+async function initialiseConfirmation() {
+
+    $("year").textContent = new Date().getFullYear();
+
+    const savedOrder =
+        localStorage.getItem("kikisCurrentOrder");
+
+    let order = null;
+
+    if (savedOrder) {
+        try {
+            order = JSON.parse(savedOrder);
+        } catch (error) {
+            console.error("Invalid saved order:", error);
+        }
+    }
+
+    let reference = order?.reference || "";
+    let phone =
+        order?.customer?.phone ||
+        order?.phone ||
+        "";
+
+    if (!reference) {
+        reference =
+            localStorage.getItem("kikisTrackingReference") || "";
+    }
+
+    if (!phone) {
+        phone =
+            localStorage.getItem("kikisTrackingPhone") || "";
+    }
+
+    // Do not display an order until Supabase confirms it.
+    if (reference && phone) {
+
+        $("lookup-reference").value = reference;
+        $("lookup-phone").value = phone;
+
+        const success = await trackOrder(reference, phone);
+
+        if (success) {
+
+            if (refreshTimer) clearInterval(refreshTimer);
+
+            refreshTimer = setInterval(() => {
+                trackOrder(currentReference, currentPhone);
+            }, 20000);
+
+            return;
+        }
+    }
+
+    // Clear any unverified or old order information.
+    currentReference = "";
+    currentPhone = "";
+
+    $("reference").textContent = "Not verified";
+    $("customer-name").textContent = "-";
+    $("customer-phone").textContent = "-";
+    $("payment-method").textContent = "-";
+    $("order-date").textContent = "-";
+    $("order-total").textContent = "GH₵ 0.00";
+    $("products").innerHTML = "";
+
+    $("confirmation-title").textContent =
+        "Track Your Order";
+
+    $("message").textContent =
+        "We could not confirm an order using the saved details. Enter your correct order reference and phone number below.";
+
+    $("payment-status").style.display = "none";
+
+    $("tracking-list").innerHTML = `
+        <p style="text-align:center;color:#888;font-size:13px">
+            No verified order is currently displayed.
+        </p>
+    `;
+
+    $("tracking-updated").textContent =
+        "Waiting for a valid order lookup.";
+}
+
+
+
+/* =========================
+   PRINT
+========================= */
+
+$("print-button").addEventListener("click", () => {
+    window.print();
+});
+
+
+/* START PAGE */
+
+initialiseConfirmation();
 
 </script>
 
