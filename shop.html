@@ -188,6 +188,7 @@ nav a:hover {
 
 /* UPDATED PRODUCT IMAGE DISPLAY */
 
+/* PRODUCT IMAGE DISPLAY */
 .product-image {
     height: 310px;
     background: #f8f5ef;
@@ -203,10 +204,10 @@ nav a:hover {
     height: 100%;
     object-fit: contain;
     object-position: center;
-    padding: 5px;
+    padding: 0;
     display: block;
+    transform: scale(1.25);
 }
-
 .product-info {
     padding: 17px;
 }
@@ -381,13 +382,17 @@ footer strong {
     }
 }
 
-/* SMALL PHONES */
-
-@media(max-width: 380px) {
-    .products {
-        grid-template-columns: 1fr;
+@media(max-width: 768px) {
+    .product-image {
+        height: 240px;
     }
 
+    .product-image img {
+        transform: scale(1.2);
+    }
+}
+
+@media(max-width: 380px) {
     .product-image {
         height: 280px;
     }
