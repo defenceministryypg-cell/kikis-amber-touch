@@ -82,6 +82,7 @@ body {
     align-items: center;
     gap: 15px;
     margin-bottom: 30px;
+    flex-wrap: wrap;
 }
 
 .topbar h1 {
@@ -153,6 +154,7 @@ body {
     align-items: center;
     gap: 12px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 .panel-heading h2 {
@@ -174,12 +176,12 @@ body {
 table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 850px;
+    min-width: 1050px;
 }
 
 th, td {
     text-align: left;
-    padding: 15px 12px;
+    padding: 14px 12px;
     border-bottom: 1px solid #eee;
     font-size: 13px;
 }
@@ -198,6 +200,7 @@ th {
     border-radius: 20px;
     font-size: 11px;
     font-weight: bold;
+    text-transform: capitalize;
 }
 
 .pending {
@@ -205,23 +208,36 @@ th {
     color: #99651b;
 }
 
-.verified {
+.verified,
+.completed {
     background: #dff4e5;
     color: #237541;
 }
 
-.rejected {
+.rejected,
+.cancelled {
     background: #ffe2e2;
     color: #a52c2c;
 }
 
+.processing,
+.shipped {
+    background: #e3edff;
+    color: #315b9a;
+}
+
 .btn {
-    border: none;
+    border: 0;
     padding: 8px 11px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 12px;
     margin: 2px;
+}
+
+.btn:disabled {
+    opacity: .45;
+    cursor: not-allowed;
 }
 
 .view-btn {
@@ -236,6 +252,11 @@ th {
 
 .reject-btn {
     background: #a83232;
+    color: white;
+}
+
+.progress-btn {
+    background: #315b9a;
     color: white;
 }
 
@@ -278,7 +299,7 @@ th {
     background: var(--black);
     color: var(--light-gold);
     padding: 10px 15px;
-    border: none;
+    border: 0;
     border-radius: 6px;
     cursor: pointer;
 }
@@ -288,6 +309,13 @@ footer {
     font-size: 12px;
     text-align: center;
     margin-top: 35px;
+}
+
+.hint {
+    font-size: 12px;
+    color: #777;
+    margin-top: 10px;
+    line-height: 1.5;
 }
 
 @media(max-width: 1000px) {
@@ -367,8 +395,10 @@ footer {
 
 <aside class="sidebar">
     <div class="logo">
-        KIKIS<br>AMBER TOUCH
-        <br><small>ADMINISTRATION</small>
+        KIKIS<br>
+        AMBER TOUCH
+        <br>
+        <small>ADMINISTRATION</small>
     </div>
 
     <nav class="nav">
@@ -393,6 +423,7 @@ footer {
     </section>
 
     <section class="stats">
+
         <div class="stat">
             <p>Total Orders</p>
             <h2 id="totalOrders">0</h2>
@@ -412,9 +443,11 @@ footer {
             <p>Rejected Payments</p>
             <h2 id="rejectedOrders">0</h2>
         </div>
+
     </section>
 
     <section class="panel">
+
         <div class="panel-heading">
             <h2>Customer Orders</h2>
 
@@ -426,7 +459,7 @@ footer {
                     placeholder="Search customer or order ID..."
                 >
 
-                <button class="refresh" onclick="loadOrders()">
+                <button class="refresh" id="refreshButton">
                     Refresh
                 </button>
             </div>
@@ -441,7 +474,7 @@ footer {
                         <th>Amount</th>
                         <th>Payment Method</th>
                         <th>Payment Status</th>
-                        <th>Order Status</th>
+                        <th>Fulfilment Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -455,6 +488,12 @@ footer {
         </div>
 
         <div id="orderDetails" class="details"></div>
+
+        <p class="hint">
+            Payment verification confirms receipt of funds.
+            Fulfilment status tracks preparation, dispatch and delivery separately.
+        </p>
+
     </section>
 
     <footer>
@@ -462,20 +501,33 @@ footer {
     </footer>
 
 </main>
+
 <script type="module">
+
 import { createClient } from
 "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-const SUPABASE_URL = "https://mgxeyjyhuzbsgnbpbkst.supabase.co";
-const SUPABASE_KEY = "sb_publishable_ANZvxJnS89wrYo0MTx6LRA_Nu2XPss5";
+const SUPABASE_URL =
+"https://mgxeyjyhuzbsgnbpbkst.supabase.co";
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_KEY =
+"sb_publishable_ANZvxJnS89wrYo0MTx6LRA_Nu2XPss5";
+
+const supabase = createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
 
 let orders = [];
 let orderItems = {};
 let currentAdmin = null;
 
 const $ = id => document.getElementById(id);
+
+
+/* =========================
+   GENERAL FUNCTIONS
+========================= */
 
 function escapeHTML(value) {
     return String(value ?? "").replace(/[&<>"']/g, char => ({
@@ -493,22 +545,39 @@ function formatMoney(value) {
 
 function formatDate(value) {
     if (!value) return "Not provided";
+
     const date = new Date(value);
+
     return Number.isNaN(date.getTime())
         ? "Not provided"
         : date.toLocaleString();
 }
 
-function statusClass(status) {
-    const value = String(status || "").toLowerCase();
+function normalise(value) {
+    return String(value || "pending")
+        .trim()
+        .toLowerCase();
+}
 
-    if (["rejected", "cancelled", "failed"].includes(value)) {
+function isPendingPayment(value) {
+    return [
+        "pending",
+        "pending verification",
+        "awaiting verification"
+    ].includes(normalise(value));
+}
+
+function statusClass(value) {
+    const s = normalise(value);
+
+    if (["rejected", "cancelled", "failed"].includes(s))
         return "rejected";
-    }
 
-    if (["verified", "paid", "approved"].includes(value)) {
+    if (["verified", "paid", "approved", "completed"].includes(s))
         return "verified";
-    }
+
+    if (["processing", "shipped"].includes(s))
+        return s;
 
     return "pending";
 }
@@ -517,12 +586,17 @@ function showMessage(message) {
     alert(message);
 }
 
-/* ADMIN LOGIN */
+
+/* =========================
+   ADMIN LOGIN
+========================= */
 
 function createLoginScreen() {
+
     if ($("adminLoginOverlay")) return;
 
     const overlay = document.createElement("div");
+
     overlay.id = "adminLoginOverlay";
 
     overlay.style.cssText = `
@@ -537,15 +611,17 @@ function createLoginScreen() {
     `;
 
     overlay.innerHTML = `
-        <form id="adminLoginForm" style="
-            width:100%;
-            max-width:400px;
-            background:#1b1916;
-            color:white;
-            padding:30px;
-            border-radius:12px;
-            border:1px solid #c9a45c;
-        ">
+        <form id="adminLoginForm"
+            style="
+                width:100%;
+                max-width:400px;
+                background:#1b1916;
+                color:white;
+                padding:30px;
+                border-radius:12px;
+                border:1px solid #c9a45c;
+            ">
+
             <h2 style="color:#e5c985;margin-bottom:8px">
                 KIKIS AMBER TOUCH
             </h2>
@@ -554,35 +630,46 @@ function createLoginScreen() {
                 Administrator Login
             </p>
 
-            <label>Email Address</label>
-            <input id="adminEmail" type="email" required
+            <label for="adminEmail">Email Address</label>
+
+            <input
+                id="adminEmail"
+                type="email"
+                required
                 autocomplete="username"
-                style="width:100%;padding:13px;margin:8px 0 18px;
-                border-radius:6px;border:1px solid #555">
+                style="width:100%;padding:13px;margin:8px 0 18px;border-radius:6px;border:1px solid #555"
+            >
 
-            <label>Password</label>
-            <input id="adminPassword" type="password" required
+            <label for="adminPassword">Password</label>
+
+            <input
+                id="adminPassword"
+                type="password"
+                required
                 autocomplete="current-password"
-                style="width:100%;padding:13px;margin:8px 0 18px;
-                border-radius:6px;border:1px solid #555">
+                style="width:100%;padding:13px;margin:8px 0 18px;border-radius:6px;border:1px solid #555"
+            >
 
-            <button id="loginButton" type="submit" style="
-                width:100%;padding:13px;background:#c9a45c;
-                border:0;border-radius:6px;font-weight:bold;
-                cursor:pointer">
+            <button
+                id="loginButton"
+                type="submit"
+                style="width:100%;padding:13px;background:#c9a45c;border:0;border-radius:6px;font-weight:bold;cursor:pointer"
+            >
                 Sign In
             </button>
 
-            <p id="loginError" style="
-                color:#ff8585;margin-top:15px;font-size:13px">
+            <p id="loginError"
+                style="color:#ff8585;margin-top:15px;font-size:13px">
             </p>
+
         </form>
     `;
 
     document.body.appendChild(overlay);
 
-    $("adminLoginForm").addEventListener("submit", async event => {
-        event.preventDefault();
+    $("adminLoginForm").addEventListener("submit", async e => {
+
+        e.preventDefault();
 
         const button = $("loginButton");
         const errorBox = $("loginError");
@@ -591,38 +678,51 @@ function createLoginScreen() {
         button.textContent = "Signing in...";
         errorBox.textContent = "";
 
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email: $("adminEmail").value.trim(),
-            password: $("adminPassword").value
-        });
+        try {
 
-        if (error) {
-            errorBox.textContent = error.message;
+            const { data, error } =
+                await supabase.auth.signInWithPassword({
+                    email: $("adminEmail").value.trim(),
+                    password: $("adminPassword").value
+                });
+
+            if (error) throw error;
+
+            const allowed = await verifyAdmin(data.user);
+
+            if (!allowed) {
+
+                await supabase.auth.signOut();
+
+                throw new Error(
+                    "This account is not authorised to access the admin dashboard."
+                );
+            }
+
+            currentAdmin = data.user;
+
+            overlay.remove();
+
+            await loadOrders();
+
+        } catch (err) {
+
+            errorBox.textContent = err.message;
+
             button.disabled = false;
             button.textContent = "Sign In";
-            return;
         }
 
-        const allowed = await verifyAdmin(data.user);
-
-        if (!allowed) {
-            await supabase.auth.signOut();
-            errorBox.textContent =
-                "This account is not authorised to access the admin dashboard.";
-            button.disabled = false;
-            button.textContent = "Sign In";
-            return;
-        }
-
-        currentAdmin = data.user;
-        overlay.remove();
-        await loadOrders();
     });
 }
 
-/* VERIFY ADMIN ACCOUNT */
+
+/* =========================
+   VERIFY ADMIN ACCOUNT
+========================= */
 
 async function verifyAdmin(user) {
+
     if (!user) return false;
 
     const { data, error } = await supabase
@@ -639,48 +739,72 @@ async function verifyAdmin(user) {
     return !!data;
 }
 
-/* CHECK LOGIN SESSION */
+
+/* =========================
+   INITIALISE DASHBOARD
+========================= */
 
 async function initialiseDashboard() {
-    const { data, error } = await supabase.auth.getSession();
 
-    if (error) {
-        showMessage("Unable to check your admin session: " + error.message);
-        return;
-    }
+    try {
 
-    const user = data.session?.user;
+        const { data, error } =
+            await supabase.auth.getSession();
 
-    if (!user) {
+        if (error) throw error;
+
+        const user = data.session?.user;
+
+        if (!user) {
+            createLoginScreen();
+            return;
+        }
+
+        const allowed = await verifyAdmin(user);
+
+        if (!allowed) {
+
+            await supabase.auth.signOut();
+
+            createLoginScreen();
+
+            return;
+        }
+
+        currentAdmin = user;
+
+        await loadOrders();
+
+    } catch (error) {
+
+        showMessage(
+            "Unable to check your admin session: " + error.message
+        );
+
         createLoginScreen();
-        return;
     }
-
-    const allowed = await verifyAdmin(user);
-
-    if (!allowed) {
-        await supabase.auth.signOut();
-        createLoginScreen();
-        return;
-    }
-
-    currentAdmin = user;
-    await loadOrders();
 }
 
-/* LOAD ORDERS FROM SUPABASE */
+
+/* =========================
+   LOAD CUSTOMER ORDERS
+========================= */
 
 async function loadOrders() {
+
     const table = $("ordersTable");
     const empty = $("emptyMessage");
 
     table.innerHTML = `
-        <tr><td colspan="7" style="text-align:center">
-            Loading customer orders...
-        </td></tr>
+        <tr>
+            <td colspan="7" style="text-align:center">
+                Loading customer orders...
+            </td>
+        </tr>
     `;
 
     try {
+
         const { data, error } = await supabase
             .from("orders")
             .select("*")
@@ -689,12 +813,17 @@ async function loadOrders() {
         if (error) throw error;
 
         orders = data || [];
+
         orderItems = {};
 
         if (orders.length) {
-            const ids = orders.map(order => order.id);
 
-            const { data: items, error: itemError } = await supabase
+            const ids = orders.map(o => o.id);
+
+            const {
+                data: items,
+                error: itemError
+            } = await supabase
                 .from("order_items")
                 .select("*")
                 .in("order_id", ids);
@@ -702,11 +831,10 @@ async function loadOrders() {
             if (itemError) throw itemError;
 
             (items || []).forEach(item => {
-                if (!orderItems[item.order_id]) {
-                    orderItems[item.order_id] = [];
-                }
 
-                orderItems[item.order_id].push(item);
+                (orderItems[item.order_id] ||= [])
+                    .push(item);
+
             });
         }
 
@@ -714,97 +842,175 @@ async function loadOrders() {
         renderOrders();
 
     } catch (error) {
+
         console.error(error);
+
         table.innerHTML = "";
+
         empty.style.display = "block";
-        empty.textContent = "Unable to load orders: " + error.message;
+
+        empty.textContent =
+            "Unable to load orders: " + error.message;
     }
 }
 
-/* DASHBOARD STATISTICS */
+
+/* =========================
+   DASHBOARD STATISTICS
+========================= */
 
 function updateStats() {
+
     $("totalOrders").textContent = orders.length;
 
-    $("pendingOrders").textContent = orders.filter(order =>
-        statusClass(order.payment_status) === "pending"
-    ).length;
+    $("pendingOrders").textContent =
+        orders.filter(o =>
+            isPendingPayment(o.payment_status)
+        ).length;
 
-    $("verifiedOrders").textContent = orders.filter(order =>
-        statusClass(order.payment_status) === "verified"
-    ).length;
+    $("verifiedOrders").textContent =
+        orders.filter(o =>
+            ["verified", "paid", "approved"]
+                .includes(normalise(o.payment_status))
+        ).length;
 
-    $("rejectedOrders").textContent = orders.filter(order =>
-        statusClass(order.payment_status) === "rejected"
-    ).length;
+    $("rejectedOrders").textContent =
+        orders.filter(o =>
+            ["rejected", "failed"]
+                .includes(normalise(o.payment_status))
+        ).length;
 }
 
-/* DISPLAY ORDERS */
+
+/* =========================
+   FULFILMENT WORKFLOW
+========================= */
+
+function nextFulfilment(status) {
+
+    return ({
+        pending: "processing",
+        processing: "shipped",
+        shipped: "completed"
+    })[normalise(status)] || "";
+}
+
+function nextFulfilmentLabel(status) {
+
+    return ({
+        pending: "Start Processing",
+        processing: "Mark Shipped",
+        shipped: "Mark Delivered"
+    })[normalise(status)] || "";
+}
+
+
+/* =========================
+   DISPLAY CUSTOMER ORDERS
+========================= */
 
 function renderOrders() {
+
     const table = $("ordersTable");
     const empty = $("emptyMessage");
 
-    const search = $("searchInput").value.trim().toLowerCase();
+    const search =
+        $("searchInput").value.trim().toLowerCase();
 
     table.innerHTML = "";
 
-    const filtered = orders.filter(order => {
-        const text = [
-            order.order_number,
-            order.customer_name,
-            order.phone,
-            order.email
-        ].join(" ").toLowerCase();
+    const filtered = orders.filter(o =>
+        [
+            o.order_number,
+            o.customer_name,
+            o.phone,
+            o.email
+        ].join(" ").toLowerCase().includes(search)
+    );
 
-        return text.includes(search);
-    });
-
-    empty.style.display = filtered.length ? "none" : "block";
+    empty.style.display =
+        filtered.length ? "none" : "block";
 
     filtered.forEach(order => {
-        const payment = String(order.payment_status || "pending");
-        const css = statusClass(payment);
+
+        const payment = normalise(order.payment_status);
+
+        const fulfilment =
+            normalise(order.fulfillment_status);
+
+        const next = nextFulfilment(fulfilment);
 
         const row = document.createElement("tr");
 
         row.innerHTML = `
-            <td>${escapeHTML(order.order_number || order.id)}</td>
-
-            <td>${escapeHTML(order.customer_name)}</td>
-
-            <td>${formatMoney(order.total)}</td>
-
-            <td>${escapeHTML(order.payment_method)}</td>
 
             <td>
-                <span class="status ${css}">
+                ${escapeHTML(order.order_number || order.id)}
+            </td>
+
+            <td>
+                ${escapeHTML(order.customer_name)}
+            </td>
+
+            <td>
+                ${formatMoney(order.total)}
+            </td>
+
+            <td>
+                ${escapeHTML(order.payment_method)}
+            </td>
+
+            <td>
+                <span class="status ${statusClass(payment)}">
                     ${escapeHTML(payment)}
                 </span>
             </td>
 
-            <td>${escapeHTML(order.order_status)}</td>
+            <td>
+                <span class="status ${statusClass(fulfilment)}">
+                    ${escapeHTML(fulfilment)}
+                </span>
+            </td>
 
             <td>
-                <button class="btn view-btn"
+
+                <button
+                    class="btn view-btn"
                     data-action="view"
                     data-id="${escapeHTML(order.id)}">
                     View
                 </button>
 
-                <button class="btn approve-btn"
+                <button
+                    class="btn approve-btn"
                     data-action="verify"
                     data-id="${escapeHTML(order.id)}"
-                    ${css === "verified" || css === "rejected" ? "disabled" : ""}>
+                    ${!isPendingPayment(payment) ? "disabled" : ""}>
                     Verify
                 </button>
 
-                <button class="btn reject-btn"
+                <button
+                    class="btn reject-btn"
                     data-action="reject"
                     data-id="${escapeHTML(order.id)}"
-                    ${css === "verified" || css === "rejected" ? "disabled" : ""}>
+                    ${!isPendingPayment(payment) ? "disabled" : ""}>
                     Reject
                 </button>
+
+                ${
+                    payment === "verified" && next
+                    ? `
+                        <button
+                            class="btn progress-btn"
+                            data-action="fulfil"
+                            data-status="${next}"
+                            data-id="${escapeHTML(order.id)}">
+                            ${nextFulfilmentLabel(fulfilment)}
+                        </button>
+                    `
+                    : ""
+                }
+
             </td>
         `;
 
@@ -812,17 +1018,19 @@ function renderOrders() {
     });
 }
 
-/* VIEW PAYMENT RECEIPT */
+
+/* =========================
+   PAYMENT RECEIPT
+========================= */
 
 async function getReceiptURL(path) {
+
     if (!path) return null;
 
-    // Already a complete URL
-    if (/^https?:\/\//i.test(path)) {
-        return path;
-    }
+    if (/^https?:\/\//i.test(path)) return path;
 
-    const { data, error } = await supabase.storage
+    const { data, error } = await supabase
+        .storage
         .from("payment-receipts")
         .createSignedUrl(path, 300);
 
@@ -834,16 +1042,23 @@ async function getReceiptURL(path) {
     return data.signedUrl;
 }
 
-/* ORDER DETAILS */
+
+/* =========================
+   VIEW ORDER DETAILS
+========================= */
 
 async function viewOrder(id) {
-    const order = orders.find(item => item.id === id);
+
+    const order = orders.find(o => o.id === id);
+
     if (!order) return;
 
     const details = $("orderDetails");
+
     const items = orderItems[id] || [];
 
     const itemsHTML = items.length
+
         ? items.map(item => `
             <tr>
                 <td>${escapeHTML(item.product_name)}</td>
@@ -852,41 +1067,57 @@ async function viewOrder(id) {
                 <td>${formatMoney(item.line_total)}</td>
             </tr>
         `).join("")
-        : `<tr><td colspan="4">No products found.</td></tr>`;
+
+        : '<tr><td colspan="4">No products found.</td></tr>';
 
     details.style.display = "block";
 
     details.innerHTML = `
-        <h3>Order Details — ${escapeHTML(order.order_number)}</h3>
+
+        <h3>
+            Order Details —
+            ${escapeHTML(order.order_number || order.id)}
+        </h3>
 
         <p><strong>Customer:</strong>
-            ${escapeHTML(order.customer_name)}</p>
+            ${escapeHTML(order.customer_name)}
+        </p>
 
         <p><strong>Phone:</strong>
-            ${escapeHTML(order.phone)}</p>
+            ${escapeHTML(order.phone)}
+        </p>
 
         <p><strong>Email:</strong>
-            ${escapeHTML(order.email || "Not provided")}</p>
+            ${escapeHTML(order.email || "Not provided")}
+        </p>
 
         <p><strong>Region:</strong>
-            ${escapeHTML(order.region || "Not provided")}</p>
+            ${escapeHTML(order.region || "Not provided")}
+        </p>
 
         <p><strong>City:</strong>
-            ${escapeHTML(order.city || "Not provided")}</p>
+            ${escapeHTML(order.city || "Not provided")}
+        </p>
 
         <p><strong>Delivery Address:</strong>
-            ${escapeHTML(order.address)}</p>
+            ${escapeHTML(order.address)}
+        </p>
 
         <p><strong>Notes:</strong>
-            ${escapeHTML(order.notes || "None")}</p>
+            ${escapeHTML(order.notes || "None")}
+        </p>
 
         <p><strong>Date:</strong>
-            ${escapeHTML(formatDate(order.created_at))}</p>
+            ${escapeHTML(formatDate(order.created_at))}
+        </p>
 
-        <h3 style="margin-top:20px">Products Ordered</h3>
+        <h3 style="margin-top:20px">
+            Products Ordered
+        </h3>
 
         <div class="table-wrap">
             <table style="min-width:480px">
+
                 <thead>
                     <tr>
                         <th>Product</th>
@@ -895,38 +1126,57 @@ async function viewOrder(id) {
                         <th>Line Total</th>
                     </tr>
                 </thead>
-                <tbody>${itemsHTML}</tbody>
+
+                <tbody>
+                    ${itemsHTML}
+                </tbody>
+
             </table>
         </div>
 
         <p><strong>Subtotal:</strong>
-            ${formatMoney(order.subtotal)}</p>
+            ${formatMoney(order.subtotal)}
+        </p>
 
         <p><strong>Delivery Fee:</strong>
-            ${formatMoney(order.delivery_fee)}</p>
+            ${formatMoney(order.delivery_fee)}
+        </p>
 
         <p><strong>Grand Total:</strong>
-            <strong>${formatMoney(order.total)}</strong></p>
+            <strong>${formatMoney(order.total)}</strong>
+        </p>
 
-        <h3 style="margin-top:20px">Payment Information</h3>
+        <h3 style="margin-top:20px">
+            Payment Information
+        </h3>
 
         <p><strong>Payment Method:</strong>
-            ${escapeHTML(order.payment_method)}</p>
+            ${escapeHTML(order.payment_method)}
+        </p>
 
         <p><strong>Payment Status:</strong>
-            ${escapeHTML(order.payment_status)}</p>
+            ${escapeHTML(order.payment_status)}
+        </p>
 
         <p><strong>MoMo Number:</strong>
-            ${escapeHTML(order.momo_number || "Not provided")}</p>
+            ${escapeHTML(order.momo_number || "Not provided")}
+        </p>
 
         <p><strong>MoMo Name:</strong>
-            ${escapeHTML(order.momo_name || "Not provided")}</p>
+            ${escapeHTML(order.momo_name || "Not provided")}
+        </p>
 
         <p><strong>Transaction Reference:</strong>
-            ${escapeHTML(order.transaction_reference || "Not provided")}</p>
+            ${escapeHTML(order.transaction_reference || "Not provided")}
+        </p>
 
-        <p><strong>Order Status:</strong>
-            ${escapeHTML(order.order_status)}</p>
+        <p><strong>Original Order Status:</strong>
+            ${escapeHTML(order.order_status || "Not provided")}
+        </p>
+
+        <p><strong>Fulfilment Status:</strong>
+            ${escapeHTML(order.fulfillment_status || "pending")}
+        </p>
 
         <div id="receiptArea" style="margin-top:15px">
             <strong>Payment Receipt:</strong>
@@ -939,72 +1189,163 @@ async function viewOrder(id) {
         block: "nearest"
     });
 
-    const receiptArea = $("receiptArea");
+    const area = $("receiptArea");
 
     if (!order.receipt_path) {
-        receiptArea.innerHTML +=
+
+        area.innerHTML +=
             "<p>No receipt was attached to this order.</p>";
+
         return;
     }
 
-    const receiptURL = await getReceiptURL(order.receipt_path);
+    const url = await getReceiptURL(order.receipt_path);
 
-    if (!receiptURL) {
-        receiptArea.innerHTML +=
-            "<p>Unable to access the receipt. Check Storage permissions.</p>";
+    if (!url) {
+
+        area.innerHTML +=
+            "<p>Unable to access receipt. Check Storage permissions.</p>";
+
         return;
     }
 
-    const image = document.createElement("img");
-    image.src = receiptURL;
-    image.alt = "Customer payment receipt";
-    image.className = "receipt";
+    const img = document.createElement("img");
 
-    image.onerror = () => {
-        receiptArea.innerHTML +=
-            "<p>Receipt preview unavailable. Check the uploaded file type.</p>";
-    };
+    img.src = url;
+    img.alt = "Customer payment receipt";
+    img.className = "receipt";
 
-    receiptArea.appendChild(image);
+    area.appendChild(img);
 
     const link = document.createElement("a");
-    link.href = receiptURL;
+
+    link.href = url;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
     link.textContent = "Open receipt in a new tab";
     link.style.display = "inline-block";
     link.style.marginTop = "12px";
 
-    receiptArea.appendChild(link);
+    area.appendChild(link);
 }
 
-/* UPDATE PAYMENT STATUS */
+
+/* =========================
+   VERIFY OR REJECT PAYMENT
+========================= */
 
 async function updatePayment(id, status) {
-    const order = orders.find(item => item.id === id);
+
+    const order = orders.find(o => o.id === id);
+
     if (!order) return;
 
-    if (status === "verified") {
-        const confirmed = confirm(
-            "Only verify after confirming that the payment has entered your MoMo account. Have you confirmed receipt?"
-        );
+    if (!isPendingPayment(order.payment_status)) {
 
-        if (!confirmed) return;
+        showMessage("This payment has already been processed.");
+
+        return;
     }
 
-    if (status === "rejected") {
-        const confirmed = confirm(
-            "Are you sure you want to reject this payment?"
-        );
+    const promptText = status === "verified"
 
-        if (!confirmed) return;
-    }
+        ? "Only verify after confirming that payment has entered your MoMo account. Have you confirmed receipt?"
+
+        : "Are you sure you want to reject this payment?";
+
+    if (!confirm(promptText)) return;
 
     try {
+
+        const updates = {
+            payment_status: status,
+            updated_at: new Date().toISOString()
+        };
+
+        if (status === "verified") {
+            updates.fulfillment_status = "processing";
+        }
+
+        if (status === "rejected") {
+            updates.fulfillment_status = "cancelled";
+        }
+
+        const { error } = await supabase
+            .from("orders")
+            .update(updates)
+            .eq("id", id);
+
+        if (error) throw error;
+
+        showMessage(
+            status === "verified"
+                ? "Payment verified. Order is now processing."
+                : "Payment rejected. Fulfilment marked cancelled."
+        );
+
+        await loadOrders();
+
+    } catch (error) {
+
+        console.error(error);
+
+        showMessage(
+            "Unable to update payment: " + error.message
+        );
+    }
+}
+
+
+/* =========================
+   UPDATE FULFILMENT STATUS
+========================= */
+
+async function updateFulfillment(id, newStatus) {
+
+    const order = orders.find(o => o.id === id);
+
+    if (!order) return;
+
+    const allowed = {
+        pending: "processing",
+        processing: "shipped",
+        shipped: "completed"
+    };
+
+    if (
+        !["verified", "paid", "approved"]
+        .includes(normalise(order.payment_status))
+    ) {
+
+        showMessage(
+            "Verify payment before processing this order."
+        );
+
+        return;
+    }
+
+    if (
+        allowed[normalise(order.fulfillment_status)]
+        !== newStatus
+    ) {
+
+        showMessage(
+            "This order cannot move to that status."
+        );
+
+        return;
+    }
+
+    if (!confirm(
+        `Change order ${order.order_number || order.id} to ${newStatus}?`
+    )) return;
+
+    try {
+
         const { error } = await supabase
             .from("orders")
             .update({
-                payment_status: status,
+                fulfillment_status: newStatus,
                 updated_at: new Date().toISOString()
             })
             .eq("id", id);
@@ -1012,77 +1353,127 @@ async function updatePayment(id, status) {
         if (error) throw error;
 
         showMessage(
-            status === "verified"
-                ? "Payment successfully verified."
-                : "Payment successfully rejected."
+            "Order fulfilment updated to " + newStatus + "."
         );
 
         await loadOrders();
 
-        if (status === "rejected") {
-            showMessage(
-                "Payment rejected. Stock restoration has not yet been configured."
-            );
-        }
-
     } catch (error) {
+
         console.error(error);
-        showMessage("Unable to update payment: " + error.message);
+
+        showMessage(
+            "Unable to update fulfilment: " + error.message
+        );
     }
 }
 
-/* TABLE BUTTON EVENTS */
+
+/* =========================
+   TABLE BUTTON EVENTS
+========================= */
 
 $("ordersTable").addEventListener("click", event => {
-    const button = event.target.closest("button[data-action]");
+
+    const button = event.target.closest(
+        "button[data-action]"
+    );
+
     if (!button) return;
 
-    const id = button.dataset.id;
-    const action = button.dataset.action;
+    const { id, action } = button.dataset;
 
-    if (action === "view") viewOrder(id);
-    if (action === "verify") updatePayment(id, "verified");
-    if (action === "reject") updatePayment(id, "rejected");
+    if (action === "view") {
+        viewOrder(id);
+    }
+
+    if (action === "verify") {
+        updatePayment(id, "verified");
+    }
+
+    if (action === "reject") {
+        updatePayment(id, "rejected");
+    }
+
+    if (action === "fulfil") {
+        updateFulfillment(id, button.dataset.status);
+    }
 });
 
-/* SEARCH AND REFRESH */
 
-$("searchInput").addEventListener("input", renderOrders);
+/* =========================
+   SEARCH AND REFRESH
+========================= */
 
-$("searchInput").addEventListener("search", renderOrders);
+$("searchInput").addEventListener(
+    "input",
+    renderOrders
+);
 
-document.querySelector(".refresh").addEventListener("click", loadOrders);
+$("refreshButton").addEventListener(
+    "click",
+    loadOrders
+);
 
-/* AUTOMATIC REFRESH */
 
-setInterval(async () => {
-    if (currentAdmin) {
-        await loadOrders();
-    }
-}, 30000);
-
-/* SIGN OUT */
+/* =========================
+   SIGN OUT
+========================= */
 
 const logoutButton = document.createElement("button");
+
 logoutButton.textContent = "Sign Out";
 logoutButton.className = "refresh";
-logoutButton.style.marginLeft = "10px";
 
 logoutButton.addEventListener("click", async () => {
-    if (!confirm("Are you sure you want to sign out?")) return;
+
+    if (!confirm("Are you sure you want to sign out?"))
+        return;
 
     await supabase.auth.signOut();
+
     currentAdmin = null;
+
     location.reload();
 });
 
-document.querySelector(".topbar").appendChild(logoutButton);
+document.querySelector(".topbar")
+    .appendChild(logoutButton);
 
-/* START */
+
+/* =========================
+   AUTH SESSION MONITOR
+========================= */
+
+supabase.auth.onAuthStateChange((_event, session) => {
+
+    if (!session) {
+
+        currentAdmin = null;
+
+        createLoginScreen();
+    }
+});
+
+
+/* =========================
+   AUTO REFRESH
+========================= */
+
+setInterval(() => {
+
+    if (currentAdmin) {
+        loadOrders();
+    }
+
+}, 30000);
+
+
+/* START DASHBOARD */
 
 initialiseDashboard();
-</script>
 
+</script>
 
 </body>
 </html>
