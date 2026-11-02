@@ -1,0 +1,1223 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Management | Kikis Amber Touch</title>
+
+<style>
+:root {
+    --black: #11100e;
+    --dark: #1b1916;
+    --gold: #c9a45c;
+    --light-gold: #e5c985;
+    --cream: #f7f3eb;
+    --white: #fff;
+    --border: #e8e0d2;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: var(--cream);
+    color: #25221d;
+}
+
+.sidebar {
+    width: 245px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: var(--black);
+    color: white;
+    padding: 30px 20px;
+}
+
+.logo {
+    color: var(--light-gold);
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    line-height: 1.5;
+    margin-bottom: 45px;
+}
+
+.logo small {
+    display: block;
+    color: #aaa49a;
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.nav a {
+    display: block;
+    color: #ddd;
+    text-decoration: none;
+    padding: 14px 12px;
+    margin: 8px 0;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.nav a.active,
+.nav a:hover {
+    background: #302a20;
+    color: var(--light-gold);
+}
+
+.main {
+    margin-left: 245px;
+    padding: 30px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.topbar h1 {
+    font-size: 26px;
+}
+
+.topbar p {
+    color: #777;
+    font-size: 13px;
+    margin-top: 7px;
+}
+
+.admin-label {
+    color: #8b6b32;
+    font-size: 12px;
+    background: #f0e5ce;
+    padding: 10px 15px;
+    border-radius: 30px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.stat {
+    background: white;
+    padding: 22px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+}
+
+.stat p {
+    color: #777;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.stat h2 {
+    font-size: 26px;
+    color: #a17b39;
+}
+
+.panel {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 25px;
+}
+
+.panel-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 22px;
+}
+
+.panel-heading h2 {
+    font-size: 19px;
+}
+
+.gold-btn {
+    background: var(--black);
+    color: var(--light-gold);
+    border: none;
+    padding: 12px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.gold-btn:hover {
+    background: var(--gold);
+    color: var(--black);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 17px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: Arial;
+    font-size: 13px;
+    outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--gold);
+}
+
+.form-group textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.cancel-btn {
+    background: #eee;
+    color: #333;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#productForm {
+    display: none;
+    margin-bottom: 25px;
+}
+
+#productPreview {
+    width: 100px;
+    height: 110px;
+    object-fit: cover;
+    display: none;
+    margin-top: 12px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+.toolbar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.toolbar input,
+.toolbar select {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: white;
+}
+
+.toolbar input {
+    flex: 1;
+    min-width: 180px;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.product-card {
+    border: 1px solid #eee;
+    border-radius: 9px;
+    overflow: hidden;
+    background: white;
+}
+
+.product-image {
+    height: 210px;
+    background: #f4f0e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.no-image {
+    color: #999;
+    font-size: 12px;
+}
+
+.product-info {
+    padding: 15px;
+}
+
+.product-info h3 {
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+.product-info p {
+    color: #777;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.product-price {
+    color: #a17b39 !important;
+    font-weight: bold;
+    font-size: 16px !important;
+}
+
+.product-actions {
+    display: flex;
+    gap: 7px;
+    margin-top: 13px;
+}
+
+.product-actions button {
+    flex: 1;
+    padding: 9px 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.edit-btn {
+    background: #eee7d9;
+    color: #604c2d;
+}
+
+.delete-btn {
+    background: #ffe5e5;
+    color: #a32c2c;
+}
+
+.stock-label {
+    display: inline-block;
+    padding: 5px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    background: #e1f3e6;
+    color: #287343;
+}
+
+.out-stock {
+    background: #ffe3e3;
+    color: #a32c2c;
+}
+
+.empty {
+    text-align: center;
+    padding: 35px;
+    color: #888;
+    grid-column: 1 / -1;
+}
+
+footer {
+    text-align: center;
+    color: #888;
+    font-size: 12px;
+    margin-top: 30px;
+}
+
+@media(max-width: 1100px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width: 700px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 18px;
+    }
+
+    .logo {
+        margin-bottom: 15px;
+    }
+
+    .nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .nav a {
+        margin: 0;
+        padding: 10px;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 18px;
+    }
+
+    .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .product-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .product-image {
+        height: 160px;
+    }
+
+    .panel {
+        padding: 15px;
+    }
+
+    .panel-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+}
+
+@media(max-width: 380px) {
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+
+    <div class="logo">
+        KIKIS<br>AMBER TOUCH
+        <small>ADMINISTRATION</small>
+    </div>
+
+    <nav class="nav">
+        <a href="admin.html">Dashboard</a>
+        <a href="products.html" class="active">Products</a>
+        <a href="shop.html">View Shop</a>
+        <a href="index.html">Visit Website</a>
+    </nav>
+
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>Product Management</h1>
+            <p>Add, update and manage your perfume collection.</p>
+        </div>
+
+        <span class="admin-label">STORE MANAGEMENT</span>
+    </header>
+
+    <section class="stats">
+
+        <div class="stat">
+            <p>Total Products</p>
+            <h2 id="totalProducts">0</h2>
+        </div>
+
+        <div class="stat">
+            <p>Available Stock</p>
+            <h2 id="availableStock">0</h2>
+        </div>
+
+        <div class="stat">
+            <p>Out of Stock</p>
+            <h2 id="outOfStock">0</h2>
+        </div>
+
+    </section>
+
+    <!-- ADD PRODUCT BUTTON -->
+
+    <div style="margin-bottom:20px;">
+        <button class="gold-btn" onclick="openForm()">
+            + ADD NEW PERFUME
+        </button>
+    </div>
+
+    <!-- PRODUCT FORM -->
+
+    <section class="panel" id="productForm">
+
+        <div class="panel-heading">
+            <h2 id="formTitle">Add New Perfume</h2>
+        </div>
+
+        <form id="productFormElement">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="productName">Product Name *</label>
+                    <input type="text" id="productName" required
+                    placeholder="e.g. Amber Oud">
+                </div>
+
+                <div class="form-group">
+                    <label for="productCategory">Category *</label>
+                    <select id="productCategory" required>
+                        <option value="">Select category</option>
+                        <option value="Men">Men</option>
+                        <option value="Women">Women</option>
+                        <option value="Unisex">Unisex</option>
+                        <option value="Luxury">Luxury</option>
+                        <option value="Body Mist">Body Mist</option>
+                        <option value="Oud">Oud</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="productPrice">Selling Price (GH₵) *</label>
+                    <input type="number" id="productPrice"
+                    min="0.01" step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="productStock">Stock Quantity *</label>
+                    <input type="number" id="productStock"
+                    min="0" step="1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="productImage">Product Image</label>
+                    <input type="file" id="productImage"
+                    accept="image/jpeg,image/png,image/webp">
+                    <img id="productPreview" alt="Product preview">
+                </div>
+
+                <div class="form-group">
+                    <label for="productStatus">Product Status</label>
+                    <select id="productStatus">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+
+                <div class="form-group full">
+                    <label for="productDescription">Description</label>
+                    <textarea id="productDescription"
+                    placeholder="Describe the fragrance..."></textarea>
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="gold-btn" id="saveButton">
+                    SAVE PRODUCT
+                </button>
+
+                <button type="button" class="cancel-btn"
+                onclick="closeForm()">
+                    CANCEL
+                </button>
+            </div>
+
+        </form>
+
+    </section>
+
+    <!-- PRODUCT LIST -->
+
+    <section class="panel">
+
+        <div class="panel-heading">
+            <h2>Your Perfume Collection</h2>
+            <span id="productCount">0 products</span>
+        </div>
+
+        <div class="toolbar">
+
+            <input type="search" id="searchInput"
+            placeholder="Search perfume...">
+
+            <select id="categoryFilter">
+                <option value="">All Categories</option>
+                <option>Men</option>
+                <option>Women</option>
+                <option>Unisex</option>
+                <option>Luxury</option>
+                <option>Body Mist</option>
+                <option>Oud</option>
+            </select>
+
+        </div>
+
+        <div class="product-grid" id="productGrid"></div>
+
+    </section>
+
+    <footer>
+        Kikis Amber Touch © 2026. Admin Product Management.
+    </footer>
+
+</main>
+
+<script type="module">
+
+import { createClient } from
+"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const supabase = createClient(
+    "https://mgxeyjyhuzbsgnbpbkst.supabase.co",
+    "sb_publishable_ANZvxJnS89wrYo0MTx6LRA_Nu2XPss5"
+);
+
+const BUCKET = "product-images";
+
+let products = [];
+let editingId = null;
+let selectedImage = "";
+let selectedImageFile = null;
+let adminUser = null;
+
+const $ = id => document.getElementById(id);
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    })[char]);
+}
+
+function money(value) {
+    return "GH₵ " + Number(value || 0).toFixed(2);
+}
+
+// ========================================
+// ADMIN LOGIN
+// ========================================
+
+function showLogin(message = "") {
+    let overlay = $("supabaseLogin");
+
+    if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.id = "supabaseLogin";
+
+        overlay.style.cssText = `
+            position:fixed;inset:0;z-index:9999;
+            background:#11100e;display:flex;
+            align-items:center;justify-content:center;
+            padding:20px;
+        `;
+
+        overlay.innerHTML = `
+            <form id="adminLoginForm" style="
+                background:#fff;padding:30px;border-radius:12px;
+                width:100%;max-width:400px;color:#222;
+            ">
+                <h2 style="color:#a17b39;margin-bottom:8px">
+                    KIKIS AMBER TOUCH
+                </h2>
+                <p style="margin-bottom:22px;color:#777">
+                    Administrator Sign In
+                </p>
+
+                <label>Email Address</label>
+                <input id="loginEmail" type="email" required
+                    style="width:100%;padding:13px;margin:8px 0 16px;
+                    border:1px solid #ddd;border-radius:5px">
+
+                <label>Password</label>
+                <input id="loginPassword" type="password" required
+                    style="width:100%;padding:13px;margin:8px 0 16px;
+                    border:1px solid #ddd;border-radius:5px">
+
+                <p id="loginMessage" style="
+                    color:#b32d2d;font-size:13px;margin-bottom:12px
+                "></p>
+
+                <button type="submit" style="
+                    width:100%;padding:14px;background:#11100e;
+                    color:#e5c985;border:0;border-radius:5px;
+                    cursor:pointer;font-weight:bold
+                ">SIGN IN</button>
+            </form>
+        `;
+
+        document.body.appendChild(overlay);
+
+        $("adminLoginForm").addEventListener("submit", signInAdmin);
+    }
+
+    $("loginMessage").textContent = message;
+    overlay.style.display = "flex";
+}
+
+async function signInAdmin(event) {
+    event.preventDefault();
+
+    const email = $("loginEmail").value.trim();
+    const password = $("loginPassword").value;
+    const message = $("loginMessage");
+
+    message.textContent = "Signing in...";
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+    });
+
+    if (error) {
+        message.textContent = error.message;
+        return;
+    }
+
+    await verifyAdmin(data.user);
+}
+
+async function verifyAdmin(user) {
+    if (!user) {
+        showLogin("Please sign in.");
+        return false;
+    }
+
+    const { data, error } = await supabase
+        .from("admin_users")
+        .select("user_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+    if (error || !data) {
+        await supabase.auth.signOut();
+        showLogin("This account is not registered as a store administrator.");
+        return false;
+    }
+
+    adminUser = user;
+
+    const overlay = $("supabaseLogin");
+    if (overlay) overlay.style.display = "none";
+
+    await loadProducts();
+    return true;
+}
+
+async function initialiseAdmin() {
+    showLogin("Sign in to manage your products.");
+
+    const { data, error } = await supabase.auth.getSession();
+
+    if (error) {
+        showLogin(error.message);
+        return;
+    }
+
+    if (data.session) {
+        await verifyAdmin(data.session.user);
+    }
+}
+
+// ========================================
+// LOAD PRODUCTS FROM SUPABASE
+// ========================================
+
+async function loadProducts() {
+    const grid = $("productGrid");
+
+    grid.innerHTML = `
+        <div class="empty">Loading products...</div>
+    `;
+
+    const { data, error } = await supabase
+        .from("products")
+        .select("id,name,description,category,price,image_url,stock,status,created_at,updated_at")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        grid.innerHTML = `
+            <div class="empty">
+                Could not load products: ${escapeHTML(error.message)}
+            </div>
+        `;
+        return;
+    }
+
+    products = (data || []).map(product => ({
+        ...product,
+        image: product.image_url || ""
+    }));
+
+    displayProducts();
+    updateStats();
+}
+
+// ========================================
+// OPEN AND CLOSE PRODUCT FORM
+// ========================================
+
+window.openForm = function () {
+    $("productForm").style.display = "block";
+    $("formTitle").textContent = "Add New Perfume";
+    $("saveButton").textContent = "SAVE PRODUCT";
+
+    editingId = null;
+    selectedImage = "";
+    selectedImageFile = null;
+
+    $("productFormElement").reset();
+
+    $("productPreview").style.display = "none";
+    $("productPreview").src = "";
+
+    $("productForm").scrollIntoView({
+        behavior: "smooth"
+    });
+};
+
+window.closeForm = function () {
+    $("productForm").style.display = "none";
+    $("productFormElement").reset();
+
+    editingId = null;
+    selectedImage = "";
+    selectedImageFile = null;
+
+    $("productPreview").style.display = "none";
+};
+
+// ========================================
+// IMAGE PREVIEW
+// ========================================
+
+$("productImage").addEventListener("change", function () {
+    const file = this.files[0];
+
+    if (!file) return;
+
+    const allowed = [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+    ];
+
+    if (!allowed.includes(file.type)) {
+        alert("Please select a JPG, PNG or WEBP image.");
+        this.value = "";
+        return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+        alert("Image must not exceed 5MB.");
+        this.value = "";
+        return;
+    }
+
+    selectedImageFile = file;
+
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+        const preview = $("productPreview");
+        preview.src = event.target.result;
+        preview.style.display = "block";
+    };
+
+    reader.readAsDataURL(file);
+});
+
+// ========================================
+// UPLOAD IMAGE TO SUPABASE STORAGE
+// ========================================
+
+async function uploadProductImage(file) {
+    const extension = file.name.split(".").pop().toLowerCase();
+
+    const safeName = file.name
+        .replace(/[^a-zA-Z0-9.-]/g, "-")
+        .toLowerCase();
+
+    const path = `${adminUser.id}/${crypto.randomUUID()}-${safeName}`;
+
+    const { error } = await supabase.storage
+        .from(BUCKET)
+        .upload(path, file, {
+            contentType: file.type,
+            upsert: false
+        });
+
+    if (error) {
+        throw new Error(
+            "Image upload failed: " + error.message
+        );
+    }
+
+    const { data } = supabase.storage
+        .from(BUCKET)
+        .getPublicUrl(path);
+
+    return data.publicUrl;
+}
+
+// ========================================
+// SAVE PRODUCT TO DATABASE
+// ========================================
+
+$("productFormElement").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    if (!adminUser) {
+        alert("Please sign in as an administrator.");
+        return;
+    }
+
+    const name = $("productName").value.trim();
+    const category = $("productCategory").value;
+    const price = Number($("productPrice").value);
+    const stock = Number($("productStock").value);
+    const description = $("productDescription").value.trim();
+    const status = $("productStatus").value;
+
+    if (
+        !name ||
+        !category ||
+        !Number.isFinite(price) ||
+        price <= 0 ||
+        !Number.isInteger(stock) ||
+        stock < 0
+    ) {
+        alert("Please enter valid product information.");
+        return;
+    }
+
+    const saveButton = $("saveButton");
+    saveButton.disabled = true;
+    saveButton.textContent = "SAVING...";
+
+    try {
+        const existing = editingId
+            ? products.find(product => product.id === editingId)
+            : null;
+
+        let imageUrl = existing?.image_url || "";
+
+        if (selectedImageFile) {
+            imageUrl = await uploadProductImage(selectedImageFile);
+        }
+
+        const productData = {
+            name,
+            category,
+            price,
+            stock,
+            description,
+            status,
+            image_url: imageUrl,
+            updated_at: new Date().toISOString()
+        };
+
+        let result;
+
+        if (editingId) {
+            result = await supabase
+                .from("products")
+                .update(productData)
+                .eq("id", editingId)
+                .select()
+                .single();
+        } else {
+            result = await supabase
+                .from("products")
+                .insert(productData)
+                .select()
+                .single();
+        }
+
+        if (result.error) {
+            throw result.error;
+        }
+
+        alert(
+            editingId
+                ? "Product updated successfully."
+                : "Product added successfully."
+        );
+
+        window.closeForm();
+        await loadProducts();
+
+    } catch (error) {
+        alert("Could not save product: " + error.message);
+    } finally {
+        saveButton.disabled = false;
+        saveButton.textContent = editingId
+            ? "UPDATE PRODUCT"
+            : "SAVE PRODUCT";
+    }
+});
+
+// ========================================
+// DISPLAY PRODUCTS
+// ========================================
+
+function displayProducts() {
+    const grid = $("productGrid");
+
+    const search = $("searchInput").value.trim().toLowerCase();
+    const category = $("categoryFilter").value;
+
+    const filtered = products.filter(product => {
+        const matchesSearch =
+            product.name.toLowerCase().includes(search) ||
+            String(product.description || "").toLowerCase().includes(search);
+
+        const matchesCategory =
+            !category || product.category === category;
+
+        return matchesSearch && matchesCategory;
+    });
+
+    grid.innerHTML = "";
+
+    $("productCount").textContent =
+        filtered.length + " products";
+
+    if (!filtered.length) {
+        grid.innerHTML = `
+            <div class="empty">
+                No products found. Add your first perfume.
+            </div>
+        `;
+        return;
+    }
+
+    filtered.forEach(product => {
+        const card = document.createElement("div");
+        card.className = "product-card";
+
+        const imageContainer = document.createElement("div");
+        imageContainer.className = "product-image";
+
+        if (product.image_url) {
+            const img = document.createElement("img");
+            img.src = product.image_url;
+            img.alt = product.name;
+            img.onerror = () => {
+                img.style.display = "none";
+                imageContainer.textContent = "Image unavailable";
+            };
+            imageContainer.appendChild(img);
+        } else {
+            const placeholder = document.createElement("span");
+            placeholder.className = "no-image";
+            placeholder.textContent = "No product image";
+            imageContainer.appendChild(placeholder);
+        }
+
+        const info = document.createElement("div");
+        info.className = "product-info";
+
+        const title = document.createElement("h3");
+        title.textContent = product.name;
+
+        const categoryText = document.createElement("p");
+        categoryText.textContent = "Category: " + product.category;
+
+        const price = document.createElement("p");
+        price.className = "product-price";
+        price.textContent = money(product.price);
+
+        const stock = document.createElement("span");
+        stock.className = product.stock > 0
+            ? "stock-label"
+            : "stock-label out-stock";
+
+        stock.textContent = product.stock > 0
+            ? product.stock + " in stock"
+            : "Out of stock";
+
+        const status = document.createElement("p");
+        status.textContent = product.status === "active"
+            ? "Published"
+            : "Hidden";
+        status.style.color = product.status === "active"
+            ? "#287343"
+            : "#a32c2c";
+
+        const actions = document.createElement("div");
+        actions.className = "product-actions";
+
+        const editButton = document.createElement("button");
+        editButton.className = "edit-btn";
+        editButton.textContent = "EDIT";
+        editButton.addEventListener("click", () => editProduct(product.id));
+
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "delete-btn";
+        deleteButton.textContent = "DELETE";
+        deleteButton.addEventListener("click", () => deleteProduct(product.id));
+
+        actions.append(editButton, deleteButton);
+        info.append(title, categoryText, price, stock, status, actions);
+        card.append(imageContainer, info);
+        grid.appendChild(card);
+    });
+}
+
+// ========================================
+// EDIT PRODUCT
+// ========================================
+
+window.editProduct = function (id) {
+    const product = products.find(item => item.id === id);
+    if (!product) return;
+
+    editingId = id;
+    selectedImage = product.image_url || "";
+    selectedImageFile = null;
+
+    $("productName").value = product.name;
+    $("productCategory").value = product.category;
+    $("productPrice").value = product.price;
+    $("productStock").value = product.stock;
+    $("productDescription").value = product.description || "";
+    $("productStatus").value = product.status || "active";
+
+    $("formTitle").textContent = "Edit Perfume";
+    $("saveButton").textContent = "UPDATE PRODUCT";
+
+    const preview = $("productPreview");
+
+    if (product.image_url) {
+        preview.src = product.image_url;
+        preview.style.display = "block";
+    } else {
+        preview.style.display = "none";
+    }
+
+    $("productForm").style.display = "block";
+    $("productForm").scrollIntoView({ behavior: "smooth" });
+};
+
+// ========================================
+// DELETE PRODUCT
+// ========================================
+
+window.deleteProduct = async function (id) {
+    const product = products.find(item => item.id === id);
+    if (!product) return;
+
+    if (!confirm(`Delete "${product.name}" permanently?`)) return;
+
+    const { error } = await supabase
+        .from("products")
+        .delete()
+        .eq("id", id);
+
+    if (error) {
+        alert("Could not delete product: " + error.message);
+        return;
+    }
+
+    products = products.filter(item => item.id !== id);
+
+    displayProducts();
+    updateStats();
+
+    alert("Product deleted successfully.");
+};
+
+// ========================================
+// STATISTICS
+// ========================================
+
+function updateStats() {
+    $("totalProducts").textContent = products.length;
+
+    $("availableStock").textContent =
+        products.reduce(
+            (sum, item) => sum + Number(item.stock || 0),
+            0
+        );
+
+    $("outOfStock").textContent =
+        products.filter(item => Number(item.stock) === 0).length;
+}
+
+// ========================================
+// SEARCH AND FILTER
+// ========================================
+
+$("searchInput").addEventListener("input", displayProducts);
+$("categoryFilter").addEventListener("change", displayProducts);
+
+// ========================================
+// START
+// ========================================
+
+initialiseAdmin();
+
+
+</script>
+
+</body>
+</html>

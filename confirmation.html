@@ -1,0 +1,532 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Order Confirmation | Kikis Amber Touch</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --black: #11100e;
+    --gold: #c6a15b;
+    --cream: #f8f5ef;
+    --white: #fff;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: var(--cream);
+    color: var(--black);
+}
+
+header {
+    background: var(--black);
+    color: white;
+    padding: 20px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: Georgia, serif;
+    font-size: 21px;
+    color: var(--gold);
+}
+
+.logo span {
+    display: block;
+    font-family: Arial;
+    color: white;
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-align: center;
+    margin-top: 5px;
+}
+
+nav {
+    display: flex;
+    gap: 25px;
+    font-size: 13px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+}
+
+nav a:hover {
+    color: var(--gold);
+}
+
+.banner {
+    background: linear-gradient(90deg, #17130e, #51402a);
+    text-align: center;
+    color: white;
+    padding: 55px 20px;
+}
+
+.banner small {
+    color: var(--gold);
+    letter-spacing: 4px;
+}
+
+.banner h1 {
+    font-family: Georgia, serif;
+    font-weight: normal;
+    font-size: 38px;
+    margin-top: 15px;
+}
+
+.container {
+    max-width: 850px;
+    padding: 40px 15px;
+    margin: auto;
+}
+
+.confirmation-card {
+    background: white;
+    padding: 35px;
+    border: 1px solid #eee;
+    text-align: center;
+}
+
+.success-icon {
+    width: 75px;
+    height: 75px;
+    border: 2px solid var(--gold);
+    color: var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 35px;
+    margin: 0 auto 20px;
+}
+
+.confirmation-card h2 {
+    font-family: Georgia, serif;
+    font-size: 29px;
+    font-weight: normal;
+    margin-bottom: 12px;
+}
+
+.description {
+    color: #777;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.reference {
+    background: #f9f6ef;
+    padding: 18px;
+    margin: 25px 0;
+}
+
+.reference small {
+    display: block;
+    color: #777;
+    margin-bottom: 8px;
+}
+
+.reference strong {
+    color: #947039;
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+
+.status {
+    display: inline-block;
+    padding: 10px 18px;
+    background: #fff3df;
+    color: #946525;
+    font-size: 12px;
+    margin-top: 15px;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+.details {
+    background: white;
+    border: 1px solid #eee;
+    margin-top: 25px;
+    padding: 25px;
+}
+
+.details h3 {
+    font-family: Georgia, serif;
+    font-size: 21px;
+    font-weight: normal;
+    margin-bottom: 20px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+}
+
+.detail-row span:first-child {
+    color: #777;
+}
+
+.products {
+    margin-top: 20px;
+}
+
+.product-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+}
+
+.total {
+    font-size: 19px;
+    font-weight: bold;
+    color: #947039;
+    border-top: 1px solid #ddd;
+    margin-top: 15px;
+    padding-top: 20px;
+}
+
+.instructions {
+    background: #f9f6ef;
+    border-left: 3px solid var(--gold);
+    padding: 20px;
+    margin-top: 25px;
+    text-align: left;
+}
+
+.instructions h3 {
+    font-family: Georgia, serif;
+    margin-bottom: 12px;
+}
+
+.instructions p {
+    color: #666;
+    font-size: 13px;
+    line-height: 1.9;
+}
+
+.actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 15px 25px;
+    background: var(--black);
+    color: white;
+    text-decoration: none;
+    border: none;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.btn.gold {
+    background: var(--gold);
+    color: var(--black);
+}
+
+footer {
+    background: #080807;
+    color: #aaa;
+    text-align: center;
+    padding: 35px;
+    font-size: 12px;
+    line-height: 2;
+}
+
+footer strong {
+    color: var(--gold);
+}
+
+@media(max-width: 600px) {
+    header {
+        padding: 17px 5%;
+    }
+
+    .logo {
+        font-size: 16px;
+    }
+
+    nav {
+        gap: 12px;
+        font-size: 11px;
+    }
+
+    .banner h1 {
+        font-size: 30px;
+    }
+
+    .confirmation-card {
+        padding: 25px 15px;
+    }
+
+    .details {
+        padding: 18px;
+    }
+
+    .detail-row {
+        font-size: 12px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <a href="index.html" class="logo">
+        KIKIS AMBER TOUCH
+        <span>LUXURY FRAGRANCES</span>
+    </a>
+
+    <nav>
+        <a href="index.html">HOME</a>
+        <a href="shop.html">SHOP</a>
+    </nav>
+</header>
+
+<section class="banner">
+    <small>KIKIS AMBER TOUCH</small>
+    <h1>Order Confirmation</h1>
+</section>
+
+<main class="container">
+
+    <section class="confirmation-card">
+
+        <div class="success-icon">✓</div>
+
+        <h2>Thank You for Your Order!</h2>
+
+        <p class="description" id="message">
+            Your order details have been prepared.
+        </p>
+
+        <div class="reference">
+            <small>YOUR ORDER REFERENCE</small>
+            <strong id="reference">Loading...</strong>
+        </div>
+
+        <div class="status" id="payment-status">
+            PENDING VERIFICATION
+        </div>
+
+    </section>
+
+    <section class="details">
+
+        <h3>Customer Information</h3>
+
+        <div class="detail-row">
+            <span>Customer Name</span>
+            <strong id="customer-name">-</strong>
+        </div>
+
+        <div class="detail-row">
+            <span>Phone Number</span>
+            <strong id="customer-phone">-</strong>
+        </div>
+
+        <div class="detail-row">
+            <span>Delivery Region</span>
+            <strong id="customer-region">-</strong>
+        </div>
+
+        <div class="detail-row">
+            <span>Town / City</span>
+            <strong id="customer-city">-</strong>
+        </div>
+
+        <div class="detail-row">
+            <span>Payment Method</span>
+            <strong id="payment-method">-</strong>
+        </div>
+
+    </section>
+
+    <section class="details">
+
+        <h3>Products Ordered</h3>
+
+        <div class="products" id="products"></div>
+
+        <div class="detail-row total">
+            <span>Order Total</span>
+            <strong id="order-total">GH₵ 0.00</strong>
+        </div>
+
+    </section>
+
+    <section class="instructions">
+
+        <h3>What Happens Next?</h3>
+
+        <p id="next-steps">
+            The administrator will review your order and confirm payment.
+            You will be contacted regarding delivery arrangements.
+        </p>
+
+    </section>
+
+    <div class="actions">
+
+        <a href="shop.html" class="btn gold">
+            CONTINUE SHOPPING
+        </a>
+
+        <a
+            href="https://wa.me/233503192094"
+            target="_blank"
+            rel="noopener"
+            class="btn"
+        >
+            CHAT WITH US
+        </a>
+
+        <button class="btn" onclick="window.print()">
+            PRINT ORDER
+        </button>
+
+    </div>
+
+</main>
+
+<footer>
+    <strong>KIKIS AMBER TOUCH</strong>
+    <p>Luxury fragrances. Elegance in every drop.</p>
+    <p>WhatsApp: 0503192094</p>
+    <p>© <span id="year"></span> Kikis Amber Touch. All Rights Reserved.</p>
+</footer>
+
+<script>
+
+function money(amount) {
+    return "GH₵ " + Number(amount).toFixed(2);
+}
+
+function loadConfirmation() {
+
+    const savedOrder = localStorage.getItem("kikisCurrentOrder");
+
+    if (!savedOrder) {
+
+        document.querySelector(".confirmation-card").innerHTML = `
+            <h2>No Recent Order Found</h2>
+            <p class="description">
+                We could not find a recent order on this device.
+            </p>
+            <br>
+            <a href="shop.html" class="btn gold">
+                RETURN TO SHOP
+            </a>
+        `;
+
+        document.querySelectorAll(".details, .instructions, .actions")
+            .forEach(element => element.style.display = "none");
+
+        return;
+    }
+
+    const order = JSON.parse(savedOrder);
+
+    document.getElementById("reference").textContent =
+        order.reference || "-";
+
+    document.getElementById("customer-name").textContent =
+        order.customer.name;
+
+    document.getElementById("customer-phone").textContent =
+        order.customer.phone;
+
+    document.getElementById("customer-region").textContent =
+        order.customer.region;
+
+    document.getElementById("customer-city").textContent =
+        order.customer.city;
+
+    document.getElementById("payment-method").textContent =
+        order.payment;
+
+    document.getElementById("order-total").textContent =
+        money(order.total);
+
+    const status = order.paymentStatus || "Pending verification";
+
+    document.getElementById("payment-status").textContent =
+        status.toUpperCase();
+
+    if (order.payment === "Mobile Money") {
+
+        document.getElementById("message").textContent =
+            "Your order has been prepared. Your MoMo payment is awaiting administrator verification.";
+
+        document.getElementById("next-steps").textContent =
+            "Our administrator will verify your MoMo payment and contact you to confirm your order and arrange delivery. Please keep your transaction receipt.";
+
+    } else {
+
+        document.getElementById("message").textContent =
+            "Your order details are available below. Payment confirmation must be received before processing.";
+
+        document.getElementById("next-steps").textContent =
+            "Your Paystack payment must be verified by the payment server before your order can be processed.";
+
+    }
+
+    const productsContainer = document.getElementById("products");
+
+    productsContainer.innerHTML = "";
+
+    order.products.forEach(item => {
+
+        const row = document.createElement("div");
+        row.className = "product-item";
+
+        const name = document.createElement("span");
+
+        name.textContent =
+            item.name + " × " + item.quantity;
+
+        const price = document.createElement("strong");
+
+        price.textContent =
+            money(item.price * item.quantity);
+
+        row.append(name, price);
+
+        productsContainer.appendChild(row);
+
+    });
+
+}
+
+document.getElementById("year").textContent =
+    new Date().getFullYear();
+
+loadConfirmation();
+
+</script>
+
+</body>
+</html>

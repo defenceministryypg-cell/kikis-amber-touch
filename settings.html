@@ -1,0 +1,686 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Store Settings | Kikis Amber Touch</title>
+
+<style>
+:root {
+    --black: #11100e;
+    --gold: #c9a45c;
+    --light-gold: #e5c985;
+    --cream: #f7f3eb;
+    --white: #fff;
+    --border: #e8e0d2;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: var(--cream);
+    color: #25221d;
+}
+
+.sidebar {
+    width: 245px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: var(--black);
+    color: white;
+    padding: 30px 20px;
+}
+
+.logo {
+    color: var(--light-gold);
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    line-height: 1.5;
+    margin-bottom: 45px;
+}
+
+.logo small {
+    display: block;
+    color: #aaa49a;
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.nav a {
+    display: block;
+    color: #ddd;
+    text-decoration: none;
+    padding: 14px 12px;
+    margin: 8px 0;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.nav a:hover,
+.nav a.active {
+    background: #302a20;
+    color: var(--light-gold);
+}
+
+.main {
+    margin-left: 245px;
+    padding: 30px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.topbar h1 {
+    font-size: 26px;
+}
+
+.topbar p {
+    color: #777;
+    font-size: 13px;
+    margin-top: 7px;
+}
+
+.admin-label {
+    color: #8b6b32;
+    font-size: 12px;
+    background: #f0e5ce;
+    padding: 10px 15px;
+    border-radius: 30px;
+}
+
+.panel {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.panel h2 {
+    font-size: 19px;
+    margin-bottom: 8px;
+}
+
+.panel > p {
+    color: #777;
+    font-size: 13px;
+    margin-bottom: 22px;
+    line-height: 1.6;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.form-group {
+    margin-bottom: 17px;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 13px;
+    font-family: Arial;
+    outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--gold);
+}
+
+.form-group textarea {
+    min-height: 85px;
+    resize: vertical;
+}
+
+.logo-preview {
+    width: 110px;
+    height: 110px;
+    border: 1px dashed #c9b78f;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    margin-top: 12px;
+    background: #faf8f3;
+}
+
+.logo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+    gap: 15px;
+}
+
+.toggle-row strong {
+    font-size: 14px;
+}
+
+.toggle-row p {
+    font-size: 12px;
+    color: #777;
+    margin-top: 5px;
+}
+
+.toggle-row input {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--gold);
+}
+
+.save-btn {
+    background: var(--black);
+    color: var(--light-gold);
+    border: none;
+    padding: 14px 22px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+.save-btn:hover {
+    background: var(--gold);
+    color: var(--black);
+}
+
+.reset-btn {
+    background: #eee;
+    color: #333;
+    border: none;
+    padding: 14px 22px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.notice {
+    background: #f8f1df;
+    border-left: 4px solid var(--gold);
+    padding: 13px;
+    color: #745a2b;
+    font-size: 12px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+footer {
+    text-align: center;
+    color: #888;
+    font-size: 12px;
+    margin-top: 30px;
+}
+
+@media(max-width: 700px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 18px;
+    }
+
+    .logo {
+        margin-bottom: 15px;
+    }
+
+    .nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .nav a {
+        margin: 0;
+        padding: 10px;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 18px;
+    }
+
+    .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+
+    .panel {
+        padding: 18px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+
+    <div class="logo">
+        KIKIS<br>AMBER TOUCH
+        <small>ADMINISTRATION</small>
+    </div>
+
+    <nav class="nav">
+        <a href="admin.html">Dashboard</a>
+        <a href="products.html">Products</a>
+        <a href="settings.html" class="active">Settings</a>
+        <a href="shop.html">View Shop</a>
+        <a href="index.html">Visit Website</a>
+    </nav>
+
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>Store Settings</h1>
+            <p>Manage your shop information and business preferences.</p>
+        </div>
+
+        <span class="admin-label">STORE MANAGEMENT</span>
+    </header>
+
+    <form id="settingsForm">
+
+        <!-- STORE INFORMATION -->
+
+        <section class="panel">
+
+            <h2>01. Store Information</h2>
+            <p>Update the public information displayed for your business.</p>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="storeName">Store Name</label>
+                    <input type="text" id="storeName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="storeTagline">Store Tagline</label>
+                    <input type="text" id="storeTagline">
+                </div>
+
+                <div class="form-group">
+                    <label for="storeEmail">Business Email</label>
+                    <input type="email" id="storeEmail">
+                </div>
+
+                <div class="form-group">
+                    <label for="storePhone">Business Phone</label>
+                    <input type="tel" id="storePhone">
+                </div>
+
+                <div class="form-group full">
+                    <label for="storeAddress">Business Address</label>
+                    <textarea id="storeAddress"></textarea>
+                </div>
+
+                <div class="form-group full">
+                    <label for="storeLogo">Store Logo</label>
+                    <input type="file" id="storeLogo"
+                    accept="image/jpeg,image/png,image/webp">
+
+                    <div class="logo-preview">
+                        <img id="logoPreview" alt="Store logo preview"
+                        style="display:none;">
+                        <span id="logoPlaceholder">Logo Preview</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- PAYMENT SETTINGS -->
+
+        <section class="panel">
+
+            <h2>02. Payment Information</h2>
+            <p>Manage the payment details customers see during checkout.</p>
+
+            <div class="notice">
+                Make sure your Mobile Money account details are correct
+                before customers place orders.
+            </div>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="momoNumber">Mobile Money Number</label>
+                    <input type="tel" id="momoNumber" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="momoName">Mobile Money Account Name</label>
+                    <input type="text" id="momoName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="paystackKey">Paystack Public Key</label>
+                    <input type="text" id="paystackKey"
+                    placeholder="pk_test_...">
+                </div>
+
+                <div class="form-group">
+                    <label for="currency">Store Currency</label>
+                    <select id="currency">
+                        <option value="GHS">Ghana Cedis (GH₵)</option>
+                    </select>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- DELIVERY SETTINGS -->
+
+        <section class="panel">
+
+            <h2>03. Delivery Settings</h2>
+            <p>Configure delivery charges and free delivery conditions.</p>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="deliveryFee">Standard Delivery Fee (GH₵)</label>
+                    <input type="number" id="deliveryFee"
+                    min="0" step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="freeDelivery">Free Delivery Minimum Order (GH₵)</label>
+                    <input type="number" id="freeDelivery"
+                    min="0" step="0.01">
+                </div>
+
+                <div class="form-group">
+                    <label for="deliveryTime">Estimated Delivery Time</label>
+                    <input type="text" id="deliveryTime"
+                    placeholder="e.g. 2–5 working days">
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- WHATSAPP SETTINGS -->
+
+        <section class="panel">
+
+            <h2>04. WhatsApp Settings</h2>
+            <p>Set the WhatsApp number customers use to contact the store.</p>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="whatsappNumber">WhatsApp Number</label>
+                    <input type="tel" id="whatsappNumber" required>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- STORE STATUS -->
+
+        <section class="panel">
+
+            <h2>05. Store Availability</h2>
+            <p>Control whether customers can place orders.</p>
+
+            <div class="toggle-row">
+                <div>
+                    <strong>Store Open</strong>
+                    <p>Allow customers to browse and place orders.</p>
+                </div>
+                <input type="checkbox" id="storeOpen">
+            </div>
+
+            <div class="toggle-row">
+                <div>
+                    <strong>Accept New Orders</strong>
+                    <p>Allow checkout submissions.</p>
+                </div>
+                <input type="checkbox" id="acceptOrders">
+            </div>
+
+        </section>
+
+        <div class="form-actions">
+            <button type="submit" class="save-btn">
+                SAVE SETTINGS
+            </button>
+
+            <button type="button" class="reset-btn"
+            onclick="resetSettings()">
+                RESET DEFAULTS
+            </button>
+        </div>
+
+    </form>
+
+    <footer>
+        Kikis Amber Touch © 2026. Store Settings.
+    </footer>
+
+</main>
+
+<script>
+
+const DEFAULT_SETTINGS = {
+    storeName: "KIKIS AMBER TOUCH",
+    storeTagline: "Luxury fragrances. Elegance in every drop.",
+    storeEmail: "",
+    storePhone: "0503192094",
+    storeAddress: "",
+    logo: "",
+    momoNumber: "0537367236",
+    momoName: "NANA AKUA AMPOFOAH YAMOAH",
+    paystackKey: "",
+    currency: "GHS",
+    deliveryFee: 0,
+    freeDelivery: 0,
+    deliveryTime: "2–5 working days",
+    whatsappNumber: "233503192094",
+    storeOpen: true,
+    acceptOrders: true
+};
+
+let settings = {};
+
+function loadSettings() {
+
+    try {
+        settings = {
+            ...DEFAULT_SETTINGS,
+            ...JSON.parse(localStorage.getItem("kikisSettings") || "{}")
+        };
+    } catch (error) {
+        settings = { ...DEFAULT_SETTINGS };
+    }
+
+    Object.keys(DEFAULT_SETTINGS).forEach(key => {
+
+        const field = document.getElementById(key);
+
+        if (!field) return;
+
+        if (field.type === "checkbox") {
+            field.checked = settings[key];
+        } else if (field.type !== "file") {
+            field.value = settings[key] ?? "";
+        }
+
+    });
+
+    showLogo(settings.logo);
+}
+
+function showLogo(logo) {
+
+    const preview = document.getElementById("logoPreview");
+    const placeholder = document.getElementById("logoPlaceholder");
+
+    if (logo) {
+        preview.src = logo;
+        preview.style.display = "block";
+        placeholder.style.display = "none";
+    } else {
+        preview.style.display = "none";
+        placeholder.style.display = "block";
+    }
+}
+
+document.getElementById("storeLogo").addEventListener(
+    "change",
+    function() {
+
+        const file = this.files[0];
+
+        if (!file) return;
+
+        if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+            alert("Please upload a JPG, PNG or WEBP logo.");
+            this.value = "";
+            return;
+        }
+
+        if (file.size > 2 * 1024 * 1024) {
+            alert("Logo must not exceed 2MB.");
+            this.value = "";
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+            settings.logo = event.target.result;
+            showLogo(settings.logo);
+        };
+
+        reader.readAsDataURL(file);
+    }
+);
+
+document.getElementById("settingsForm").addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+        const updatedSettings = {};
+
+        Object.keys(DEFAULT_SETTINGS).forEach(key => {
+
+            const field = document.getElementById(key);
+
+            if (!field) return;
+
+            if (field.type === "checkbox") {
+                updatedSettings[key] = field.checked;
+            } else if (field.type !== "file") {
+                updatedSettings[key] = field.value.trim();
+            }
+
+        });
+
+        updatedSettings.logo = settings.logo || "";
+
+        updatedSettings.deliveryFee =
+            Math.max(0, Number(updatedSettings.deliveryFee) || 0);
+
+        updatedSettings.freeDelivery =
+            Math.max(0, Number(updatedSettings.freeDelivery) || 0);
+
+        localStorage.setItem(
+            "kikisSettings",
+            JSON.stringify(updatedSettings)
+        );
+
+        settings = updatedSettings;
+
+        alert("Store settings saved successfully.");
+    }
+);
+
+function resetSettings() {
+
+    if (!confirm("Reset all store settings to the default values?")) {
+        return;
+    }
+
+    settings = { ...DEFAULT_SETTINGS };
+
+    localStorage.setItem(
+        "kikisSettings",
+        JSON.stringify(settings)
+    );
+
+    loadSettings();
+
+    alert("Default settings restored.");
+}
+
+loadSettings();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,779 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>My Shopping Cart | Kikis Amber Touch</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --black: #11100e;
+    --gold: #c6a15b;
+    --cream: #f8f5ef;
+    --white: #fff;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: var(--cream);
+    color: var(--black);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.announcement {
+    background: var(--gold);
+    text-align: center;
+    padding: 10px;
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+header {
+    background: var(--black);
+    color: white;
+    padding: 18px 7%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-family: Georgia, serif;
+    color: var(--gold);
+    font-size: 21px;
+}
+
+.logo span {
+    display: block;
+    font-family: Arial;
+    color: white;
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-align: center;
+    margin-top: 5px;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    font-size: 13px;
+}
+
+nav a:hover {
+    color: var(--gold);
+}
+
+.cart-link {
+    border: 1px solid var(--gold);
+    padding: 10px 16px;
+    color: var(--gold);
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    color: white;
+    border: none;
+    font-size: 25px;
+}
+
+/* PAGE BANNER */
+
+.page-banner {
+    background: linear-gradient(90deg, #17130e, #51402a);
+    color: white;
+    text-align: center;
+    padding: 55px 20px;
+}
+
+.page-banner small {
+    color: var(--gold);
+    letter-spacing: 4px;
+}
+
+.page-banner h1 {
+    font-family: Georgia, serif;
+    font-size: 42px;
+    font-weight: normal;
+    margin: 15px 0;
+}
+
+/* CART LAYOUT */
+
+.cart-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 55px 25px;
+}
+
+.cart-layout {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 30px;
+    align-items: start;
+}
+
+.cart-products,
+.summary {
+    background: white;
+    padding: 25px;
+    border: 1px solid #eee;
+}
+
+.cart-products h2,
+.summary h2 {
+    font-family: Georgia, serif;
+    font-size: 24px;
+    font-weight: normal;
+    margin-bottom: 25px;
+}
+
+.cart-item {
+    display: grid;
+    grid-template-columns: 110px 1fr auto;
+    gap: 20px;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.cart-item img {
+    width: 110px;
+    height: 120px;
+    object-fit: cover;
+    background: #eee9df;
+}
+
+.item-details h3 {
+    font-family: Georgia, serif;
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.item-details .price {
+    color: #9c783d;
+    font-weight: bold;
+    margin-bottom: 14px;
+}
+
+.quantity {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.quantity button {
+    width: 29px;
+    height: 29px;
+    border: 1px solid #ddd;
+    background: white;
+    cursor: pointer;
+    font-size: 17px;
+}
+
+.quantity span {
+    min-width: 15px;
+    text-align: center;
+}
+
+.item-total {
+    text-align: right;
+}
+
+.item-total strong {
+    font-size: 16px;
+}
+
+.remove-btn {
+    display: block;
+    border: none;
+    background: none;
+    color: #b13b32;
+    cursor: pointer;
+    margin-top: 15px;
+    font-size: 12px;
+}
+
+/* SUMMARY */
+
+.summary {
+    position: sticky;
+    top: 105px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+.summary-row.total {
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+    color: var(--black);
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.checkout-btn {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    background: var(--black);
+    color: white;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin-top: 20px;
+}
+
+.checkout-btn:hover {
+    background: var(--gold);
+    color: var(--black);
+}
+
+.continue-btn {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 13px;
+    color: #8d6b34;
+}
+
+/* EMPTY CART */
+
+.empty-cart {
+    text-align: center;
+    padding: 55px 15px;
+    display: none;
+}
+
+.empty-cart .icon {
+    font-size: 55px;
+    margin-bottom: 15px;
+}
+
+.empty-cart h2 {
+    font-family: Georgia, serif;
+    font-size: 27px;
+    margin-bottom: 12px;
+}
+
+.empty-cart p {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+.shop-btn {
+    display: inline-block;
+    background: var(--black);
+    color: white;
+    padding: 14px 28px;
+    font-size: 12px;
+}
+
+/* FOOTER */
+
+footer {
+    background: #080807;
+    color: #aaa;
+    text-align: center;
+    padding: 35px 7%;
+    font-size: 12px;
+    line-height: 2;
+}
+
+footer strong {
+    color: var(--gold);
+}
+
+.whatsapp {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background: #25D366;
+    color: white;
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 26px;
+    z-index: 200;
+}
+
+@media(max-width: 800px) {
+
+    header {
+        padding: 15px 5%;
+    }
+
+    .logo {
+        font-size: 17px;
+    }
+
+    .menu-toggle {
+        display: block;
+        cursor: pointer;
+    }
+
+    nav {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: var(--black);
+        flex-direction: column;
+        padding: 25px;
+    }
+
+    nav.active {
+        display: flex;
+    }
+
+    .cart-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .summary {
+        position: static;
+    }
+
+    .cart-container {
+        padding: 35px 15px;
+    }
+}
+
+@media(max-width: 480px) {
+
+    .page-banner h1 {
+        font-size: 32px;
+    }
+
+    .cart-products,
+    .summary {
+        padding: 16px;
+    }
+
+    .cart-item {
+        grid-template-columns: 85px 1fr;
+        gap: 12px;
+    }
+
+    .cart-item img {
+        width: 85px;
+        height: 100px;
+    }
+
+    .item-total {
+        grid-column: 2;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .remove-btn {
+        margin-top: 0;
+    }
+
+    .item-details h3 {
+        font-size: 15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="announcement">
+    LUXURY FRAGRANCES • ELEGANCE IN EVERY DROP
+</div>
+
+<header>
+
+    <a href="index.html" class="logo">
+        KIKIS AMBER TOUCH
+        <span>LUXURY FRAGRANCES</span>
+    </a>
+
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+    <nav id="navigation">
+        <a href="index.html">HOME</a>
+        <a href="shop.html">SHOP</a>
+        <a href="cart.html" class="cart-link">
+            MY CART (<span id="cart-count">0</span>)
+        </a>
+    </nav>
+
+</header>
+
+<section class="page-banner">
+    <small>YOUR SELECTION</small>
+    <h1>Shopping Cart</h1>
+    <p>Review your selected fragrances before checkout.</p>
+</section>
+
+<main class="cart-container">
+
+    <div class="cart-layout" id="cart-layout">
+
+        <!-- CART ITEMS -->
+
+        <section class="cart-products">
+
+            <h2>Your Shopping Items</h2>
+
+            <div id="cart-items"></div>
+
+        </section>
+
+        <!-- ORDER SUMMARY -->
+
+        <aside class="summary">
+
+            <h2>Order Summary</h2>
+
+            <div class="summary-row">
+                <span>Items</span>
+                <span id="total-items">0</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span id="subtotal">GH₵ 0.00</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Delivery</span>
+                <span>Calculated later</span>
+            </div>
+
+            <div class="summary-row total">
+                <span>Total</span>
+                <span id="grand-total">GH₵ 0.00</span>
+            </div>
+
+            <button
+                class="checkout-btn"
+                id="checkout-btn"
+                onclick="goToCheckout()"
+            >
+                PROCEED TO CHECKOUT
+            </button>
+
+            <a href="shop.html" class="continue-btn">
+                ← Continue Shopping
+            </a>
+
+        </aside>
+
+    </div>
+
+    <!-- EMPTY CART -->
+
+    <div class="empty-cart" id="empty-cart">
+
+        <div class="icon">🛍</div>
+
+        <h2>Your cart is empty</h2>
+
+        <p>
+            You haven't added any fragrances to your cart yet.
+            Explore our collection and find your favourite scent.
+        </p>
+
+        <a href="shop.html" class="shop-btn">
+            EXPLORE PERFUMES
+        </a>
+
+    </div>
+
+</main>
+
+<footer>
+    <strong>KIKIS AMBER TOUCH</strong>
+    <p>Luxury fragrances. Elegance in every drop.</p>
+    <p>WhatsApp: 0503192094</p>
+    <p>© <span id="year"></span> Kikis Amber Touch. All Rights Reserved.</p>
+</footer>
+
+<a
+    class="whatsapp"
+    href="https://wa.me/233503192094"
+    target="_blank"
+    rel="noopener"
+>◉</a>
+
+
+<script type="module">
+import { createClient } from
+"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const supabase = createClient(
+    "https://mgxeyjyhuzbsgnbpbkst.supabase.co",
+    "sb_publishable_ANZvxJnS89wrYo0MTx6LRA_Nu2XPss5"
+);
+
+const $ = id => document.getElementById(id);
+
+function getCart() {
+    try {
+        return JSON.parse(localStorage.getItem("kikisCart") || "[]");
+    } catch {
+        return [];
+    }
+}
+
+function saveCart(cart) {
+    localStorage.setItem("kikisCart", JSON.stringify(cart));
+}
+
+function money(amount) {
+    return "GH₵ " + Number(amount || 0).toFixed(2);
+}
+
+function updateCartCount() {
+    const count = getCart().reduce(
+        (sum, item) => sum + Number(item.quantity || 0), 0
+    );
+    $("cart-count").textContent = count;
+}
+
+// Refresh product details and prices from Supabase
+async function refreshCartProducts() {
+    let cart = getCart();
+
+    if (!cart.length) return;
+
+    const ids = [...new Set(
+        cart.map(item => String(item.product_id || item.id))
+    )];
+
+    const { data, error } = await supabase
+        .from("products")
+        .select("id,name,price,image_url,stock,status")
+        .in("id", ids);
+
+    if (error) {
+        console.error("Could not verify cart products:", error);
+        $("cart-items").innerHTML =
+            "<p>We couldn't verify your products. Please refresh the page.</p>";
+        $("checkout-btn").disabled = true;
+        return;
+    }
+
+    const latestProducts = new Map(
+        (data || []).map(product => [String(product.id), product])
+    );
+
+    const validCart = [];
+
+    cart.forEach(item => {
+        const id = String(item.product_id || item.id);
+        const product = latestProducts.get(id);
+
+        if (!product || product.status !== "active" ||
+            Number(product.stock) <= 0) {
+            return;
+        }
+
+        const quantity = Math.min(
+            Math.max(1, Number(item.quantity) || 1),
+            Number(product.stock)
+        );
+
+        validCart.push({
+            ...item,
+            id: String(product.id),
+            product_id: String(product.id),
+            name: product.name,
+            price: Number(product.price),
+            image: product.image_url || "",
+            quantity
+        });
+    });
+
+    saveCart(validCart);
+}
+
+// Display cart
+function displayCart() {
+    const cart = getCart();
+    const container = $("cart-items");
+    const layout = $("cart-layout");
+    const empty = $("empty-cart");
+
+    container.innerHTML = "";
+    updateCartCount();
+
+    if (!cart.length) {
+        layout.style.display = "none";
+        empty.style.display = "block";
+
+        $("total-items").textContent = 0;
+        $("subtotal").textContent = money(0);
+        $("grand-total").textContent = money(0);
+        $("checkout-btn").disabled = true;
+        return;
+    }
+
+    layout.style.display = "grid";
+    empty.style.display = "none";
+    $("checkout-btn").disabled = false;
+
+    let subtotal = 0;
+    let totalItems = 0;
+
+    cart.forEach((item, index) => {
+        const quantity = Number(item.quantity);
+        const price = Number(item.price);
+        const itemTotal = price * quantity;
+
+        subtotal += itemTotal;
+        totalItems += quantity;
+
+        const image = document.createElement("img");
+        image.src = item.image || "";
+        image.alt = item.name || "Perfume";
+
+        image.onerror = function() {
+            this.style.visibility = "hidden";
+        };
+
+        const details = document.createElement("div");
+        details.className = "item-details";
+
+        const name = document.createElement("h3");
+        name.textContent = item.name;
+
+        const unitPrice = document.createElement("div");
+        unitPrice.className = "price";
+        unitPrice.textContent = money(price);
+
+        const quantityBox = document.createElement("div");
+        quantityBox.className = "quantity";
+
+        const decrease = document.createElement("button");
+        decrease.textContent = "−";
+        decrease.onclick = () => changeQuantity(index, -1);
+
+        const quantityValue = document.createElement("span");
+        quantityValue.textContent = quantity;
+
+        const increase = document.createElement("button");
+        increase.textContent = "+";
+        increase.onclick = () => changeQuantity(index, 1);
+
+        quantityBox.append(decrease, quantityValue, increase);
+        details.append(name, unitPrice, quantityBox);
+
+        const totalBox = document.createElement("div");
+        totalBox.className = "item-total";
+
+        const total = document.createElement("strong");
+        total.textContent = money(itemTotal);
+
+        const remove = document.createElement("button");
+        remove.className = "remove-btn";
+        remove.textContent = "Remove";
+        remove.onclick = () => removeItem(index);
+
+        totalBox.append(total, remove);
+
+        const itemElement = document.createElement("div");
+        itemElement.className = "cart-item";
+
+        itemElement.append(image, details, totalBox);
+        container.appendChild(itemElement);
+    });
+
+    $("total-items").textContent = totalItems;
+    $("subtotal").textContent = money(subtotal);
+    $("grand-total").textContent = money(subtotal);
+}
+
+// Change quantity
+window.changeQuantity = function(index, amount) {
+    const cart = getCart();
+    const item = cart[index];
+
+    if (!item) return;
+
+    const newQuantity = Number(item.quantity) + amount;
+
+    if (newQuantity <= 0) {
+        cart.splice(index, 1);
+    } else {
+        item.quantity = newQuantity;
+    }
+
+    saveCart(cart);
+    displayCart();
+};
+
+// Remove item
+window.removeItem = function(index) {
+    const cart = getCart();
+
+    cart.splice(index, 1);
+
+    saveCart(cart);
+    displayCart();
+};
+
+// Checkout
+window.goToCheckout = function() {
+    const cart = getCart();
+
+    if (!cart.length) {
+        alert("Your shopping cart is empty.");
+        return;
+    }
+
+    window.location.href = "checkout.html";
+};
+
+// Mobile navigation
+window.toggleMenu = function() {
+    $("navigation").classList.toggle("active");
+};
+
+// Start
+$("year").textContent = new Date().getFullYear();
+
+async function initialiseCart() {
+    await refreshCartProducts();
+    displayCart();
+}
+
+initialiseCart();
+</script>
+
+
+</body>
+</html>

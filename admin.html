@@ -1,0 +1,922 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard | Kikis Amber Touch</title>
+
+<style>
+:root {
+    --black: #11100e;
+    --dark: #1b1916;
+    --gold: #c9a45c;
+    --light-gold: #e5c985;
+    --cream: #f7f3eb;
+    --white: #fff;
+    --muted: #aaa49a;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: var(--cream);
+    color: #25221d;
+}
+
+.sidebar {
+    width: 245px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: var(--black);
+    color: white;
+    padding: 30px 20px;
+}
+
+.logo {
+    color: var(--light-gold);
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    line-height: 1.5;
+    margin-bottom: 45px;
+}
+
+.sidebar small {
+    color: var(--muted);
+    letter-spacing: 2px;
+    font-size: 10px;
+}
+
+.nav a {
+    display: block;
+    color: #ddd;
+    text-decoration: none;
+    padding: 14px 12px;
+    margin: 8px 0;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.nav a.active,
+.nav a:hover {
+    background: #302a20;
+    color: var(--light-gold);
+}
+
+.main {
+    margin-left: 245px;
+    padding: 30px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.topbar h1 {
+    font-size: 26px;
+}
+
+.admin-label {
+    color: #8b6b32;
+    font-size: 13px;
+    background: #f0e5ce;
+    padding: 10px 15px;
+    border-radius: 30px;
+}
+
+.welcome {
+    background: var(--black);
+    color: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+}
+
+.welcome h2 {
+    color: var(--light-gold);
+    margin-bottom: 8px;
+}
+
+.welcome p {
+    color: #c7c0b4;
+    font-size: 14px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+.stat {
+    background: white;
+    padding: 22px;
+    border-radius: 10px;
+    border: 1px solid #eee7da;
+}
+
+.stat p {
+    color: #777;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.stat h2 {
+    font-size: 27px;
+    color: #a17b39;
+}
+
+.panel {
+    background: white;
+    border-radius: 12px;
+    padding: 22px;
+    border: 1px solid #eee7da;
+    margin-bottom: 25px;
+}
+
+.panel-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.panel-heading h2 {
+    font-size: 19px;
+}
+
+.search {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    width: 220px;
+    max-width: 100%;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 850px;
+}
+
+th, td {
+    text-align: left;
+    padding: 15px 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+}
+
+th {
+    color: #82765f;
+    background: #faf8f3;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.status {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.pending {
+    background: #fff0d3;
+    color: #99651b;
+}
+
+.verified {
+    background: #dff4e5;
+    color: #237541;
+}
+
+.rejected {
+    background: #ffe2e2;
+    color: #a52c2c;
+}
+
+.btn {
+    border: none;
+    padding: 8px 11px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    margin: 2px;
+}
+
+.view-btn {
+    background: #eee8dc;
+    color: #4d402b;
+}
+
+.approve-btn {
+    background: #247744;
+    color: white;
+}
+
+.reject-btn {
+    background: #a83232;
+    color: white;
+}
+
+.empty {
+    text-align: center;
+    padding: 35px;
+    color: #888;
+}
+
+.details {
+    display: none;
+    background: #faf8f3;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 1px solid #e9dfce;
+}
+
+.details h3 {
+    margin-bottom: 15px;
+    color: #9a7435;
+}
+
+.details p {
+    margin: 9px 0;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+.receipt {
+    max-width: 300px;
+    max-height: 350px;
+    object-fit: contain;
+    display: block;
+    margin-top: 12px;
+    border-radius: 8px;
+}
+
+.refresh {
+    background: var(--black);
+    color: var(--light-gold);
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+footer {
+    color: #888;
+    font-size: 12px;
+    text-align: center;
+    margin-top: 35px;
+}
+
+@media(max-width: 1000px) {
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width: 700px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 18px;
+    }
+
+    .logo {
+        margin-bottom: 15px;
+    }
+
+    .nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .nav a {
+        margin: 0;
+        padding: 10px;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 18px;
+    }
+
+    .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .stat {
+        padding: 16px;
+    }
+
+    .stat h2 {
+        font-size: 22px;
+    }
+
+    .panel {
+        padding: 15px;
+    }
+
+    .panel-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .search {
+        width: 100%;
+    }
+}
+
+@media(max-width: 380px) {
+    .stats {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+    <div class="logo">
+        KIKIS<br>AMBER TOUCH
+        <br><small>ADMINISTRATION</small>
+    </div>
+
+    <nav class="nav">
+        <a href="admin.html" class="active">Dashboard</a>
+        <a href="products.html">Manage Products</a>
+        <a href="settings.html">Store Settings</a>
+        <a href="shop.html">View Shop</a>
+        <a href="index.html">Visit Website</a>
+    </nav>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <h1>Admin Dashboard</h1>
+        <span class="admin-label">STORE MANAGEMENT</span>
+    </header>
+
+    <section class="welcome">
+        <h2>Welcome to Kikis Amber Touch</h2>
+        <p>Manage your orders, monitor payments and keep track of your perfume business.</p>
+    </section>
+
+    <section class="stats">
+        <div class="stat">
+            <p>Total Orders</p>
+            <h2 id="totalOrders">0</h2>
+        </div>
+
+        <div class="stat">
+            <p>Pending Payments</p>
+            <h2 id="pendingOrders">0</h2>
+        </div>
+
+        <div class="stat">
+            <p>Verified Payments</p>
+            <h2 id="verifiedOrders">0</h2>
+        </div>
+
+        <div class="stat">
+            <p>Rejected Payments</p>
+            <h2 id="rejectedOrders">0</h2>
+        </div>
+    </section>
+
+    <section class="panel">
+        <div class="panel-heading">
+            <h2>Customer Orders</h2>
+
+            <div>
+                <input
+                    type="search"
+                    id="searchInput"
+                    class="search"
+                    placeholder="Search customer or order ID..."
+                >
+
+                <button class="refresh" onclick="loadOrders()">
+                    Refresh
+                </button>
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Amount</th>
+                        <th>Payment Method</th>
+                        <th>Payment Status</th>
+                        <th>Order Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="ordersTable"></tbody>
+            </table>
+        </div>
+
+        <div id="emptyMessage" class="empty">
+            No customer orders have been received yet.
+        </div>
+
+        <div id="orderDetails" class="details"></div>
+    </section>
+
+    <footer>
+        Kikis Amber Touch &copy; 2026. Admin Dashboard.
+    </footer>
+
+</main>
+
+<script>
+let orders = [];
+
+function readJSON(key, fallback) {
+    try {
+        const value = JSON.parse(localStorage.getItem(key) || "null");
+        return value === null ? fallback : value;
+    } catch (error) {
+        return fallback;
+    }
+}
+
+function getOrders() {
+    const saved = readJSON("kikisOrders", []);
+    orders = Array.isArray(saved) ? saved : [];
+
+    const current = readJSON("kikisCurrentOrder", null);
+
+    if (current && typeof current === "object") {
+        const currentId = orderId(current);
+
+        const exists = orders.some(order =>
+            currentId !== "No ID" && orderId(order) === currentId
+        );
+
+        if (!exists) {
+            orders.unshift(current);
+        }
+    }
+
+    orders.sort((a, b) =>
+        new Date(orderDate(b)).getTime() -
+        new Date(orderDate(a)).getTime()
+    );
+}
+
+function orderId(order) {
+    return String(getValue(
+        order,
+        ["orderId", "id", "reference"],
+        "No ID"
+    ));
+}
+
+function getValue(object, keys, fallback = "Not provided") {
+    for (const key of keys) {
+        const value = object && object[key];
+
+        if (value !== undefined && value !== null && value !== "") {
+            return value;
+        }
+    }
+
+    return fallback;
+}
+
+function orderDate(order) {
+    return getValue(
+        order,
+        ["date", "createdAt", "orderDate", "timestamp"],
+        0
+    );
+}
+
+function paymentStatus(order) {
+    return String(getValue(
+        order,
+        ["paymentStatus", "payment_status"],
+        "pending"
+    )).toLowerCase();
+}
+
+function orderStatus(order) {
+    return String(getValue(
+        order,
+        ["orderStatus", "order_status"],
+        "Pending"
+    ));
+}
+
+function statusClass(status) {
+    const value = String(status).toLowerCase();
+
+    if (
+        value.includes("reject") ||
+        value.includes("fail") ||
+        value.includes("cancel")
+    ) {
+        return "rejected";
+    }
+
+    if (
+        value.includes("paid") ||
+        value.includes("verif") ||
+        value.includes("confirm") ||
+        value.includes("approved")
+    ) {
+        return "verified";
+    }
+
+    return "pending";
+}
+
+function formatMoney(value) {
+    return "GH₵" + (Number(value) || 0).toFixed(2);
+}
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    })[char]);
+}
+
+function customerName(order) {
+    return getValue(
+        order,
+        ["customerName", "fullName", "name"],
+        "Customer"
+    );
+}
+
+function orderItems(order) {
+    const items = order.items || order.products || order.cart || [];
+    return Array.isArray(items) ? items : [];
+}
+
+function itemName(item) {
+    return getValue(
+        item,
+        ["name", "productName", "title"],
+        "Perfume"
+    );
+}
+
+function itemQty(item) {
+    return Number(getValue(item, ["quantity", "qty"], 1)) || 1;
+}
+
+function itemPrice(item) {
+    return Number(getValue(
+        item,
+        ["price", "unitPrice", "amount"],
+        0
+    )) || 0;
+}
+
+function updateStats() {
+    document.getElementById("totalOrders").textContent = orders.length;
+
+    document.getElementById("pendingOrders").textContent =
+        orders.filter(order =>
+            statusClass(paymentStatus(order)) === "pending"
+        ).length;
+
+    document.getElementById("verifiedOrders").textContent =
+        orders.filter(order =>
+            statusClass(paymentStatus(order)) === "verified"
+        ).length;
+
+    document.getElementById("rejectedOrders").textContent =
+        orders.filter(order =>
+            statusClass(paymentStatus(order)) === "rejected"
+        ).length;
+}
+
+function loadOrders() {
+    getOrders();
+    updateStats();
+
+    const table = document.getElementById("ordersTable");
+    const empty = document.getElementById("emptyMessage");
+    const search = document.getElementById("searchInput")
+        .value.trim().toLowerCase();
+
+    table.innerHTML = "";
+
+    const filtered = orders.filter(order => {
+        const haystack = [
+            orderId(order),
+            customerName(order),
+            getValue(order, ["phone", "customerPhone", "phoneNumber"], "")
+        ].join(" ").toLowerCase();
+
+        return haystack.includes(search);
+    });
+
+    empty.style.display = filtered.length ? "none" : "block";
+
+    filtered.forEach(order => {
+        const index = orders.indexOf(order);
+        const payment = statusClass(paymentStatus(order));
+
+        const label = paymentStatus(order).replace(
+            /\b\w/g,
+            char => char.toUpperCase()
+        );
+
+        const amount = getValue(
+            order,
+            ["total", "grandTotal", "totalAmount", "amount"],
+            0
+        );
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${escapeHTML(orderId(order))}</td>
+            <td>${escapeHTML(customerName(order))}</td>
+            <td>${formatMoney(amount)}</td>
+            <td>${escapeHTML(getValue(
+                order,
+                ["paymentMethod", "payment_method"],
+                "Not provided"
+            ))}</td>
+            <td>
+                <span class="status ${payment}">
+                    ${escapeHTML(label)}
+                </span>
+            </td>
+            <td>${escapeHTML(orderStatus(order))}</td>
+            <td>
+                <button class="btn view-btn"
+                    onclick="viewOrder(${index})">View</button>
+
+                <button class="btn approve-btn"
+                    onclick="updatePayment(${index}, 'verified')">Verify</button>
+
+                <button class="btn reject-btn"
+                    onclick="updatePayment(${index}, 'rejected')">Reject</button>
+            </td>
+        `;
+
+        table.appendChild(row);
+    });
+}
+
+function viewOrder(index) {
+    const order = orders[index];
+    if (!order) return;
+
+    const details = document.getElementById("orderDetails");
+    const items = orderItems(order);
+
+    const itemsHTML = items.length
+        ? items.map(item => `
+            <tr>
+                <td>${escapeHTML(itemName(item))}</td>
+                <td>${itemQty(item)}</td>
+                <td>${formatMoney(itemPrice(item))}</td>
+                <td>${formatMoney(itemPrice(item) * itemQty(item))}</td>
+            </tr>
+        `).join("")
+        : `<tr><td colspan="4">
+            No product details were saved with this order.
+           </td></tr>`;
+
+    const receipt = getValue(
+        order,
+        ["receiptData", "receiptUrl", "receipt"],
+        ""
+    );
+
+    const receiptHTML =
+        typeof receipt === "string" && receipt.startsWith("data:image/")
+            ? `<img class="receipt" src="${receipt}" alt="Payment receipt">`
+            : `<p>${escapeHTML(getValue(
+                order,
+                ["receiptFileName", "receiptFilename"],
+                "No receipt image is available in this order."
+            ))}</p>`;
+
+    const subtotal = getValue(
+        order,
+        ["subtotal"],
+        items.reduce(
+            (sum, item) => sum + itemPrice(item) * itemQty(item),
+            0
+        )
+    );
+
+    const delivery = getValue(
+        order,
+        ["deliveryFee", "delivery"],
+        0
+    );
+
+    const total = getValue(
+        order,
+        ["total", "grandTotal", "totalAmount", "amount"],
+        Number(subtotal) + Number(delivery)
+    );
+
+    details.style.display = "block";
+
+    details.innerHTML = `
+        <h3>Order Details — ${escapeHTML(orderId(order))}</h3>
+
+        <p><strong>Customer:</strong>
+            ${escapeHTML(customerName(order))}</p>
+
+        <p><strong>Phone:</strong>
+            ${escapeHTML(getValue(
+                order,
+                ["phone", "customerPhone", "phoneNumber"]
+            ))}</p>
+
+        <p><strong>Email:</strong>
+            ${escapeHTML(getValue(
+                order,
+                ["email", "customerEmail"]
+            ))}</p>
+
+        <p><strong>Region / City:</strong>
+            ${escapeHTML(getValue(order, ["region"]))} /
+            ${escapeHTML(getValue(order, ["city", "town"]))}</p>
+
+        <p><strong>Delivery Address:</strong>
+            ${escapeHTML(getValue(
+                order,
+                ["address", "deliveryAddress"]
+            ))}</p>
+
+        <p><strong>Delivery Notes:</strong>
+            ${escapeHTML(getValue(
+                order,
+                ["notes", "deliveryNotes"],
+                "None"
+            ))}</p>
+
+        <p><strong>Order Date:</strong>
+            ${escapeHTML(orderDate(order)
+                ? new Date(orderDate(order)).toLocaleString()
+                : "Not provided")}</p>
+
+        <h3 style="margin-top:20px">Products Ordered</h3>
+
+        <div class="table-wrap">
+            <table style="min-width:480px">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Qty</th>
+                        <th>Unit Price</th>
+                        <th>Line Total</th>
+                    </tr>
+                </thead>
+                <tbody>${itemsHTML}</tbody>
+            </table>
+        </div>
+
+        <p><strong>Subtotal:</strong> ${formatMoney(subtotal)}</p>
+        <p><strong>Delivery Fee:</strong> ${formatMoney(delivery)}</p>
+        <p><strong>Grand Total:</strong>
+            <strong>${formatMoney(total)}</strong></p>
+
+        <h3 style="margin-top:20px">Payment Information</h3>
+
+        <p><strong>Method:</strong>
+            ${escapeHTML(getValue(
+                order,
+                ["paymentMethod", "payment_method"]
+            ))}</p>
+
+        <p><strong>Payment Status:</strong>
+            ${escapeHTML(paymentStatus(order))}</p>
+
+        <p><strong>MoMo Number:</strong>
+            ${escapeHTML(getValue(
+                order,
+                ["momoNumber", "mobileMoneyNumber"]
+            ))}</p>
+
+        <p><strong>MoMo Account Name:</strong>
+            ${escapeHTML(getValue(
+                order,
+                ["momoName", "mobileMoneyName"]
+            ))}</p>
+
+        <p><strong>Transaction Reference:</strong>
+            ${escapeHTML(getValue(
+                order,
+                ["transactionReference", "transactionId", "paymentReference"]
+            ))}</p>
+
+        <p><strong>Receipt:</strong></p>
+        ${receiptHTML}
+
+        <p><strong>Order Status:</strong>
+            ${escapeHTML(orderStatus(order))}</p>
+    `;
+
+    details.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+    });
+}
+
+function updatePayment(index, status) {
+    const order = orders[index];
+    if (!order) return;
+
+    const promptText = status === "verified"
+        ? "Only verify after confirming that the payment has entered your MoMo account. Have you confirmed receipt?"
+        : "Are you sure you want to reject this payment?";
+
+    if (!confirm(promptText)) return;
+
+    order.paymentStatus = status;
+
+    order.orderStatus = status === "verified"
+        ? "Confirmed"
+        : "Payment Rejected";
+
+    localStorage.setItem("kikisOrders", JSON.stringify(orders));
+
+    const current = readJSON("kikisCurrentOrder", null);
+
+    if (current && orderId(current) === orderId(order)) {
+        current.paymentStatus = order.paymentStatus;
+        current.orderStatus = order.orderStatus;
+
+        localStorage.setItem(
+            "kikisCurrentOrder",
+            JSON.stringify(current)
+        );
+    }
+
+    loadOrders();
+
+    alert(
+        status === "verified"
+            ? "Payment marked as verified."
+            : "Payment marked as rejected."
+    );
+}
+
+document.getElementById("searchInput")
+    .addEventListener("input", loadOrders);
+
+window.addEventListener("storage", event => {
+    if (
+        event.key === "kikisOrders" ||
+        event.key === "kikisCurrentOrder"
+    ) {
+        loadOrders();
+    }
+});
+
+loadOrders();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1412 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout | Kikis Amber Touch</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --black: #11100e;
+    --gold: #c6a15b;
+    --cream: #f8f5ef;
+    --white: #fff;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: var(--cream);
+    color: var(--black);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.announcement {
+    background: var(--gold);
+    text-align: center;
+    padding: 10px;
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+header {
+    background: var(--black);
+    color: white;
+    padding: 18px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-family: Georgia, serif;
+    color: var(--gold);
+    font-size: 21px;
+}
+
+.logo span {
+    display: block;
+    font-family: Arial;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: white;
+    text-align: center;
+    margin-top: 5px;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    font-size: 13px;
+}
+
+nav a:hover {
+    color: var(--gold);
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 25px;
+}
+
+.page-banner {
+    background: linear-gradient(90deg, #17130e, #51402a);
+    color: white;
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.page-banner small {
+    color: var(--gold);
+    letter-spacing: 4px;
+}
+
+.page-banner h1 {
+    font-family: Georgia, serif;
+    font-size: 40px;
+    font-weight: normal;
+    margin: 12px 0;
+}
+
+.container {
+    max-width: 1150px;
+    margin: auto;
+    padding: 50px 20px;
+}
+
+.checkout-layout {
+    display: grid;
+    grid-template-columns: 1fr 370px;
+    gap: 30px;
+    align-items: start;
+}
+
+.panel {
+    background: white;
+    border: 1px solid #eee;
+    padding: 28px;
+    margin-bottom: 25px;
+}
+
+.panel h2 {
+    font-family: Georgia, serif;
+    font-size: 23px;
+    font-weight: normal;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 9px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #ddd;
+    background: white;
+    outline: none;
+    font-family: Arial;
+    font-size: 14px;
+    border-radius: 2px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: var(--gold);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+.two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* PAYMENT OPTIONS */
+
+.payment-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    border: 1px solid #ddd;
+    padding: 17px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.payment-option:has(input:checked) {
+    border-color: var(--gold);
+    background: #fcf9f2;
+}
+
+.payment-option input {
+    margin-top: 4px;
+    accent-color: var(--gold);
+}
+
+.payment-option strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+.payment-option small {
+    color: #777;
+    line-height: 1.5;
+}
+
+.payment-details {
+    display: none;
+    background: #f9f6ef;
+    border: 1px solid #e6d9bd;
+    padding: 20px;
+    margin: 15px 0;
+}
+
+.payment-details.active {
+    display: block;
+}
+
+.payment-details h3 {
+    font-family: Georgia, serif;
+    margin-bottom: 15px;
+}
+
+.account-number {
+    font-size: 24px;
+    font-weight: bold;
+    color: #947039;
+    margin: 10px 0;
+    letter-spacing: 1px;
+}
+
+.account-name {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.payment-instructions {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.8;
+}
+
+/* RECEIPT */
+
+.upload-area {
+    border: 2px dashed #d1bd91;
+    background: #fcfaf5;
+    padding: 25px;
+    text-align: center;
+}
+
+.upload-area input {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.upload-area p {
+    color: #777;
+    font-size: 12px;
+    margin-top: 10px;
+}
+
+#receipt-preview {
+    display: none;
+    max-width: 100%;
+    max-height: 200px;
+    margin: 15px auto 0;
+    object-fit: contain;
+}
+
+/* ORDER SUMMARY */
+
+.summary {
+    background: white;
+    border: 1px solid #eee;
+    padding: 25px;
+    position: sticky;
+    top: 110px;
+}
+
+.summary h2 {
+    font-family: Georgia, serif;
+    font-weight: normal;
+    font-size: 23px;
+    margin-bottom: 20px;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 13px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 18px 0;
+    font-size: 13px;
+    color: #666;
+    gap: 10px;
+}
+
+.summary-total {
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+    color: var(--black);
+    font-size: 19px;
+    font-weight: bold;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--black);
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 15px;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+.submit-btn:hover {
+    background: var(--gold);
+    color: black;
+}
+
+.submit-btn:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+}
+
+.secure-note {
+    text-align: center;
+    color: #777;
+    font-size: 11px;
+    margin-top: 15px;
+    line-height: 1.6;
+}
+
+.back-link {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    color: #947039;
+    font-size: 13px;
+}
+
+.notice {
+    display: none;
+    background: #fff3df;
+    padding: 13px;
+    margin-bottom: 15px;
+    font-size: 12px;
+    color: #745322;
+    line-height: 1.6;
+}
+
+footer {
+    background: #080807;
+    color: #aaa;
+    text-align: center;
+    padding: 35px 7%;
+    font-size: 12px;
+    line-height: 2;
+}
+
+footer strong {
+    color: var(--gold);
+}
+
+.whatsapp {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background: #25D366;
+    color: white;
+    width: 55px;
+    height: 55px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-size: 26px;
+    z-index: 200;
+}
+
+@media(max-width: 800px) {
+    header {
+        padding: 15px 5%;
+    }
+
+    .logo {
+        font-size: 17px;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    nav {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: var(--black);
+        flex-direction: column;
+        padding: 25px;
+    }
+
+    nav.active {
+        display: flex;
+    }
+
+    .checkout-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .summary {
+        position: static;
+    }
+
+    .container {
+        padding: 30px 12px;
+    }
+
+    .panel {
+        padding: 20px;
+    }
+}
+
+@media(max-width: 450px) {
+    .two-columns {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .page-banner h1 {
+        font-size: 32px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="announcement">
+    KIKIS AMBER TOUCH • LUXURY FRAGRANCES
+</div>
+
+<header>
+
+    <a href="index.html" class="logo">
+        KIKIS AMBER TOUCH
+        <span>LUXURY FRAGRANCES</span>
+    </a>
+
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+    <nav id="navigation">
+        <a href="index.html">HOME</a>
+        <a href="shop.html">SHOP</a>
+        <a href="cart.html">MY CART</a>
+    </nav>
+
+</header>
+
+<section class="page-banner">
+    <small>ALMOST THERE</small>
+    <h1>Complete Your Order</h1>
+    <p>Provide your delivery details and choose your payment method.</p>
+</section>
+
+<main class="container">
+
+<div class="notice" id="store-status-notice"></div>
+
+<form id="checkout-form">
+
+<div class="checkout-layout">
+
+    <div>
+
+        <!-- CUSTOMER INFORMATION -->
+
+        <section class="panel">
+
+            <h2>01. Customer Information</h2>
+
+            <div class="form-group">
+                <label for="fullname">Full Name *</label>
+                <input
+                    type="text"
+                    id="fullname"
+                    placeholder="Enter your full name"
+                    required
+                >
+            </div>
+
+            <div class="two-columns">
+
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input
+                        type="tel"
+                        id="phone"
+                        placeholder="024XXXXXXX"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="example@gmail.com"
+                    >
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- DELIVERY DETAILS -->
+
+        <section class="panel">
+
+            <h2>02. Delivery Information</h2>
+
+            <div class="form-group">
+                <label for="region">Region *</label>
+                <select id="region" required>
+                    <option value="">Select your region</option>
+                    <option>Greater Accra</option>
+                    <option>Ashanti</option>
+                    <option>Central</option>
+                    <option>Eastern</option>
+                    <option>Western</option>
+                    <option>Western North</option>
+                    <option>Volta</option>
+                    <option>Oti</option>
+                    <option>Northern</option>
+                    <option>Savannah</option>
+                    <option>North East</option>
+                    <option>Upper East</option>
+                    <option>Upper West</option>
+                    <option>Bono</option>
+                    <option>Bono East</option>
+                    <option>Ahafo</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="city">Town / City *</label>
+                <input
+                    type="text"
+                    id="city"
+                    placeholder="Enter your town or city"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="address">Full Delivery Address *</label>
+                <textarea
+                    id="address"
+                    placeholder="House number, street name, landmark and directions..."
+                    required
+                ></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="notes">Additional Delivery Instructions</label>
+                <textarea
+                    id="notes"
+                    placeholder="Optional delivery instructions"
+                ></textarea>
+            </div>
+
+        </section>
+
+        <!-- PAYMENT METHOD -->
+
+        <section class="panel">
+
+            <h2>03. Choose Payment Method</h2>
+
+            <label class="payment-option">
+                <input
+                    type="radio"
+                    name="payment"
+                    value="momo"
+                    checked
+                >
+
+                <span>
+                    <strong>Mobile Money (MoMo)</strong>
+                    <small>Transfer payment and upload your transaction receipt.</small>
+                </span>
+            </label>
+
+            <label class="payment-option">
+                <input
+                    type="radio"
+                    name="payment"
+                    value="paystack"
+                >
+
+                <span>
+                    <strong>Paystack</strong>
+                    <small>Pay securely using the Paystack payment gateway.</small>
+                </span>
+            </label>
+
+            <!-- MOMO DETAILS -->
+
+            <div id="momo-details" class="payment-details active">
+
+                <h3>Mobile Money Payment</h3>
+
+                <p class="payment-instructions">
+                    Please transfer the exact order amount to:
+                </p>
+
+                <div class="account-number" id="momo-number">
+                    053 736 7236
+                </div>
+
+                <div class="account-name" id="momo-name">
+                    NANA AKUA AMPOFOAH YAMOAH
+                </div>
+
+                <p class="payment-instructions">
+                    1. Open your Mobile Money application.<br>
+                    2. Send the exact amount shown in your order summary.<br>
+                    3. Confirm your transaction.<br>
+                    4. Upload your payment receipt below.<br>
+                    5. Submit your order for administrator verification.
+                </p>
+
+                <div class="form-group" style="margin-top:20px">
+
+                    <label>Upload MoMo Payment Receipt *</label>
+
+                    <div class="upload-area">
+
+                        <strong>Choose your receipt</strong>
+
+                        <p>Upload a screenshot or transaction receipt (JPG, PNG or PDF).</p>
+
+                        <input
+                            type="file"
+                            id="receipt"
+                            accept="image/jpeg,image/png,application/pdf"
+                        >
+
+                        <img id="receipt-preview" alt="Receipt preview">
+
+                        <p id="receipt-name"></p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- PAYSTACK DETAILS -->
+
+            <div id="paystack-details" class="payment-details">
+
+                <h3>Pay with Paystack</h3>
+
+                <p class="payment-instructions">
+                    You will be redirected to a secure Paystack checkout
+                    to complete your payment.
+                </p>
+
+                <div class="notice" id="paystack-notice" style="display:block;">
+                    Paystack requires a secure payment backend before it can accept payments.
+                    Please use Mobile Money for now.
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- ORDER SUMMARY -->
+
+    <aside class="summary">
+
+        <h2>Your Order</h2>
+
+        <div id="order-items"></div>
+
+        <div class="summary-row">
+            <span>Total Items</span>
+            <span id="item-count">0</span>
+        </div>
+
+        <div class="summary-row">
+            <span>Subtotal</span>
+            <span id="subtotal">GH₵ 0.00</span>
+        </div>
+
+        <div class="summary-row">
+            <span>Delivery</span>
+            <span id="delivery-fee">GH₵ 0.00</span>
+        </div>
+
+        <div class="summary-row summary-total">
+            <span>Order Total</span>
+            <span id="grand-total">GH₵ 0.00</span>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn">
+            SUBMIT ORDER VIA WHATSAPP
+        </button>
+
+        <p class="secure-note">
+            Your order will be sent to Kikis Amber Touch
+            for processing and payment verification.
+        </p>
+
+        <a href="cart.html" class="back-link">
+            ← Return to Shopping Cart
+        </a>
+
+    </aside>
+
+</div>
+
+</form>
+
+</main>
+
+<footer>
+    <strong>KIKIS AMBER TOUCH</strong>
+    <p>Luxury fragrances. Elegance in every drop.</p>
+    <p>WhatsApp: <span id="footer-phone">0503192094</span></p>
+    <p>© <span id="year"></span> Kikis Amber Touch. All Rights Reserved.</p>
+</footer>
+
+<a
+    class="whatsapp"
+    id="floating-whatsapp"
+    href="https://wa.me/233503192094"
+    target="_blank"
+    rel="noopener"
+>◉</a>
+
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+/* =========================================
+   SUPABASE CONNECTION
+========================================= */
+
+const SUPABASE_URL = "https://mgxeyjyhuzbsgnbpbkst.supabase.co";
+const SUPABASE_KEY = "sb_publishable_ANZvxJnS89wrYo0MTx6LRA_Nu2XPss5";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* =========================================
+   STORE SETTINGS
+========================================= */
+
+const DEFAULT_SETTINGS = {
+    storeName: "KIKIS AMBER TOUCH",
+    storeTagline: "Luxury fragrances. Elegance in every drop.",
+    storePhone: "0503192094",
+    momoNumber: "0537367236",
+    momoName: "NANA AKUA AMPOFOAH YAMOAH",
+    currency: "GHS",
+    deliveryFee: 0,
+    freeDelivery: 0,
+    deliveryTime: "2–5 working days",
+    whatsappNumber: "233503192094",
+    storeOpen: true,
+    acceptOrders: true
+};
+
+function loadStoreSettings() {
+    try {
+        return {
+            ...DEFAULT_SETTINGS,
+            ...JSON.parse(localStorage.getItem("kikisSettings") || "{}")
+        };
+    } catch {
+        return { ...DEFAULT_SETTINGS };
+    }
+}
+
+const storeSettings = loadStoreSettings();
+
+function money(amount) {
+    const value = Number(amount || 0);
+
+    if ((storeSettings.currency || "GHS") === "GHS") {
+        return "GH₵ " + value.toLocaleString("en-GH", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    return storeSettings.currency + " " + value.toFixed(2);
+}
+
+function cleanWhatsAppNumber(number) {
+    let digits = String(number || "").replace(/\D/g, "");
+
+    if (digits.startsWith("0")) {
+        digits = "233" + digits.slice(1);
+    }
+
+    return digits;
+}
+
+const ADMIN_WHATSAPP = cleanWhatsAppNumber(
+    storeSettings.whatsappNumber || DEFAULT_SETTINGS.whatsappNumber
+);
+
+const MOMO_NUMBER = storeSettings.momoNumber || DEFAULT_SETTINGS.momoNumber;
+const MOMO_NAME = storeSettings.momoName || DEFAULT_SETTINGS.momoName;
+
+/* =========================================
+   CART
+========================================= */
+
+function getCart() {
+    try {
+        const cart = JSON.parse(localStorage.getItem("kikisCart") || "[]");
+        return Array.isArray(cart) ? cart : [];
+    } catch {
+        return [];
+    }
+}
+
+function saveCart(cart) {
+    localStorage.setItem("kikisCart", JSON.stringify(cart));
+}
+
+let cart = getCart();
+
+function getSubtotal() {
+    return cart.reduce((sum, item) => {
+        return sum + Number(item.price || 0) * Number(item.quantity || 0);
+    }, 0);
+}
+
+function getDeliveryFee(subtotal = getSubtotal()) {
+    const standardFee = Math.max(0, Number(storeSettings.deliveryFee) || 0);
+    const freeThreshold = Math.max(0, Number(storeSettings.freeDelivery) || 0);
+
+    if (freeThreshold > 0 && subtotal >= freeThreshold) {
+        return 0;
+    }
+
+    return standardFee;
+}
+
+/* =========================================
+   REFRESH PRODUCTS FROM SUPABASE
+========================================= */
+
+async function refreshCartProducts() {
+    if (!cart.length) {
+        displayOrder();
+        return;
+    }
+
+    const productIds = [
+        ...new Set(
+            cart.map(item => String(item.product_id || item.id || ""))
+                .filter(Boolean)
+        )
+    ];
+
+    const { data, error } = await supabase
+        .from("products")
+        .select("id,name,description,category,price,image_url,stock,status")
+        .in("id", productIds)
+        .eq("status", "active");
+
+    if (error) {
+        console.error("Product refresh error:", error);
+        throw new Error("We could not verify your cart. Please refresh the page and try again.");
+    }
+
+    const products = new Map((data || []).map(product => [
+        String(product.id),
+        product
+    ]));
+
+    const updatedCart = [];
+
+    for (const item of cart) {
+        const id = String(item.product_id || item.id || "");
+        const product = products.get(id);
+
+        if (!product || Number(product.stock) < 1) {
+            continue;
+        }
+
+        const requestedQuantity = Math.max(1, Number(item.quantity) || 1);
+        const quantity = Math.min(requestedQuantity, Number(product.stock));
+
+        updatedCart.push({
+            id: String(product.id),
+            product_id: String(product.id),
+            name: product.name,
+            price: Number(product.price),
+            image: product.image_url || "",
+            quantity,
+            stock: Number(product.stock)
+        });
+    }
+
+    cart = updatedCart;
+    saveCart(cart);
+    displayOrder();
+}
+
+/* =========================================
+   APPLY STORE SETTINGS
+========================================= */
+
+function applyStoreSettings() {
+    const storeName = storeSettings.storeName || DEFAULT_SETTINGS.storeName;
+    const tagline = storeSettings.storeTagline || DEFAULT_SETTINGS.storeTagline;
+
+    document.title = "Checkout | " + storeName;
+
+    const announcement = document.querySelector(".announcement");
+    if (announcement) {
+        announcement.textContent = storeName + " • " + tagline;
+    }
+
+    const footerName = document.querySelector("footer strong");
+    if (footerName) footerName.textContent = storeName;
+
+    const footerPhone = document.getElementById("footer-phone");
+    if (footerPhone) {
+        footerPhone.textContent = storeSettings.storePhone || MOMO_NUMBER;
+    }
+
+    document.getElementById("momo-number").textContent = MOMO_NUMBER;
+    document.getElementById("momo-name").textContent = MOMO_NAME;
+
+    const whatsappLink = document.getElementById("floating-whatsapp");
+    if (whatsappLink && ADMIN_WHATSAPP) {
+        whatsappLink.href = "https://wa.me/" + ADMIN_WHATSAPP;
+    }
+
+    const notice = document.getElementById("store-status-notice");
+    const submitButton = document.getElementById("submit-btn");
+
+    if (!storeSettings.storeOpen) {
+        notice.textContent = "Our store is currently closed. Checkout is temporarily unavailable.";
+        notice.style.display = "block";
+        submitButton.disabled = true;
+        submitButton.textContent = "STORE CURRENTLY CLOSED";
+    } else if (!storeSettings.acceptOrders) {
+        notice.textContent = "We are temporarily not accepting new orders. Please check back later.";
+        notice.style.display = "block";
+        submitButton.disabled = true;
+        submitButton.textContent = "ORDERS TEMPORARILY UNAVAILABLE";
+    }
+
+    const secureNote = document.querySelector(".secure-note");
+    if (secureNote) {
+        secureNote.textContent =
+            "Your order will be sent to " + storeName +
+            " for processing and payment verification. Estimated delivery: " +
+            (storeSettings.deliveryTime || "To be confirmed") + ".";
+    }
+
+    const threshold = Number(storeSettings.freeDelivery) || 0;
+
+    if (threshold > 0) {
+        const note = document.createElement("p");
+        note.style.cssText =
+            "font-size:11px;color:#947039;text-align:center;margin-top:10px;line-height:1.5;";
+        note.textContent = "Free delivery on orders of " + money(threshold) + " or more.";
+
+        const backLink = document.querySelector(".summary .back-link");
+        if (backLink) backLink.before(note);
+    }
+}
+
+/* =========================================
+   ORDER SUMMARY
+========================================= */
+
+function displayOrder() {
+    const container = document.getElementById("order-items");
+    container.innerHTML = "";
+
+    let count = 0;
+
+    cart.forEach(item => {
+        const quantity = Number(item.quantity || 0);
+        const price = Number(item.price || 0);
+
+        count += quantity;
+
+        const row = document.createElement("div");
+        row.className = "order-item";
+
+        const description = document.createElement("span");
+        description.textContent = (item.name || "Product") + " × " + quantity;
+
+        const amount = document.createElement("strong");
+        amount.textContent = money(price * quantity);
+
+        row.append(description, amount);
+        container.appendChild(row);
+    });
+
+    const subtotal = getSubtotal();
+    const delivery = getDeliveryFee(subtotal);
+    const total = subtotal + delivery;
+
+    document.getElementById("item-count").textContent = count;
+    document.getElementById("subtotal").textContent = money(subtotal);
+
+    const freeDelivery =
+        Number(storeSettings.freeDelivery) > 0 &&
+        subtotal >= Number(storeSettings.freeDelivery);
+
+    document.getElementById("delivery-fee").textContent =
+        freeDelivery ? "FREE" : money(delivery);
+
+    document.getElementById("grand-total").textContent = money(total);
+
+    if (cart.length === 0) {
+        const button = document.getElementById("submit-btn");
+        button.disabled = true;
+        button.textContent = "YOUR CART IS EMPTY";
+    }
+}
+
+/* =========================================
+   PAYMENT METHOD
+========================================= */
+
+const paymentOptions = document.querySelectorAll('input[name="payment"]');
+const receiptInput = document.getElementById("receipt");
+
+paymentOptions.forEach(option => {
+    option.addEventListener("change", function () {
+        const isMomo = this.value === "momo";
+
+        document.getElementById("momo-details")
+            .classList.toggle("active", isMomo);
+
+        document.getElementById("paystack-details")
+            .classList.toggle("active", !isMomo);
+
+        receiptInput.required = isMomo;
+
+        const button = document.getElementById("submit-btn");
+        button.textContent = isMomo
+            ? "SUBMIT ORDER VIA WHATSAPP"
+            : "PAYSTACK NOT YET AVAILABLE";
+
+        if (!isMomo) {
+            button.disabled = true;
+        } else {
+            button.disabled = cart.length === 0 ||
+                !storeSettings.storeOpen ||
+                !storeSettings.acceptOrders;
+        }
+    });
+});
+
+/* =========================================
+   RECEIPT PREVIEW AND VALIDATION
+========================================= */
+
+receiptInput.addEventListener("change", function () {
+    const file = this.files[0];
+    const preview = document.getElementById("receipt-preview");
+    const name = document.getElementById("receipt-name");
+
+    preview.style.display = "none";
+    name.textContent = "";
+
+    if (!file) return;
+
+    const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "application/pdf"
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+        alert("Please upload a JPG, PNG or PDF receipt.");
+        this.value = "";
+        return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+        alert("Receipt must not exceed 5MB.");
+        this.value = "";
+        return;
+    }
+
+    name.textContent = "Selected: " + file.name;
+
+    if (file.type.startsWith("image/")) {
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = "block";
+    }
+});
+
+/* =========================================
+   UPLOAD RECEIPT TO SUPABASE STORAGE
+========================================= */
+
+async function uploadReceipt(file, orderReference) {
+    const extension = file.name.split(".").pop().toLowerCase();
+    const safeExtension = ["jpg", "jpeg", "png", "pdf"].includes(extension)
+        ? extension
+        : "file";
+
+    const filePath =
+        "customer-receipts/" +
+        orderReference + "-" + crypto.randomUUID() + "." + safeExtension;
+
+    const { data, error } = await supabase.storage
+        .from("payment-receipts")
+        .upload(filePath, file, {
+            cacheControl: "3600",
+            upsert: false,
+            contentType: file.type
+        });
+
+    if (error) {
+        console.error("Receipt upload error:", error);
+        throw new Error(
+            "Receipt upload failed. Please check that the payment-receipts bucket and its upload policy have been created in Supabase."
+        );
+    }
+
+    // Keep the storage path, not a public URL, in the order record.
+    return data.path;
+}
+
+/* =========================================
+   SUBMIT ORDER
+========================================= */
+
+const checkoutForm = document.getElementById("checkout-form");
+const submitButton = document.getElementById("submit-btn");
+
+checkoutForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    if (!this.reportValidity()) return;
+
+    if (!cart.length) {
+        alert("Your shopping cart is empty.");
+        return;
+    }
+
+    if (!storeSettings.storeOpen || !storeSettings.acceptOrders) {
+        alert("The store is currently not accepting orders.");
+        return;
+    }
+
+    const payment = document.querySelector(
+        'input[name="payment"]:checked'
+    ).value;
+
+    if (payment === "paystack") {
+        alert("Paystack is not connected yet. Please choose Mobile Money.");
+        return;
+    }
+
+    const receipt = receiptInput.files[0];
+
+    if (!receipt) {
+        alert("Please upload your MoMo payment receipt.");
+        return;
+    }
+
+    const customer = {
+        name: document.getElementById("fullname").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        region: document.getElementById("region").value,
+        city: document.getElementById("city").value.trim(),
+        address: document.getElementById("address").value.trim(),
+        notes: document.getElementById("notes").value.trim()
+    };
+
+    const orderReference =
+        "KAT-" + Date.now().toString().slice(-9);
+
+    submitButton.disabled = true;
+    submitButton.textContent = "PROCESSING YOUR ORDER...";
+
+    try {
+        // Verify the products and prices again immediately before submission.
+        await refreshCartProducts();
+
+        if (!cart.length) {
+            throw new Error("Your cart no longer contains available products. Please return to the shop.");
+        }
+
+        const transactionReference =
+            "MOMO-" + crypto.randomUUID();
+
+        // Upload the real receipt file first.
+        const receiptPath = await uploadReceipt(receipt, orderReference);
+
+        // The database function must calculate the final prices and totals.
+        const customerForDatabase = {
+            ...customer,
+            receipt_path: receiptPath,
+            receipt_file_name: receipt.name,
+            order_reference: orderReference,
+            delivery_time: storeSettings.deliveryTime || ""
+        };
+
+        const itemsForDatabase = cart.map(item => ({
+            product_id: item.product_id || item.id,
+            quantity: Number(item.quantity)
+        }));
+
+        const { data, error } = await supabase.rpc(
+            "submit_customer_order",
+            {
+                p_customer: customerForDatabase,
+                p_items: itemsForDatabase,
+                p_payment_method: "Mobile Money",
+                p_momo_number: MOMO_NUMBER,
+                p_momo_name: MOMO_NAME,
+                p_transaction_reference: transactionReference
+            }
+        );
+
+        if (error) {
+            console.error("Order submission error:", error);
+            throw new Error(
+                "Supabase could not create the order. " + error.message
+            );
+        }
+
+        // The RPC may return an object or a one-row array.
+        const savedOrder = Array.isArray(data) ? data[0] : data;
+
+        const finalReference =
+            savedOrder?.reference ||
+            savedOrder?.order_reference ||
+            savedOrder?.order_id ||
+            orderReference;
+
+        const finalTotal =
+            Number(savedOrder?.total ?? savedOrder?.grand_total ?? getSubtotal() + getDeliveryFee());
+
+        const finalSubtotal =
+            Number(savedOrder?.subtotal ?? getSubtotal());
+
+        const finalDelivery =
+            Number(savedOrder?.delivery_fee ?? getDeliveryFee(finalSubtotal));
+
+        const order = {
+            reference: finalReference,
+            orderId: savedOrder?.id || finalReference,
+            customer,
+            products: cart,
+            items: cart,
+            subtotal: finalSubtotal,
+            deliveryFee: finalDelivery,
+            total: finalTotal,
+            amount: finalTotal,
+            payment: "Mobile Money",
+            paymentMethod: "Mobile Money",
+            paymentStatus: "Pending verification",
+            orderStatus: "Awaiting payment verification",
+            momoNumber: MOMO_NUMBER,
+            momoName: MOMO_NAME,
+            receiptPath,
+            receiptFileName: receipt.name,
+            deliveryTime: storeSettings.deliveryTime || "",
+            date: new Date().toISOString()
+        };
+
+        localStorage.setItem("kikisCurrentOrder", JSON.stringify(order));
+
+        // Build WhatsApp notification.
+        let message =
+`*NEW ORDER - ${storeSettings.storeName || "KIKIS AMBER TOUCH"}*
+
+Order Reference: ${finalReference}
+
+*CUSTOMER DETAILS*
+Name: ${customer.name}
+Phone: ${customer.phone}
+Email: ${customer.email || "Not provided"}
+
+*DELIVERY DETAILS*
+Region: ${customer.region}
+Town/City: ${customer.city}
+Address: ${customer.address}
+Instructions: ${customer.notes || "None"}
+Estimated Delivery: ${storeSettings.deliveryTime || "To be confirmed"}
+
+*PRODUCTS ORDERED*
+`;
+
+        cart.forEach(item => {
+            message +=
+`${item.name} x ${item.quantity}
+Unit Price: ${money(item.price)}
+Subtotal: ${money(Number(item.price) * Number(item.quantity))}
+
+`;
+        });
+
+        message +=
+`*PAYMENT SUMMARY*
+Subtotal: ${money(finalSubtotal)}
+Delivery Fee: ${finalDelivery === 0 ? "FREE" : money(finalDelivery)}
+*ORDER TOTAL: ${money(finalTotal)}*
+
+*PAYMENT DETAILS*
+Method: Mobile Money
+MoMo Number: ${MOMO_NUMBER}
+Account Name: ${MOMO_NAME}
+Receipt: Uploaded to the store's order system
+Payment Status: PENDING ADMIN VERIFICATION
+
+Please verify the payment before processing this order.
+
+Thank you.
+${storeSettings.storeName || "Kikis Amber Touch"}`;
+
+        // Clear the cart only after the database confirms the order.
+        localStorage.removeItem("kikisCart");
+
+        // Open WhatsApp after the order is saved.
+        const whatsappURL =
+            "https://wa.me/" + ADMIN_WHATSAPP +
+            "?text=" + encodeURIComponent(message);
+
+        window.open(whatsappURL, "_blank");
+
+        window.location.href = "confirmation.html";
+
+    } catch (error) {
+        console.error(error);
+        alert(error.message || "Something went wrong while submitting your order.");
+
+        submitButton.disabled = false;
+        submitButton.textContent = "SUBMIT ORDER VIA WHATSAPP";
+    }
+});
+
+/* =========================================
+   MOBILE MENU
+========================================= */
+
+window.toggleMenu = function () {
+    document.getElementById("navigation").classList.toggle("active");
+};
+
+/* =========================================
+   INITIAL PAGE LOAD
+========================================= */
+
+document.getElementById("year").textContent = new Date().getFullYear();
+
+applyStoreSettings();
+
+try {
+    await refreshCartProducts();
+} catch (error) {
+    console.error(error);
+    document.getElementById("store-status-notice").textContent = error.message;
+    document.getElementById("store-status-notice").style.display = "block";
+    submitButton.disabled = true;
+    submitButton.textContent = "CART VERIFICATION FAILED";
+}
+
+window.addEventListener("storage", function (event) {
+    if (event.key === "kikisSettings") {
+        window.location.reload();
+    }
+
+    if (event.key === "kikisCart") {
+        cart = getCart();
+        displayOrder();
+    }
+});
+</script>
+
+</body>
+</html>
