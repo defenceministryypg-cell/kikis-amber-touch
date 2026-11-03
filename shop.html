@@ -1,569 +1,198 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shop | Kikis Amber Touch</title>
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--black:#11100e;--gold:#c6a15b;--cream:#f8f5ef;--white:#fff}
+body{font-family:Arial,sans-serif;background:var(--cream);color:var(--black)}
+a{text-decoration:none;color:inherit}
+.announcement{background:var(--gold);text-align:center;padding:10px;font-size:11px;letter-spacing:2px}
+header{background:var(--black);color:white;padding:18px 7%;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-family:Georgia,serif;color:var(--gold);font-size:21px}
+.logo span{display:block;font-family:Arial;color:white;font-size:9px;letter-spacing:4px;text-align:center;margin-top:5px}
+.logo img{display:none;width:170px;max-height:65px;object-fit:contain}
+nav{display:flex;align-items:center;gap:25px;font-size:13px}
+nav a:hover{color:var(--gold)}
+.cart-link{border:1px solid var(--gold);padding:10px 16px;color:var(--gold)}
+.menu-toggle{display:none;background:none;color:white;border:none;font-size:25px}
+.shop-banner{background:linear-gradient(90deg,#17130e,#51402a);color:white;padding:65px 7%;text-align:center}
+.shop-banner small{color:var(--gold);letter-spacing:4px}
+.shop-banner h1{font-family:Georgia,serif;font-weight:normal;font-size:48px;margin:15px 0}
+.shop-banner p{color:#ddd;font-size:14px}
+.shop-container{padding:55px 7%}
+.shop-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;gap:15px}
+.shop-heading h2{font-family:Georgia,serif;font-size:28px;font-weight:normal}
+.filters{display:flex;gap:12px;margin-bottom:35px;flex-wrap:wrap}
+.filters input,.filters select{padding:14px;border:1px solid #ddd;background:white;outline:none;font-size:13px}
+.filters input{flex:1;min-width:200px}
+.filters select{min-width:160px}
+.products{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.product-card{background:white;overflow:hidden;transition:.3s;border:1px solid #eee}
+.product-card:hover{transform:translateY(-5px);box-shadow:0 10px 25px #00000012}
+.product-image{height:310px;background:#f8f5ef;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.product-image img{width:100%;height:100%;object-fit:contain;object-position:center;padding:0;display:block;transform:scale(1.25)}
+.product-info{padding:17px}
+.category{font-size:10px;color:#a17d40;text-transform:uppercase;letter-spacing:1.5px}
+.product-info h3{font-family:Georgia,serif;font-size:18px;margin:10px 0}
+.product-description{color:#777;font-size:12px;line-height:1.65;margin:9px 0 5px;overflow-wrap:anywhere}
+.product-description.collapsed{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;overflow:hidden}
+.description-toggle{display:inline-block;border:0;background:transparent;color:#9c783d;font-size:11px;font-weight:bold;cursor:pointer;padding:3px 0 12px}
+.description-toggle:hover{text-decoration:underline}
+.price{font-weight:bold;color:#9c783d;font-size:17px;margin-bottom:15px}
+.quantity{display:flex;align-items:center;gap:12px;margin-bottom:15px}
+.quantity button{width:28px;height:28px;border:1px solid #ddd;background:white;cursor:pointer;font-size:17px}
+.quantity span{font-size:14px}
+.add-btn{width:100%;padding:13px;border:none;background:var(--black);color:white;cursor:pointer;font-size:11px;letter-spacing:1px;transition:.3s}
+.add-btn:hover{background:var(--gold);color:black}
+.empty-message{text-align:center;padding:50px 10px;color:#777;display:none}
+footer{background:#080807;color:#aaa;padding:35px 7%;text-align:center;font-size:12px;line-height:2}
+footer strong{color:var(--gold)}
+.whatsapp{position:fixed;right:20px;bottom:20px;background:#25D366;color:white;width:58px;height:58px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:35px;z-index:200;box-shadow:0 4px 15px #0003;transition:.3s ease}
+.whatsapp:hover{background:#1ebe5d;transform:scale(1.07)}
+
+/* PRODUCT DISCOUNT DISPLAY */
+.product-image .sale-badge{
+    position:absolute;
+    top:12px;
+    left:12px;
+    z-index:2;
+    background:#11100e;
+    color:#e5c985;
+    padding:8px 11px;
+    font-size:10px;
+    font-weight:bold;
+    letter-spacing:1px;
+    border:1px solid #c6a15b;
 }
-
-:root {
-    --black: #11100e;
-    --gold: #c6a15b;
-    --cream: #f8f5ef;
-    --white: #fff;
+.price .old-price{
+    color:#888;
+    text-decoration:line-through;
+    font-size:13px;
+    font-weight:normal;
+    margin-right:8px;
 }
-
-body {
-    font-family: Arial, sans-serif;
-    background: var(--cream);
-    color: var(--black);
-}
-
-a {
-    text-decoration: none;
-    color: inherit;
-}
-
-.announcement {
-    background: var(--gold);
-    text-align: center;
-    padding: 10px;
-    font-size: 11px;
-    letter-spacing: 2px;
-}
-
-header {
-    background: var(--black);
-    color: white;
-    padding: 18px 7%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.logo {
-    font-family: Georgia, serif;
-    color: var(--gold);
-    font-size: 21px;
-}
-
-.logo span {
-    display: block;
-    font-family: Arial;
-    color: white;
-    font-size: 9px;
-    letter-spacing: 4px;
-    text-align: center;
-    margin-top: 5px;
-}
-.logo img {
-    display: none;
-    width: 170px;
-    max-height: 65px;
-    object-fit: contain;
-}
-
-nav {
-    display: flex;
-    align-items: center;
-    gap: 25px;
-    font-size: 13px;
-}
-
-nav a:hover {
-    color: var(--gold);
-}
-
-.cart-link {
-    border: 1px solid var(--gold);
-    padding: 10px 16px;
-    color: var(--gold);
-}
-
-.menu-toggle {
-    display: none;
-    background: none;
-    color: white;
-    border: none;
-    font-size: 25px;
-}
-
-/* SHOP BANNER */
-
-.shop-banner {
-    background: linear-gradient(90deg, #17130e, #51402a);
-    color: white;
-    padding: 65px 7%;
-    text-align: center;
-}
-
-.shop-banner small {
-    color: var(--gold);
-    letter-spacing: 4px;
-}
-
-.shop-banner h1 {
-    font-family: Georgia, serif;
-    font-weight: normal;
-    font-size: 48px;
-    margin: 15px 0;
-}
-
-.shop-banner p {
-    color: #ddd;
-    font-size: 14px;
-}
-
-/* SHOP CONTENT */
-
-.shop-container {
-    padding: 55px 7%;
-}
-
-.shop-heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-    gap: 15px;
-}
-
-.shop-heading h2 {
-    font-family: Georgia, serif;
-    font-size: 28px;
-    font-weight: normal;
-}
-
-/* SEARCH AND FILTER */
-
-.filters {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 35px;
-    flex-wrap: wrap;
-}
-
-.filters input,
-.filters select {
-    padding: 14px;
-    border: 1px solid #ddd;
-    background: white;
-    outline: none;
-    font-size: 13px;
-}
-
-.filters input {
-    flex: 1;
-    min-width: 200px;
-}
-
-.filters select {
-    min-width: 160px;
-}
-
-/* PRODUCTS */
-
-.products {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 22px;
-}
-
-.product-card {
-    background: white;
-    overflow: hidden;
-    transition: .3s;
-    border: 1px solid #eee;
-}
-
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px #00000012;
-}
-
-/* PRODUCT IMAGE */
-
-.product-image {
-    height: 310px;
-    background: #f8f5ef;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.product-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    object-position: center;
-    padding: 0;
-    display: block;
-    transform: scale(1.25);
-}
-
-/* PRODUCT DETAILS */
-
-.product-info {
-    padding: 17px;
-}
-
-.category {
-    font-size: 10px;
-    color: #a17d40;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-}
-
-.product-info h3 {
-    font-family: Georgia, serif;
-    font-size: 18px;
-    margin: 10px 0;
-}
-
-/* PRODUCT DESCRIPTION */
-
-.product-description {
-    color: #777;
-    font-size: 12px;
-    line-height: 1.65;
-    margin: 9px 0 5px;
-    overflow-wrap: anywhere;
-}
-
-.product-description.collapsed {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-    overflow: hidden;
-}
-
-.description-toggle {
-    display: inline-block;
-    border: 0;
-    background: transparent;
-    color: #9c783d;
-    font-size: 11px;
-    font-weight: bold;
-    cursor: pointer;
-    padding: 3px 0 12px;
-}
-
-.description-toggle:hover {
-    text-decoration: underline;
-}
-
-/* PRICE */
-
-.price {
-    font-weight: bold;
-    color: #9c783d;
-    font-size: 17px;
-    margin-bottom: 15px;
-}
-
-/* QUANTITY */
-
-.quantity {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 15px;
-}
-
-.quantity button {
-    width: 28px;
-    height: 28px;
-    border: 1px solid #ddd;
-    background: white;
-    cursor: pointer;
-    font-size: 17px;
-}
-
-.quantity span {
-    font-size: 14px;
-}
-
-/* ADD TO CART */
-
-.add-btn {
-    width: 100%;
-    padding: 13px;
-    border: none;
-    background: var(--black);
-    color: white;
-    cursor: pointer;
-    font-size: 11px;
-    letter-spacing: 1px;
-    transition: .3s;
-}
-
-.add-btn:hover {
-    background: var(--gold);
-    color: black;
-}
-
-.empty-message {
-    text-align: center;
-    padding: 50px 10px;
-    color: #777;
-    display: none;
-}
-
-/* FOOTER */
-
-footer {
-    background: #080807;
-    color: #aaa;
-    padding: 35px 7%;
-    text-align: center;
-    font-size: 12px;
-    line-height: 2;
-}
-
-footer strong {
-    color: var(--gold);
-}
-
-/* WHATSAPP */
-
-.whatsapp {
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-    background: #25D366;
-    color: white;
-    width: 58px;
-    height: 58px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    font-size: 35px;
-    z-index: 200;
-    box-shadow: 0 4px 15px #0003;
-    transition: .3s ease;
-}
-
-.whatsapp:hover {
-    background: #1ebe5d;
-    transform: scale(1.07);
+.price .new-price{color:#9c783d}
+.price .saving-label{
+    display:block;
+    color:#287342;
+    font-size:11px;
+    font-weight:normal;
+    margin-top:4px;
 }
 
 /* TABLET */
-
-@media(max-width: 1000px) {
-    .products {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .product-image {
-        height: 290px;
-    }
+@media(max-width:1000px){
+    .products{grid-template-columns:repeat(3,1fr)}
+    .product-image{height:290px}
 }
 
 /* MOBILE */
-
-@media(max-width: 768px) {
-    header {
-        padding: 15px 5%;
+@media(max-width:768px){
+    header{padding:15px 5%}
+    .logo{font-size:17px}
+    .menu-toggle{display:block;cursor:pointer}
+    nav{
+        display:none;
+        position:absolute;
+        top:100%;
+        left:0;
+        background:var(--black);
+        width:100%;
+        flex-direction:column;
+        padding:25px
     }
-
-    .logo {
-        font-size: 17px;
-    }
-
-    .menu-toggle {
-        display: block;
-        cursor: pointer;
-    }
-
-    nav {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        background: var(--black);
-        width: 100%;
-        flex-direction: column;
-        padding: 25px;
-    }
-
-    nav.active {
-        display: flex;
-    }
-
-    .shop-banner h1 {
-        font-size: 36px;
-    }
-
-    .products {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-    }
-
-    .product-image {
-        height: 240px;
-    }
-
-    .product-image img {
-        transform: scale(1.2);
-    }
-
-    .product-info {
-        padding: 12px;
-    }
-
-    .product-info h3 {
-        font-size: 15px;
-    }
-
-    .shop-container {
-        padding: 40px 5%;
-    }
-
-    .shop-heading h2 {
-        font-size: 23px;
-    }
+    nav.active{display:flex}
+    .shop-banner h1{font-size:36px}
+    .products{grid-template-columns:repeat(2,1fr);gap:12px}
+    .product-image{height:240px}
+    .product-image img{transform:scale(1.2)}
+    .product-info{padding:12px}
+    .product-info h3{font-size:15px}
+    .shop-container{padding:40px 5%}
+    .shop-heading h2{font-size:23px}
 }
 
 /* SMALL PHONES */
-
-@media(max-width: 380px) {
-    .products {
-        grid-template-columns: 1fr;
-    }
-
-    .product-image {
-        height: 280px;
-    }
-}
-    
-/* FINAL HEADER AND MOBILE RESPONSIVENESS FIX */
-
-/* Desktop logo */
-.logo {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
+@media(max-width:380px){
+    .products{grid-template-columns:1fr}
+    .product-image{height:280px}
 }
 
-.logo img {
-    width: 170px;
-    max-width: 100%;
-    height: 58px;
-    object-fit: contain;
+/* HEADER AND MOBILE RESPONSIVENESS */
+.logo{display:flex;align-items:center;flex-shrink:0}
+.logo img{width:170px;max-width:100%;height:58px;object-fit:contain}
+
+@media(max-width:768px){
+    header{
+        min-height:64px;
+        padding:9px 4%;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:8px;
+        flex-wrap:nowrap
+    }
+    .logo{
+        flex:1 1 auto;
+        min-width:0;
+        max-width:calc(100% - 48px);
+        overflow:hidden;
+        font-size:14px;
+        line-height:1.15
+    }
+    .logo img{
+        width:100px;
+        max-width:100%;
+        height:40px;
+        object-fit:contain;
+        flex-shrink:1
+    }
+    .logo span{
+        font-size:8px;
+        letter-spacing:1.5px;
+        text-align:left;
+        margin-top:0;
+        white-space:nowrap
+    }
+    .menu-toggle{
+        display:block;
+        flex:0 0 38px;
+        width:38px;
+        height:42px;
+        margin-left:auto;
+        padding:0;
+        font-size:25px;
+        line-height:1;
+        cursor:pointer
+    }
+    nav{
+        display:none;
+        position:absolute;
+        top:100%;
+        left:0;
+        width:100%;
+        background:var(--black);
+        flex-direction:column;
+        align-items:stretch;
+        padding:18px 5%;
+        gap:18px
+    }
+    nav.active{display:flex}
+    nav a{width:100%;padding:8px 0}
+    nav .cart-link{width:fit-content;padding:9px 14px}
 }
 
-/* Mobile */
-@media (max-width: 768px) {
-
-    header {
-        min-height: 64px;
-        padding: 9px 4%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        flex-wrap: nowrap;
-    }
-
-    .logo {
-        flex: 1 1 auto;
-        min-width: 0;
-        max-width: calc(100% - 48px);
-        overflow: hidden;
-        font-size: 14px;
-        line-height: 1.15;
-    }
-
-    .logo img {
-        width: 100px;
-        max-width: 100%;
-        height: 40px;
-        object-fit: contain;
-        flex-shrink: 1;
-    }
-
-    .logo span {
-        font-size: 8px;
-        letter-spacing: 1.5px;
-        text-align: left;
-        margin-top: 0;
-        white-space: nowrap;
-    }
-
-    .menu-toggle {
-        display: block;
-        flex: 0 0 38px;
-        width: 38px;
-        height: 42px;
-        margin-left: auto;
-        padding: 0;
-        font-size: 25px;
-        line-height: 1;
-        cursor: pointer;
-    }
-
-    nav {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background: var(--black);
-        flex-direction: column;
-        align-items: stretch;
-        padding: 18px 5%;
-        gap: 18px;
-    }
-
-    nav.active {
-        display: flex;
-    }
-
-    nav a {
-        width: 100%;
-        padding: 8px 0;
-    }
-
-    nav .cart-link {
-        width: fit-content;
-        padding: 9px 14px;
-    }
+@media(max-width:380px){
+    header{padding-left:3%;padding-right:3%}
+    .logo img{width:86px;height:36px}
 }
-
-/* Very small phones */
-@media (max-width: 380px) {
-
-    header {
-        padding-left: 3%;
-        padding-right: 3%;
-    }
-
-    .logo img {
-        width: 86px;
-        height: 36px;
-    }
-}
-
 </style>
 </head>
-
 <body>
 
 <div class="announcement">
@@ -571,29 +200,24 @@ footer strong {
 </div>
 
 <header>
-
     <a href="index.html" class="logo" id="storeLogoLink">
-    <img id="storeLogoImage" alt="Kikis Amber Touch Logo">
-
-    <span id="logoFallback">
-        KIKIS AMBER TOUCH
-        <small>LUXURY FRAGRANCES</small>
-    </span>
-</a>
+        <img id="storeLogoImage" alt="Kikis Amber Touch Logo">
+        <span id="logoFallback">
+            KIKIS AMBER TOUCH
+            <small>LUXURY FRAGRANCES</small>
+        </span>
+    </a>
 
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
 
     <nav id="navigation">
         <a href="index.html">HOME</a>
         <a href="shop.html">SHOP</a>
-
         <a href="cart.html" class="cart-link">
             MY CART (<span id="cart-count">0</span>)
         </a>
-
         <a href="track-order.html">TRACK ORDER</a>
     </nav>
-
 </header>
 
 <section class="shop-banner">
@@ -610,12 +234,8 @@ footer strong {
     </div>
 
     <div class="filters">
-
-        <input
-            type="search"
-            id="search"
-            placeholder="Search for a perfume..."
-        >
+        <input type="search" id="search"
+            placeholder="Search for a perfume...">
 
         <select id="category">
             <option value="all">All Categories</option>
@@ -630,7 +250,6 @@ footer strong {
             <option value="high">Price: High to Low</option>
             <option value="name">Name: A - Z</option>
         </select>
-
     </div>
 
     <div class="products" id="products"></div>
@@ -649,15 +268,11 @@ footer strong {
     <p>© <span id="year"></span> Kikis Amber Touch. All Rights Reserved.</p>
 </footer>
 
-<!-- WHATSAPP CHAT -->
-
-<a
-    class="whatsapp"
-    href="https://wa.me/233503192094"
-    target="_blank"
-    rel="noopener"
-    aria-label="Chat with Kikis Amber Touch on WhatsApp"
->
+<a class="whatsapp"
+   href="https://wa.me/233503192094"
+   target="_blank"
+   rel="noopener"
+   aria-label="Chat with Kikis Amber Touch on WhatsApp">
     <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
 </a>
 
@@ -665,10 +280,19 @@ footer strong {
 import { createClient } from
 "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
+/* =========================================
+   SUPABASE CONNECTION
+========================================= */
+
 const supabase = createClient(
     "https://mgxeyjyhuzbsgnbpbkst.supabase.co",
     "sb_publishable_ANZvxJnS89wrYo0MTx6LRA_Nu2XPss5"
 );
+
+/* =========================================
+   LOAD STORE LOGO
+========================================= */
+
 async function loadStoreLogo() {
     const image = document.getElementById("storeLogoImage");
     const fallback = document.getElementById("logoFallback");
@@ -703,10 +327,18 @@ async function loadStoreLogo() {
 
 loadStoreLogo();
 
+/* =========================================
+   GLOBAL VARIABLES
+========================================= */
+
 let perfumeProducts = [];
 let quantities = {};
 
 const $ = id => document.getElementById(id);
+
+/* =========================================
+   HTML SECURITY
+========================================= */
 
 function escapeHTML(value) {
     return String(value ?? "").replace(/[&<>"']/g, char => ({
@@ -718,11 +350,17 @@ function escapeHTML(value) {
     })[char]);
 }
 
+/* =========================================
+   CURRENCY
+========================================= */
+
 function money(value) {
     return "GH₵ " + Number(value || 0).toFixed(2);
 }
 
-/* CART STORAGE */
+/* =========================================
+   CART STORAGE
+========================================= */
 
 function getCart() {
     try {
@@ -745,7 +383,45 @@ function updateCartCount() {
     $("cart-count").textContent = total;
 }
 
-/* LOAD PRODUCTS FROM SUPABASE */
+/* =========================================
+   PRODUCT-LEVEL DISCOUNT PRICING
+
+   Discounts are stored directly in:
+   products.discount_active
+   products.discount_percent
+========================================= */
+
+function getProductPricing(product) {
+    const originalPrice = Number(product.price || 0);
+
+    const discountActive =
+        product.discount_active === true &&
+        Number(product.discount_percent || 0) > 0;
+
+    const discountPercent = discountActive
+        ? Number(product.discount_percent)
+        : 0;
+
+    const discountedPrice = discountActive
+        ? Number(
+            (originalPrice * (1 - discountPercent / 100)).toFixed(2)
+          )
+        : originalPrice;
+
+    return {
+        price: discountedPrice,
+        originalPrice,
+        discountActive,
+        discountPercent,
+        saving: Number(
+            (originalPrice - discountedPrice).toFixed(2)
+        )
+    };
+}
+
+/* =========================================
+   LOAD PRODUCTS FROM SUPABASE
+========================================= */
 
 async function loadProducts() {
     const container = $("products");
@@ -758,7 +434,18 @@ async function loadProducts() {
 
     const { data, error } = await supabase
         .from("products")
-        .select("id,name,description,category,price,image_url,stock,status")
+        .select(`
+            id,
+            name,
+            description,
+            category,
+            price,
+            image_url,
+            stock,
+            status,
+            discount_active,
+            discount_percent
+        `)
         .eq("status", "active")
         .gt("stock", 0)
         .order("created_at", { ascending: false });
@@ -785,13 +472,16 @@ async function loadProducts() {
         price: Number(product.price || 0),
         image: product.image_url || "",
         stock: Number(product.stock || 0),
-        description: product.description || ""
+        description: product.description || "",
+        discount_active: product.discount_active === true,
+        discount_percent: Number(product.discount_percent || 0)
     }));
 
     displayProducts();
 }
-
-/* DISPLAY PRODUCTS */
+/* =========================================
+   DISPLAY PRODUCTS
+========================================= */
 
 function displayProducts() {
     const search = $("search").value.trim().toLowerCase();
@@ -799,7 +489,6 @@ function displayProducts() {
     const sort = $("sort").value;
 
     let filtered = perfumeProducts.filter(product => {
-
         const matchesSearch =
             product.name.toLowerCase().includes(search) ||
             product.description.toLowerCase().includes(search);
@@ -810,20 +499,31 @@ function displayProducts() {
         return matchesSearch && matchesCategory;
     });
 
+    // SORT BY DISCOUNTED PRICE
+
     if (sort === "low") {
-        filtered.sort((a, b) => a.price - b.price);
+        filtered.sort(
+            (a, b) =>
+                getProductPricing(a).price -
+                getProductPricing(b).price
+        );
     }
 
     if (sort === "high") {
-        filtered.sort((a, b) => b.price - a.price);
+        filtered.sort(
+            (a, b) =>
+                getProductPricing(b).price -
+                getProductPricing(a).price
+        );
     }
 
     if (sort === "name") {
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        filtered.sort((a, b) =>
+            a.name.localeCompare(b.name)
+        );
     }
 
     const container = $("products");
-
     container.innerHTML = "";
 
     $("product-count").textContent =
@@ -833,8 +533,12 @@ function displayProducts() {
         filtered.length ? "none" : "block";
 
     filtered.forEach(product => {
-
         const quantity = quantities[product.id] || 1;
+
+        const pricing = getProductPricing(product);
+
+        const hasDiscount =
+            pricing.price < pricing.originalPrice;
 
         const imageMarkup = product.image
             ? `
@@ -845,18 +549,36 @@ function displayProducts() {
                 >
             `
             : `
-                <div style="height:100%;display:flex;align-items:center;justify-content:center;color:#777;font-size:12px">
+                <div style="
+                    height:100%;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    color:#777;
+                    font-size:12px
+                ">
                     Image coming soon
                 </div>
             `;
 
         const card = document.createElement("div");
-
         card.className = "product-card";
 
         card.innerHTML = `
             <div class="product-image">
+
+                ${
+                    hasDiscount
+                    ? `
+                        <span class="sale-badge">
+                            ${pricing.discountPercent}% OFF
+                        </span>
+                    `
+                    : ""
+                }
+
                 ${imageMarkup}
+
             </div>
 
             <div class="product-info">
@@ -867,19 +589,52 @@ function displayProducts() {
 
                 <h3>${escapeHTML(product.name)}</h3>
 
-                <p class="product-description collapsed" id="description-${escapeHTML(product.id)}">${escapeHTML(product.description || "Description coming soon. Please contact us for more details about this fragrance.")}</p>
+                <p
+                    class="product-description collapsed"
+                    id="description-${escapeHTML(product.id)}"
+                >
+                    ${escapeHTML(
+                        product.description ||
+                        "Description coming soon. Please contact us for more details about this fragrance."
+                    )}
+                </p>
 
-                ${product.description && product.description.trim().length > 100 ? `
-                    <button
-                        class="description-toggle"
-                        type="button"
-                        onclick="toggleDescription('${escapeHTML(product.id)}', this)"
-                        aria-expanded="false"
-                    >READ MORE</button>
-                ` : ""}
+                ${
+                    product.description &&
+                    product.description.trim().length > 100
+                    ? `
+                        <button
+                            class="description-toggle"
+                            type="button"
+                            onclick="toggleDescription('${escapeHTML(product.id)}', this)"
+                            aria-expanded="false"
+                        >
+                            READ MORE
+                        </button>
+                    `
+                    : ""
+                }
 
                 <div class="price">
-                    ${money(product.price)}
+
+                    ${
+                        hasDiscount
+                        ? `
+                            <span class="old-price">
+                                ${money(pricing.originalPrice)}
+                            </span>
+
+                            <span class="new-price">
+                                ${money(pricing.price)}
+                            </span>
+
+                            <span class="saving-label">
+                                You save ${money(pricing.saving)}
+                            </span>
+                        `
+                        : money(product.price)
+                    }
+
                 </div>
 
                 <div class="quantity">
@@ -888,9 +643,7 @@ function displayProducts() {
                         type="button"
                         aria-label="Decrease quantity"
                         onclick="changeQuantity('${product.id}', -1)"
-                    >
-                        −
-                    </button>
+                    >−</button>
 
                     <span id="quantity-${product.id}">
                         ${quantity}
@@ -900,9 +653,7 @@ function displayProducts() {
                         type="button"
                         aria-label="Increase quantity"
                         onclick="changeQuantity('${product.id}', 1)"
-                    >
-                        +
-                    </button>
+                    >+</button>
 
                 </div>
 
@@ -921,24 +672,32 @@ function displayProducts() {
     });
 }
 
-/* EXPAND OR COLLAPSE DESCRIPTION */
+/* =========================================
+   EXPAND OR COLLAPSE DESCRIPTION
+========================================= */
 
 window.toggleDescription = function(id, button) {
     const description = $("description-" + id);
 
     if (!description || !button) return;
 
-    const isCollapsed = description.classList.toggle("collapsed");
+    const isCollapsed =
+        description.classList.toggle("collapsed");
 
-    button.textContent = isCollapsed ? "READ MORE" : "READ LESS";
+    button.textContent =
+        isCollapsed ? "READ MORE" : "READ LESS";
 
-    button.setAttribute("aria-expanded", String(!isCollapsed));
+    button.setAttribute(
+        "aria-expanded",
+        String(!isCollapsed)
+    );
 };
 
-/* CHANGE QUANTITY */
+/* =========================================
+   CHANGE QUANTITY
+========================================= */
 
 window.changeQuantity = function(id, amount) {
-
     const product = perfumeProducts.find(
         item => item.id === String(id)
     );
@@ -959,10 +718,11 @@ window.changeQuantity = function(id, amount) {
     }
 };
 
-/* ADD TO CART */
+/* =========================================
+   ADD PRODUCT TO CART
+========================================= */
 
 window.addToCart = function(id) {
-
     const product = perfumeProducts.find(
         item => item.id === String(id)
     );
@@ -982,19 +742,27 @@ window.addToCart = function(id) {
         : 0;
 
     if (alreadyInCart + quantity > product.stock) {
-
         alert(
             `Only ${product.stock} unit(s) of ${product.name} are currently available.`
         );
-
         return;
     }
+
+    const pricing = getProductPricing(product);
 
     if (existing) {
 
         existing.quantity = alreadyInCart + quantity;
         existing.name = product.name;
-        existing.price = product.price;
+        existing.price = pricing.price;
+        existing.original_price = pricing.originalPrice;
+
+        existing.discount_active =
+            pricing.discountActive;
+
+        existing.discount_percent =
+            pricing.discountPercent;
+
         existing.image = product.image;
 
     } else {
@@ -1003,9 +771,12 @@ window.addToCart = function(id) {
             id: product.id,
             product_id: product.id,
             name: product.name,
-            price: product.price,
+            price: pricing.price,
+            original_price: pricing.originalPrice,
+            discount_active: pricing.discountActive,
+            discount_percent: pricing.discountPercent,
             image: product.image,
-            quantity: quantity
+            quantity
         });
 
     }
@@ -1019,21 +790,39 @@ window.addToCart = function(id) {
     alert(product.name + " added to your cart!");
 };
 
-/* FILTER EVENTS */
+/* =========================================
+   FILTER EVENTS
+========================================= */
 
-$("search").addEventListener("input", displayProducts);
-$("category").addEventListener("change", displayProducts);
-$("sort").addEventListener("change", displayProducts);
+$("search").addEventListener(
+    "input",
+    displayProducts
+);
 
-/* MOBILE MENU */
+$("category").addEventListener(
+    "change",
+    displayProducts
+);
+
+$("sort").addEventListener(
+    "change",
+    displayProducts
+);
+
+/* =========================================
+   MOBILE MENU
+========================================= */
 
 window.toggleMenu = function() {
     $("navigation").classList.toggle("active");
 };
 
-/* START */
+/* =========================================
+   INITIAL PAGE LOAD
+========================================= */
 
-$("year").textContent = new Date().getFullYear();
+$("year").textContent =
+    new Date().getFullYear();
 
 updateCartCount();
 
