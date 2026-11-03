@@ -685,8 +685,6 @@ footer strong {
 <a class="whatsapp" id="floating-whatsapp"
     href="https://wa.me/233503192094"
     target="_blank" rel="noopener">◉</a>
-
-
     <script type="module">
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
@@ -700,7 +698,7 @@ const SUPABASE_KEY = "sb_publishable_ANZvxJnS89wrYo0MTx6LRA_Nu2XPss5";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 /* =========================================
-   STORE SETTINGS
+   DEFAULT STORE SETTINGS
 ========================================= */
 
 const DEFAULT_SETTINGS = {
@@ -729,7 +727,70 @@ function loadStoreSettings() {
     }
 }
 
-const storeSettings = loadStoreSettings();
+let storeSettings = loadStoreSettings();
+
+/* =========================================
+   LOAD LATEST SETTINGS FROM SUPABASE
+========================================= */
+
+async function loadStoreSettingsFromDatabase() {
+    const { data, error } = await supabase
+        .from("store_settings")
+        .select(`
+            store_name,
+            store_tagline,
+            whatsapp_number,
+            momo_number,
+            momo_name,
+            delivery_fee,
+            free_delivery_threshold,
+            delivery_time,
+            store_open,
+            accept_orders
+        `)
+        .eq("id", 1)
+        .maybeSingle();
+
+    if (error) {
+        console.error("Store settings error:", error);
+
+        throw new Error(
+            "Unable to load store settings. Please refresh the checkout page."
+        );
+    }
+
+    if (!data) {
+        throw new Error(
+            "Store settings were not found. Please check your store settings in the admin dashboard."
+        );
+    }
+
+    storeSettings = {
+        ...storeSettings,
+        storeName: data.store_name || DEFAULT_SETTINGS.storeName,
+        storeTagline: data.store_tagline || DEFAULT_SETTINGS.storeTagline,
+        whatsappNumber: data.whatsapp_number || DEFAULT_SETTINGS.whatsappNumber,
+        momoNumber: data.momo_number || DEFAULT_SETTINGS.momoNumber,
+        momoName: data.momo_name || DEFAULT_SETTINGS.momoName,
+        deliveryFee: Number(data.delivery_fee ?? 0),
+        freeDelivery: Number(data.free_delivery_threshold ?? 0),
+        deliveryTime: data.delivery_time || DEFAULT_SETTINGS.deliveryTime,
+        storeOpen: data.store_open ?? true,
+        acceptOrders: data.accept_orders ?? true
+    };
+
+    // Refresh the WhatsApp and MoMo values after settings load.
+    window.ADMIN_WHATSAPP = cleanWhatsAppNumber(
+        storeSettings.whatsappNumber
+    );
+
+    window.MOMO_NUMBER = storeSettings.momoNumber;
+    window.MOMO_NAME = storeSettings.momoName;
+}
+
+/* =========================================
+   CURRENCY FORMAT
+========================================= */
 
 function money(amount) {
     const value = Number(amount || 0);
@@ -744,6 +805,10 @@ function money(amount) {
     return storeSettings.currency + " " + value.toFixed(2);
 }
 
+/* =========================================
+   WHATSAPP NUMBER FORMAT
+========================================= */
+
 function cleanWhatsAppNumber(number) {
     let digits = String(number || "").replace(/\D/g, "");
 
@@ -754,12 +819,12 @@ function cleanWhatsAppNumber(number) {
     return digits;
 }
 
-const ADMIN_WHATSAPP = cleanWhatsAppNumber(
+let ADMIN_WHATSAPP = cleanWhatsAppNumber(
     storeSettings.whatsappNumber || DEFAULT_SETTINGS.whatsappNumber
 );
 
-const MOMO_NUMBER = storeSettings.momoNumber || DEFAULT_SETTINGS.momoNumber;
-const MOMO_NAME = storeSettings.momoName || DEFAULT_SETTINGS.momoName;
+let MOMO_NUMBER = storeSettings.momoNumber || DEFAULT_SETTINGS.momoNumber;
+let MOMO_NAME = storeSettings.momoName || DEFAULT_SETTINGS.momoName;
 
 /* =========================================
    CART
@@ -767,8 +832,11 @@ const MOMO_NAME = storeSettings.momoName || DEFAULT_SETTINGS.momoName;
 
 function getCart() {
     try {
-        const cart = JSON.parse(localStorage.getItem("kikisCart") || "[]");
-        return Array.isArray(cart) ? cart : [];
+        const savedCart = JSON.parse(
+            localStorage.getItem("kikisCart") || "[]"
+        );
+
+        return Array.isArray(savedCart) ? savedCart : [];
     } catch {
         return [];
     }
@@ -780,14 +848,25 @@ function saveCart(cart) {
 
 let cart = getCart();
 
+/* =========================================
+   SUBTOTAL
+========================================= */
+
 function getSubtotal() {
     return cart.reduce((sum, item) => {
-        return sum + Number(item.price || 0) * Number(item.quantity || 0);
+        return sum +
+            Number(item.price || 0) *
+            Number(item.quantity || 0);
     }, 0);
 }
 
+/* =========================================
+   DELIVERY FEE CALCULATION
+========================================= */
+
 function getDeliveryFee(subtotal = getSubtotal()) {
-    // No delivery charge when the cart is empty
+
+    // An empty cart must never attract a delivery fee.
     if (!cart.length || subtotal <= 0) {
         return 0;
     }
@@ -802,6 +881,7 @@ function getDeliveryFee(subtotal = getSubtotal()) {
         Number(storeSettings.freeDelivery) || 0
     );
 
+    // Free delivery applies when the subtotal reaches the threshold.
     if (freeThreshold > 0 && subtotal >= freeThreshold) {
         return 0;
     }
@@ -816,32 +896,51 @@ function getDeliveryFee(subtotal = getSubtotal()) {
 
 async function refreshCartProducts() {
     if (!cart.length) {
+        cart = [];
+        saveCart(cart);
         displayOrder();
         return;
     }
 
     const productIds = [
         ...new Set(
-            cart.map(item => String(item.product_id || item.id || ""))
-                .filter(Boolean)
+            cart.map(item =>
+                String(item.product_id || item.id || "")
+            ).filter(Boolean)
         )
     ];
 
     const { data, error } = await supabase
         .from("products")
-        .select("id,name,description,category,price,image_url,stock,status,discount_active,discount_percent")
+        .select(`
+            id,
+            name,
+            description,
+            category,
+            price,
+            image_url,
+            stock,
+            status,
+            discount_active,
+            discount_percent
+        `)
         .in("id", productIds)
         .eq("status", "active");
 
     if (error) {
         console.error("Product refresh error:", error);
-        throw new Error("We could not verify your cart. Please refresh the page and try again.");
+
+        throw new Error(
+            "We could not verify your cart. Please refresh the page and try again."
+        );
     }
 
-    const products = new Map((data || []).map(product => [
-        String(product.id),
-        product
-    ]));
+    const products = new Map(
+        (data || []).map(product => [
+            String(product.id),
+            product
+        ])
+    );
 
     const updatedCart = [];
 
@@ -853,10 +952,18 @@ async function refreshCartProducts() {
             continue;
         }
 
-        const requestedQuantity = Math.max(1, Number(item.quantity) || 1);
-        const quantity = Math.min(requestedQuantity, Number(product.stock));
+        const requestedQuantity = Math.max(
+            1,
+            Number(item.quantity) || 1
+        );
+
+        const quantity = Math.min(
+            requestedQuantity,
+            Number(product.stock)
+        );
 
         const originalPrice = Number(product.price || 0);
+
         const discountActive =
             product.discount_active === true &&
             Number(product.discount_percent) > 0;
@@ -866,7 +973,12 @@ async function refreshCartProducts() {
             : 0;
 
         const discountedPrice = discountActive
-            ? Number((originalPrice * (1 - discountPercent / 100)).toFixed(2))
+            ? Number(
+                (
+                    originalPrice *
+                    (1 - discountPercent / 100)
+                ).toFixed(2)
+            )
             : originalPrice;
 
         updatedCart.push({
@@ -889,52 +1001,74 @@ async function refreshCartProducts() {
 }
 
 /* =========================================
-   APPLY STORE SETTINGS
+   APPLY STORE SETTINGS TO PAGE
 ========================================= */
 
 function applyStoreSettings() {
-    const storeName = storeSettings.storeName || DEFAULT_SETTINGS.storeName;
-    const tagline = storeSettings.storeTagline || DEFAULT_SETTINGS.storeTagline;
+    const storeName =
+        storeSettings.storeName || DEFAULT_SETTINGS.storeName;
+
+    const tagline =
+        storeSettings.storeTagline || DEFAULT_SETTINGS.storeTagline;
 
     document.title = "Checkout | " + storeName;
 
     const announcement = document.querySelector(".announcement");
+
     if (announcement) {
         announcement.textContent = storeName + " • " + tagline;
     }
 
     const footerName = document.querySelector("footer strong");
-    if (footerName) footerName.textContent = storeName;
+
+    if (footerName) {
+        footerName.textContent = storeName;
+    }
 
     const footerPhone = document.getElementById("footer-phone");
+
     if (footerPhone) {
-        footerPhone.textContent = storeSettings.storePhone || MOMO_NUMBER;
+        footerPhone.textContent =
+            storeSettings.storePhone || MOMO_NUMBER;
     }
 
     document.getElementById("momo-number").textContent = MOMO_NUMBER;
     document.getElementById("momo-name").textContent = MOMO_NAME;
 
-    const whatsappLink = document.getElementById("floating-whatsapp");
+    const whatsappLink =
+        document.getElementById("floating-whatsapp");
+
     if (whatsappLink && ADMIN_WHATSAPP) {
-        whatsappLink.href = "https://wa.me/" + ADMIN_WHATSAPP;
+        whatsappLink.href =
+            "https://wa.me/" + ADMIN_WHATSAPP;
     }
 
-    const notice = document.getElementById("store-status-notice");
-    const submitButton = document.getElementById("submit-btn");
+    const notice =
+        document.getElementById("store-status-notice");
+
+    const submitButton =
+        document.getElementById("submit-btn");
 
     if (!storeSettings.storeOpen) {
-        notice.textContent = "Our store is currently closed. Checkout is temporarily unavailable.";
+        notice.textContent =
+            "Our store is currently closed. Checkout is temporarily unavailable.";
+
         notice.style.display = "block";
         submitButton.disabled = true;
         submitButton.textContent = "STORE CURRENTLY CLOSED";
+
     } else if (!storeSettings.acceptOrders) {
-        notice.textContent = "We are temporarily not accepting new orders. Please check back later.";
+        notice.textContent =
+            "We are temporarily not accepting new orders. Please check back later.";
+
         notice.style.display = "block";
         submitButton.disabled = true;
         submitButton.textContent = "ORDERS TEMPORARILY UNAVAILABLE";
     }
 
-    const secureNote = document.querySelector(".secure-note");
+    const secureNote =
+        document.querySelector(".secure-note");
+
     if (secureNote) {
         secureNote.textContent =
             "Your order will be sent to " + storeName +
@@ -942,16 +1076,35 @@ function applyStoreSettings() {
             (storeSettings.deliveryTime || "To be confirmed") + ".";
     }
 
-    const threshold = Number(storeSettings.freeDelivery) || 0;
+    // Avoid adding duplicate free-delivery messages.
+    const existingNote =
+        document.getElementById("free-delivery-note");
+
+    if (existingNote) {
+        existingNote.remove();
+    }
+
+    const threshold =
+        Number(storeSettings.freeDelivery) || 0;
 
     if (threshold > 0) {
         const note = document.createElement("p");
+
+        note.id = "free-delivery-note";
+
         note.style.cssText =
             "font-size:11px;color:#947039;text-align:center;margin-top:10px;line-height:1.5;";
-        note.textContent = "Free delivery on orders of " + money(threshold) + " or more.";
 
-        const backLink = document.querySelector(".summary .back-link");
-        if (backLink) backLink.before(note);
+        note.textContent =
+            "Free delivery on orders of " +
+            money(threshold) + " or more.";
+
+        const backLink =
+            document.querySelector(".summary .back-link");
+
+        if (backLink) {
+            backLink.before(note);
+        }
     }
 }
 
@@ -960,7 +1113,9 @@ function applyStoreSettings() {
 ========================================= */
 
 function displayOrder() {
-    const container = document.getElementById("order-items");
+    const container =
+        document.getElementById("order-items");
+
     container.innerHTML = "";
 
     let count = 0;
@@ -975,13 +1130,23 @@ function displayOrder() {
         row.className = "order-item";
 
         const description = document.createElement("span");
-        description.textContent = (item.name || "Product") + " × " + quantity;
+
+        description.textContent =
+            (item.name || "Product") + " × " + quantity;
 
         const amount = document.createElement("strong");
 
-        if (item.discount_active && Number(item.original_price) > price) {
-            const originalAmount = money(Number(item.original_price) * quantity);
-            const discountedAmount = money(price * quantity);
+        if (
+            item.discount_active &&
+            Number(item.original_price) > price
+        ) {
+            const originalAmount = money(
+                Number(item.original_price) * quantity
+            );
+
+            const discountedAmount = money(
+                price * quantity
+            );
 
             amount.innerHTML = `
                 <span style="display:block;text-decoration:line-through;color:#999;font-size:11px;font-weight:normal">
@@ -995,7 +1160,8 @@ function displayOrder() {
                 </span>
             `;
         } else {
-            amount.textContent = money(price * quantity);
+            amount.textContent =
+                money(price * quantity);
         }
 
         row.append(description, amount);
@@ -1007,29 +1173,50 @@ function displayOrder() {
     const total = subtotal + delivery;
 
     document.getElementById("item-count").textContent = count;
-    document.getElementById("subtotal").textContent = money(subtotal);
+
+    document.getElementById("subtotal").textContent =
+        money(subtotal);
 
     const freeDelivery =
         Number(storeSettings.freeDelivery) > 0 &&
-        subtotal >= Number(storeSettings.freeDelivery);
+        subtotal >= Number(storeSettings.freeDelivery) &&
+        cart.length > 0;
 
     document.getElementById("delivery-fee").textContent =
         freeDelivery ? "FREE" : money(delivery);
 
-    document.getElementById("grand-total").textContent = money(total);
+    document.getElementById("grand-total").textContent =
+        money(total);
 
     if (cart.length === 0) {
-        const button = document.getElementById("submit-btn");
+        const button =
+            document.getElementById("submit-btn");
+
         button.disabled = true;
         button.textContent = "YOUR CART IS EMPTY";
+    } else if (
+        storeSettings.storeOpen &&
+        storeSettings.acceptOrders
+    ) {
+        const selectedPayment =
+            document.querySelector('input[name="payment"]:checked');
+
+        if (selectedPayment && selectedPayment.value === "momo") {
+            document.getElementById("submit-btn").disabled = false;
+            document.getElementById("submit-btn").textContent =
+                "SUBMIT ORDER VIA WHATSAPP";
+        }
     }
 }
 /* =========================================
    PAYMENT METHOD
 ========================================= */
 
-const paymentOptions = document.querySelectorAll('input[name="payment"]');
-const receiptInput = document.getElementById("receipt");
+const paymentOptions =
+    document.querySelectorAll('input[name="payment"]');
+
+const receiptInput =
+    document.getElementById("receipt");
 
 paymentOptions.forEach(option => {
     option.addEventListener("change", function () {
@@ -1043,7 +1230,9 @@ paymentOptions.forEach(option => {
 
         receiptInput.required = isMomo;
 
-        const button = document.getElementById("submit-btn");
+        const button =
+            document.getElementById("submit-btn");
+
         button.textContent = isMomo
             ? "SUBMIT ORDER VIA WHATSAPP"
             : "PAYSTACK NOT YET AVAILABLE";
@@ -1051,7 +1240,8 @@ paymentOptions.forEach(option => {
         if (!isMomo) {
             button.disabled = true;
         } else {
-            button.disabled = cart.length === 0 ||
+            button.disabled =
+                cart.length === 0 ||
                 !storeSettings.storeOpen ||
                 !storeSettings.acceptOrders;
         }
@@ -1064,8 +1254,12 @@ paymentOptions.forEach(option => {
 
 receiptInput.addEventListener("change", function () {
     const file = this.files[0];
-    const preview = document.getElementById("receipt-preview");
-    const name = document.getElementById("receipt-name");
+
+    const preview =
+        document.getElementById("receipt-preview");
+
+    const name =
+        document.getElementById("receipt-name");
 
     preview.style.display = "none";
     name.textContent = "";
@@ -1103,15 +1297,19 @@ receiptInput.addEventListener("change", function () {
 ========================================= */
 
 async function uploadReceipt(file, orderReference) {
-    const extension = file.name.split(".").pop().toLowerCase();
+    const extension =
+        file.name.split(".").pop().toLowerCase();
 
-    const safeExtension = ["jpg", "jpeg", "png", "pdf"].includes(extension)
-        ? extension
-        : "file";
+    const safeExtension =
+        ["jpg", "jpeg", "png", "pdf"].includes(extension)
+            ? extension
+            : "file";
 
     const filePath =
         "customer-receipts/" +
-        orderReference + "-" + crypto.randomUUID() + "." + safeExtension;
+        orderReference + "-" +
+        crypto.randomUUID() + "." +
+        safeExtension;
 
     const { data, error } = await supabase.storage
         .from("payment-receipts")
@@ -1137,8 +1335,11 @@ async function uploadReceipt(file, orderReference) {
    SUBMIT ORDER
 ========================================= */
 
-const checkoutForm = document.getElementById("checkout-form");
-const submitButton = document.getElementById("submit-btn");
+const checkoutForm =
+    document.getElementById("checkout-form");
+
+const submitButton =
+    document.getElementById("submit-btn");
 
 checkoutForm.addEventListener("submit", async function (event) {
     event.preventDefault();
@@ -1150,7 +1351,10 @@ checkoutForm.addEventListener("submit", async function (event) {
         return;
     }
 
-    if (!storeSettings.storeOpen || !storeSettings.acceptOrders) {
+    if (
+        !storeSettings.storeOpen ||
+        !storeSettings.acceptOrders
+    ) {
         alert("The store is currently not accepting orders.");
         return;
     }
@@ -1160,7 +1364,9 @@ checkoutForm.addEventListener("submit", async function (event) {
     ).value;
 
     if (payment === "paystack") {
-        alert("Paystack is not connected yet. Please choose Mobile Money.");
+        alert(
+            "Paystack is not connected yet. Please choose Mobile Money."
+        );
         return;
     }
 
@@ -1188,6 +1394,20 @@ checkoutForm.addEventListener("submit", async function (event) {
     submitButton.textContent = "PROCESSING YOUR ORDER...";
 
     try {
+        // Always reload the latest settings before creating an order.
+        await loadStoreSettingsFromDatabase();
+
+        applyStoreSettings();
+
+        if (
+            !storeSettings.storeOpen ||
+            !storeSettings.acceptOrders
+        ) {
+            throw new Error(
+                "The store is currently not accepting orders."
+            );
+        }
+
         // Refresh prices, stock and discounts from Supabase.
         await refreshCartProducts();
 
@@ -1201,7 +1421,8 @@ checkoutForm.addEventListener("submit", async function (event) {
             "MOMO-" + crypto.randomUUID();
 
         // Upload the actual receipt file.
-        const receiptPath = await uploadReceipt(receipt, orderReference);
+        const receiptPath =
+            await uploadReceipt(receipt, orderReference);
 
         const customerForDatabase = {
             ...customer,
@@ -1234,16 +1455,19 @@ checkoutForm.addEventListener("submit", async function (event) {
             console.error("Order submission error:", error);
 
             throw new Error(
-                "Supabase could not create the order. " + error.message
+                "Supabase could not create the order. " +
+                error.message
             );
         }
 
         // RPC may return an object or a one-row array.
-        const savedOrder = Array.isArray(data) ? data[0] : data;
+        const savedOrder =
+            Array.isArray(data) ? data[0] : data;
 
         if (savedOrder?.success === false) {
             throw new Error(
-                savedOrder.message || "The order could not be created."
+                savedOrder.message ||
+                "The order could not be created."
             );
         }
 
@@ -1253,14 +1477,20 @@ checkoutForm.addEventListener("submit", async function (event) {
             savedOrder?.order_id ||
             orderReference;
 
-        const finalTotal =
-            Number(savedOrder?.total ?? savedOrder?.grand_total ?? getSubtotal() + getDeliveryFee());
+        const finalTotal = Number(
+            savedOrder?.total ??
+            savedOrder?.grand_total ??
+            getSubtotal() + getDeliveryFee()
+        );
 
-        const finalSubtotal =
-            Number(savedOrder?.subtotal ?? getSubtotal());
+        const finalSubtotal = Number(
+            savedOrder?.subtotal ?? getSubtotal()
+        );
 
-        const finalDelivery =
-            Number(savedOrder?.delivery_fee ?? getDeliveryFee(finalSubtotal));
+        const finalDelivery = Number(
+            savedOrder?.delivery_fee ??
+            getDeliveryFee(finalSubtotal)
+        );
 
         const order = {
             reference: finalReference,
@@ -1361,15 +1591,18 @@ ${storeSettings.storeName || "Kikis Amber Touch"}`;
         );
 
         submitButton.disabled = false;
-        submitButton.textContent = "SUBMIT ORDER VIA WHATSAPP";
+        submitButton.textContent =
+            "SUBMIT ORDER VIA WHATSAPP";
     }
 });
+
 /* =========================================
    MOBILE MENU
 ========================================= */
 
 window.toggleMenu = function () {
-    document.getElementById("navigation").classList.toggle("active");
+    document.getElementById("navigation")
+        .classList.toggle("active");
 };
 
 /* =========================================
@@ -1379,17 +1612,24 @@ window.toggleMenu = function () {
 document.getElementById("year").textContent =
     new Date().getFullYear();
 
-applyStoreSettings();
-
 try {
+    // Load the latest delivery fee and free-delivery threshold
+    // from the settings saved in the admin dashboard.
+    await loadStoreSettingsFromDatabase();
+
+    applyStoreSettings();
+
+    // Recalculate cart prices and delivery using current database data.
     await refreshCartProducts();
+
 } catch (error) {
     console.error(error);
 
     document.getElementById("store-status-notice").textContent =
         error.message;
 
-    document.getElementById("store-status-notice").style.display = "block";
+    document.getElementById("store-status-notice").style.display =
+        "block";
 
     submitButton.disabled = true;
     submitButton.textContent = "CART VERIFICATION FAILED";
