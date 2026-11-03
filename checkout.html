@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -458,7 +457,6 @@ footer strong {
 </div>
 
 <header>
-
     <a href="index.html" class="logo">
         KIKIS AMBER TOUCH
         <span>LUXURY FRAGRANCES</span>
@@ -471,7 +469,6 @@ footer strong {
         <a href="shop.html">SHOP</a>
         <a href="cart.html">MY CART</a>
     </nav>
-
 </header>
 
 <section class="page-banner">
@@ -488,261 +485,194 @@ footer strong {
 
 <div class="checkout-layout">
 
-    <div>
+<div>
 
-        <!-- CUSTOMER INFORMATION -->
+    <section class="panel">
+        <h2>01. Customer Information</h2>
 
-        <section class="panel">
-
-            <h2>01. Customer Information</h2>
-
-            <div class="form-group">
-                <label for="fullname">Full Name *</label>
-                <input
-                    type="text"
-                    id="fullname"
-                    placeholder="Enter your full name"
-                    required
-                >
-            </div>
-
-            <div class="two-columns">
-
-                <div class="form-group">
-                    <label for="phone">Phone Number *</label>
-                    <input
-                        type="tel"
-                        id="phone"
-                        placeholder="024XXXXXXX"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input
-                        type="email"
-                        id="email"
-                        placeholder="example@gmail.com"
-                    >
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- DELIVERY DETAILS -->
-
-        <section class="panel">
-
-            <h2>02. Delivery Information</h2>
-
-            <div class="form-group">
-                <label for="region">Region *</label>
-                <select id="region" required>
-                    <option value="">Select your region</option>
-                    <option>Greater Accra</option>
-                    <option>Ashanti</option>
-                    <option>Central</option>
-                    <option>Eastern</option>
-                    <option>Western</option>
-                    <option>Western North</option>
-                    <option>Volta</option>
-                    <option>Oti</option>
-                    <option>Northern</option>
-                    <option>Savannah</option>
-                    <option>North East</option>
-                    <option>Upper East</option>
-                    <option>Upper West</option>
-                    <option>Bono</option>
-                    <option>Bono East</option>
-                    <option>Ahafo</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="city">Town / City *</label>
-                <input
-                    type="text"
-                    id="city"
-                    placeholder="Enter your town or city"
-                    required
-                >
-            </div>
-
-            <div class="form-group">
-                <label for="address">Full Delivery Address *</label>
-                <textarea
-                    id="address"
-                    placeholder="House number, street name, landmark and directions..."
-                    required
-                ></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="notes">Additional Delivery Instructions</label>
-                <textarea
-                    id="notes"
-                    placeholder="Optional delivery instructions"
-                ></textarea>
-            </div>
-
-        </section>
-
-        <!-- PAYMENT METHOD -->
-
-        <section class="panel">
-
-            <h2>03. Choose Payment Method</h2>
-
-            <label class="payment-option">
-                <input
-                    type="radio"
-                    name="payment"
-                    value="momo"
-                    checked
-                >
-
-                <span>
-                    <strong>Mobile Money (MoMo)</strong>
-                    <small>Transfer payment and upload your transaction receipt.</small>
-                </span>
-            </label>
-
-            <label class="payment-option">
-                <input
-                    type="radio"
-                    name="payment"
-                    value="paystack"
-                >
-
-                <span>
-                    <strong>Paystack</strong>
-                    <small>Pay securely using the Paystack payment gateway.</small>
-                </span>
-            </label>
-
-            <!-- MOMO DETAILS -->
-
-            <div id="momo-details" class="payment-details active">
-
-                <h3>Mobile Money Payment</h3>
-
-                <p class="payment-instructions">
-                    Please transfer the exact order amount to:
-                </p>
-
-                <div class="account-number" id="momo-number">
-                    053 736 7236
-                </div>
-
-                <div class="account-name" id="momo-name">
-                    NANA AKUA AMPOFOAH YAMOAH
-                </div>
-
-                <p class="payment-instructions">
-                    1. Open your Mobile Money application.<br>
-                    2. Send the exact amount shown in your order summary.<br>
-                    3. Confirm your transaction.<br>
-                    4. Upload your payment receipt below.<br>
-                    5. Submit your order for administrator verification.
-                </p>
-
-                <div class="form-group" style="margin-top:20px">
-
-                    <label>Upload MoMo Payment Receipt *</label>
-
-                    <div class="upload-area">
-
-                        <strong>Choose your receipt</strong>
-
-                        <p>Upload a screenshot or transaction receipt (JPG, PNG or PDF).</p>
-
-                        <input
-                            type="file"
-                            id="receipt"
-                            accept="image/jpeg,image/png,application/pdf"
-                        >
-
-                        <img id="receipt-preview" alt="Receipt preview">
-
-                        <p id="receipt-name"></p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- PAYSTACK DETAILS -->
-
-            <div id="paystack-details" class="payment-details">
-
-                <h3>Pay with Paystack</h3>
-
-                <p class="payment-instructions">
-                    You will be redirected to a secure Paystack checkout
-                    to complete your payment.
-                </p>
-
-                <div class="notice" id="paystack-notice" style="display:block;">
-                    Paystack requires a secure payment backend before it can accept payments.
-                    Please use Mobile Money for now.
-                </div>
-
-            </div>
-
-        </section>
-
-    </div>
-
-    <!-- ORDER SUMMARY -->
-
-    <aside class="summary">
-
-        <h2>Your Order</h2>
-
-        <div id="order-items"></div>
-
-        <div class="summary-row">
-            <span>Total Items</span>
-            <span id="item-count">0</span>
+        <div class="form-group">
+            <label for="fullname">Full Name *</label>
+            <input type="text" id="fullname"
+                placeholder="Enter your full name" required>
         </div>
 
-        <div class="summary-row">
-            <span>Subtotal</span>
-            <span id="subtotal">GH₵ 0.00</span>
+        <div class="two-columns">
+            <div class="form-group">
+                <label for="phone">Phone Number *</label>
+                <input type="tel" id="phone"
+                    placeholder="024XXXXXXX" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email"
+                    placeholder="example@gmail.com">
+            </div>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>02. Delivery Information</h2>
+
+        <div class="form-group">
+            <label for="region">Region *</label>
+            <select id="region" required>
+                <option value="">Select your region</option>
+                <option>Greater Accra</option>
+                <option>Ashanti</option>
+                <option>Central</option>
+                <option>Eastern</option>
+                <option>Western</option>
+                <option>Western North</option>
+                <option>Volta</option>
+                <option>Oti</option>
+                <option>Northern</option>
+                <option>Savannah</option>
+                <option>North East</option>
+                <option>Upper East</option>
+                <option>Upper West</option>
+                <option>Bono</option>
+                <option>Bono East</option>
+                <option>Ahafo</option>
+            </select>
         </div>
 
-        <div class="summary-row">
-            <span>Delivery</span>
-            <span id="delivery-fee">GH₵ 0.00</span>
+        <div class="form-group">
+            <label for="city">Town / City *</label>
+            <input type="text" id="city"
+                placeholder="Enter your town or city" required>
         </div>
 
-        <div class="summary-row summary-total">
-            <span>Order Total</span>
-            <span id="grand-total">GH₵ 0.00</span>
+        <div class="form-group">
+            <label for="address">Full Delivery Address *</label>
+            <textarea id="address"
+                placeholder="House number, street name, landmark and directions..."
+                required></textarea>
         </div>
 
-        <button type="submit" class="submit-btn" id="submit-btn">
-            SUBMIT ORDER VIA WHATSAPP
-        </button>
+        <div class="form-group">
+            <label for="notes">Additional Delivery Instructions</label>
+            <textarea id="notes"
+                placeholder="Optional delivery instructions"></textarea>
+        </div>
+    </section>
 
-        <p class="secure-note">
-            Your order will be sent to Kikis Amber Touch
-            for processing and payment verification.
-        </p>
+    <section class="panel">
+        <h2>03. Choose Payment Method</h2>
 
-        <a href="cart.html" class="back-link">
-            ← Return to Shopping Cart
-        </a>
+        <label class="payment-option">
+            <input type="radio" name="payment" value="momo" checked>
+            <span>
+                <strong>Mobile Money (MoMo)</strong>
+                <small>Transfer payment and upload your transaction receipt.</small>
+            </span>
+        </label>
 
-    </aside>
+        <label class="payment-option">
+            <input type="radio" name="payment" value="paystack">
+            <span>
+                <strong>Paystack</strong>
+                <small>Pay securely using the Paystack payment gateway.</small>
+            </span>
+        </label>
+
+        <div id="momo-details" class="payment-details active">
+            <h3>Mobile Money Payment</h3>
+
+            <p class="payment-instructions">
+                Please transfer the exact order amount to:
+            </p>
+
+            <div class="account-number" id="momo-number">
+                053 736 7236
+            </div>
+
+            <div class="account-name" id="momo-name">
+                NANA AKUA AMPOFOAH YAMOAH
+            </div>
+
+            <p class="payment-instructions">
+                1. Open your Mobile Money application.<br>
+                2. Send the exact amount shown in your order summary.<br>
+                3. Confirm your transaction.<br>
+                4. Upload your payment receipt below.<br>
+                5. Submit your order for administrator verification.
+            </p>
+
+            <div class="form-group" style="margin-top:20px">
+                <label>Upload MoMo Payment Receipt *</label>
+
+                <div class="upload-area">
+                    <strong>Choose your receipt</strong>
+                    <p>Upload a screenshot or transaction receipt (JPG, PNG or PDF).</p>
+
+                    <input type="file" id="receipt"
+                        accept="image/jpeg,image/png,application/pdf">
+
+                    <img id="receipt-preview" alt="Receipt preview">
+                    <p id="receipt-name"></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="paystack-details" class="payment-details">
+            <h3>Pay with Paystack</h3>
+
+            <p class="payment-instructions">
+                You will be redirected to a secure Paystack checkout
+                to complete your payment.
+            </p>
+
+            <div class="notice" id="paystack-notice" style="display:block;">
+                Paystack requires a secure payment backend before it can accept payments.
+                Please use Mobile Money for now.
+            </div>
+        </div>
+    </section>
 
 </div>
 
-</form>
+<aside class="summary">
+    <h2>Your Order</h2>
 
+    <div id="order-items"></div>
+
+    <div class="summary-row">
+        <span>Total Items</span>
+        <span id="item-count">0</span>
+    </div>
+
+    <div class="summary-row">
+        <span>Subtotal</span>
+        <span id="subtotal">GH₵ 0.00</span>
+    </div>
+
+    <div class="summary-row">
+        <span>Delivery</span>
+        <span id="delivery-fee">GH₵ 0.00</span>
+    </div>
+
+    <div class="summary-row summary-total">
+        <span>Order Total</span>
+        <span id="grand-total">GH₵ 0.00</span>
+    </div>
+
+    <button type="submit" class="submit-btn" id="submit-btn">
+        SUBMIT ORDER VIA WHATSAPP
+    </button>
+
+    <p class="secure-note">
+        Your order will be sent to Kikis Amber Touch
+        for processing and payment verification.
+    </p>
+
+    <a href="cart.html" class="back-link">
+        ← Return to Shopping Cart
+    </a>
+</aside>
+
+</div>
+</form>
 </main>
 
 <footer>
@@ -752,15 +682,12 @@ footer strong {
     <p>© <span id="year"></span> Kikis Amber Touch. All Rights Reserved.</p>
 </footer>
 
-<a
-    class="whatsapp"
-    id="floating-whatsapp"
+<a class="whatsapp" id="floating-whatsapp"
     href="https://wa.me/233503192094"
-    target="_blank"
-    rel="noopener"
->◉</a>
+    target="_blank" rel="noopener">◉</a>
 
-<script type="module">
+
+    <script type="module">
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
 /* =========================================
@@ -860,8 +787,20 @@ function getSubtotal() {
 }
 
 function getDeliveryFee(subtotal = getSubtotal()) {
-    const standardFee = Math.max(0, Number(storeSettings.deliveryFee) || 0);
-    const freeThreshold = Math.max(0, Number(storeSettings.freeDelivery) || 0);
+    // No delivery charge when the cart is empty
+    if (!cart.length || subtotal <= 0) {
+        return 0;
+    }
+
+    const standardFee = Math.max(
+        0,
+        Number(storeSettings.deliveryFee) || 0
+    );
+
+    const freeThreshold = Math.max(
+        0,
+        Number(storeSettings.freeDelivery) || 0
+    );
 
     if (freeThreshold > 0 && subtotal >= freeThreshold) {
         return 0;
@@ -872,6 +811,7 @@ function getDeliveryFee(subtotal = getSubtotal()) {
 
 /* =========================================
    REFRESH PRODUCTS FROM SUPABASE
+   GET CURRENT PRICES AND DISCOUNTS
 ========================================= */
 
 async function refreshCartProducts() {
@@ -889,7 +829,7 @@ async function refreshCartProducts() {
 
     const { data, error } = await supabase
         .from("products")
-        .select("id,name,description,category,price,image_url,stock,status")
+        .select("id,name,description,category,price,image_url,stock,status,discount_active,discount_percent")
         .in("id", productIds)
         .eq("status", "active");
 
@@ -916,11 +856,27 @@ async function refreshCartProducts() {
         const requestedQuantity = Math.max(1, Number(item.quantity) || 1);
         const quantity = Math.min(requestedQuantity, Number(product.stock));
 
+        const originalPrice = Number(product.price || 0);
+        const discountActive =
+            product.discount_active === true &&
+            Number(product.discount_percent) > 0;
+
+        const discountPercent = discountActive
+            ? Number(product.discount_percent)
+            : 0;
+
+        const discountedPrice = discountActive
+            ? Number((originalPrice * (1 - discountPercent / 100)).toFixed(2))
+            : originalPrice;
+
         updatedCart.push({
             id: String(product.id),
             product_id: String(product.id),
             name: product.name,
-            price: Number(product.price),
+            original_price: originalPrice,
+            discount_active: discountActive,
+            discount_percent: discountPercent,
+            price: discountedPrice,
             image: product.image_url || "",
             quantity,
             stock: Number(product.stock)
@@ -1000,7 +956,7 @@ function applyStoreSettings() {
 }
 
 /* =========================================
-   ORDER SUMMARY
+   ORDER SUMMARY WITH DISCOUNTS
 ========================================= */
 
 function displayOrder() {
@@ -1022,7 +978,25 @@ function displayOrder() {
         description.textContent = (item.name || "Product") + " × " + quantity;
 
         const amount = document.createElement("strong");
-        amount.textContent = money(price * quantity);
+
+        if (item.discount_active && Number(item.original_price) > price) {
+            const originalAmount = money(Number(item.original_price) * quantity);
+            const discountedAmount = money(price * quantity);
+
+            amount.innerHTML = `
+                <span style="display:block;text-decoration:line-through;color:#999;font-size:11px;font-weight:normal">
+                    ${originalAmount}
+                </span>
+                <span style="display:block;color:#287343">
+                    ${discountedAmount}
+                </span>
+                <span style="display:block;color:#287343;font-size:10px;font-weight:normal">
+                    ${Number(item.discount_percent)}% OFF
+                </span>
+            `;
+        } else {
+            amount.textContent = money(price * quantity);
+        }
 
         row.append(description, amount);
         container.appendChild(row);
@@ -1050,7 +1024,6 @@ function displayOrder() {
         button.textContent = "YOUR CART IS EMPTY";
     }
 }
-
 /* =========================================
    PAYMENT METHOD
 ========================================= */
@@ -1131,6 +1104,7 @@ receiptInput.addEventListener("change", function () {
 
 async function uploadReceipt(file, orderReference) {
     const extension = file.name.split(".").pop().toLowerCase();
+
     const safeExtension = ["jpg", "jpeg", "png", "pdf"].includes(extension)
         ? extension
         : "file";
@@ -1149,12 +1123,13 @@ async function uploadReceipt(file, orderReference) {
 
     if (error) {
         console.error("Receipt upload error:", error);
+
         throw new Error(
             "Receipt upload failed. Please check that the payment-receipts bucket and its upload policy have been created in Supabase."
         );
     }
 
-    // Keep the storage path, not a public URL, in the order record.
+    // Store the storage path, not a public URL.
     return data.path;
 }
 
@@ -1213,20 +1188,21 @@ checkoutForm.addEventListener("submit", async function (event) {
     submitButton.textContent = "PROCESSING YOUR ORDER...";
 
     try {
-        // Verify the products and prices again immediately before submission.
+        // Refresh prices, stock and discounts from Supabase.
         await refreshCartProducts();
 
         if (!cart.length) {
-            throw new Error("Your cart no longer contains available products. Please return to the shop.");
+            throw new Error(
+                "Your cart no longer contains available products. Please return to the shop."
+            );
         }
 
         const transactionReference =
             "MOMO-" + crypto.randomUUID();
 
-        // Upload the real receipt file first.
+        // Upload the actual receipt file.
         const receiptPath = await uploadReceipt(receipt, orderReference);
 
-        // The database function must calculate the final prices and totals.
         const customerForDatabase = {
             ...customer,
             receipt_path: receiptPath,
@@ -1235,6 +1211,8 @@ checkoutForm.addEventListener("submit", async function (event) {
             delivery_time: storeSettings.deliveryTime || ""
         };
 
+        // Send product IDs and quantities only.
+        // Never trust prices supplied by the browser.
         const itemsForDatabase = cart.map(item => ({
             product_id: item.product_id || item.id,
             quantity: Number(item.quantity)
@@ -1254,13 +1232,20 @@ checkoutForm.addEventListener("submit", async function (event) {
 
         if (error) {
             console.error("Order submission error:", error);
+
             throw new Error(
                 "Supabase could not create the order. " + error.message
             );
         }
 
-        // The RPC may return an object or a one-row array.
+        // RPC may return an object or a one-row array.
         const savedOrder = Array.isArray(data) ? data[0] : data;
+
+        if (savedOrder?.success === false) {
+            throw new Error(
+                savedOrder.message || "The order could not be created."
+            );
+        }
 
         const finalReference =
             savedOrder?.reference ||
@@ -1299,7 +1284,10 @@ checkoutForm.addEventListener("submit", async function (event) {
             date: new Date().toISOString()
         };
 
-        localStorage.setItem("kikisCurrentOrder", JSON.stringify(order));
+        localStorage.setItem(
+            "kikisCurrentOrder",
+            JSON.stringify(order)
+        );
 
         // Build WhatsApp notification.
         let message =
@@ -1325,8 +1313,11 @@ Estimated Delivery: ${storeSettings.deliveryTime || "To be confirmed"}
         cart.forEach(item => {
             message +=
 `${item.name} x ${item.quantity}
-Unit Price: ${money(item.price)}
-Subtotal: ${money(Number(item.price) * Number(item.quantity))}
+${item.discount_active ? `Original Unit Price: ${money(item.original_price)}
+Discount: ${Number(item.discount_percent)}% OFF
+Discounted Unit Price: ${money(item.price)}
+` : `Unit Price: ${money(item.price)}
+`}Line Total: ${money(Number(item.price) * Number(item.quantity))}
 
 `;
         });
@@ -1363,13 +1354,16 @@ ${storeSettings.storeName || "Kikis Amber Touch"}`;
 
     } catch (error) {
         console.error(error);
-        alert(error.message || "Something went wrong while submitting your order.");
+
+        alert(
+            error.message ||
+            "Something went wrong while submitting your order."
+        );
 
         submitButton.disabled = false;
         submitButton.textContent = "SUBMIT ORDER VIA WHATSAPP";
     }
 });
-
 /* =========================================
    MOBILE MENU
 ========================================= */
@@ -1382,7 +1376,8 @@ window.toggleMenu = function () {
    INITIAL PAGE LOAD
 ========================================= */
 
-document.getElementById("year").textContent = new Date().getFullYear();
+document.getElementById("year").textContent =
+    new Date().getFullYear();
 
 applyStoreSettings();
 
@@ -1390,8 +1385,12 @@ try {
     await refreshCartProducts();
 } catch (error) {
     console.error(error);
-    document.getElementById("store-status-notice").textContent = error.message;
+
+    document.getElementById("store-status-notice").textContent =
+        error.message;
+
     document.getElementById("store-status-notice").style.display = "block";
+
     submitButton.disabled = true;
     submitButton.textContent = "CART VERIFICATION FAILED";
 }
@@ -1406,6 +1405,7 @@ window.addEventListener("storage", function (event) {
         displayOrder();
     }
 });
+
 </script>
 
 </body>
