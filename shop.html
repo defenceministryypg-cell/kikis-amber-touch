@@ -6,8 +6,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shop | Kikis Amber Touch</title>
 
-<style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
+<style>
 * {
     margin: 0;
     padding: 0;
@@ -186,9 +187,8 @@ nav a:hover {
     box-shadow: 0 10px 25px #00000012;
 }
 
-/* UPDATED PRODUCT IMAGE DISPLAY */
+/* PRODUCT IMAGE */
 
-/* PRODUCT IMAGE DISPLAY */
 .product-image {
     height: 310px;
     background: #f8f5ef;
@@ -208,6 +208,9 @@ nav a:hover {
     display: block;
     transform: scale(1.25);
 }
+
+/* PRODUCT DETAILS */
+
 .product-info {
     padding: 17px;
 }
@@ -225,12 +228,49 @@ nav a:hover {
     margin: 10px 0;
 }
 
+/* PRODUCT DESCRIPTION */
+
+.product-description {
+    color: #777;
+    font-size: 12px;
+    line-height: 1.65;
+    margin: 9px 0 5px;
+    overflow-wrap: anywhere;
+}
+
+.product-description.collapsed {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    overflow: hidden;
+}
+
+.description-toggle {
+    display: inline-block;
+    border: 0;
+    background: transparent;
+    color: #9c783d;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 3px 0 12px;
+}
+
+.description-toggle:hover {
+    text-decoration: underline;
+}
+
+/* PRICE */
+
 .price {
     font-weight: bold;
     color: #9c783d;
     font-size: 17px;
     margin-bottom: 15px;
 }
+
+/* QUANTITY */
 
 .quantity {
     display: flex;
@@ -251,6 +291,8 @@ nav a:hover {
 .quantity span {
     font-size: 14px;
 }
+
+/* ADD TO CART */
 
 .add-btn {
     width: 100%;
@@ -299,14 +341,21 @@ footer strong {
     bottom: 20px;
     background: #25D366;
     color: white;
-    width: 55px;
-    height: 55px;
+    width: 58px;
+    height: 58px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    font-size: 26px;
+    font-size: 35px;
     z-index: 200;
+    box-shadow: 0 4px 15px #0003;
+    transition: .3s ease;
+}
+
+.whatsapp:hover {
+    background: #1ebe5d;
+    transform: scale(1.07);
 }
 
 /* TABLET */
@@ -365,6 +414,10 @@ footer strong {
         height: 240px;
     }
 
+    .product-image img {
+        transform: scale(1.2);
+    }
+
     .product-info {
         padding: 12px;
     }
@@ -382,22 +435,17 @@ footer strong {
     }
 }
 
-@media(max-width: 768px) {
-    .product-image {
-        height: 240px;
-    }
-
-    .product-image img {
-        transform: scale(1.2);
-    }
-}
+/* SMALL PHONES */
 
 @media(max-width: 380px) {
+    .products {
+        grid-template-columns: 1fr;
+    }
+
     .product-image {
         height: 280px;
     }
 }
-
 </style>
 </head>
 
@@ -419,10 +467,12 @@ footer strong {
     <nav id="navigation">
         <a href="index.html">HOME</a>
         <a href="shop.html">SHOP</a>
+
         <a href="cart.html" class="cart-link">
             MY CART (<span id="cart-count">0</span>)
-            <a href="track-order.html">Track Order</a>
         </a>
+
+        <a href="track-order.html">TRACK ORDER</a>
     </nav>
 
 </header>
@@ -480,13 +530,17 @@ footer strong {
     <p>© <span id="year"></span> Kikis Amber Touch. All Rights Reserved.</p>
 </footer>
 
+<!-- WHATSAPP CHAT -->
+
 <a
     class="whatsapp"
     href="https://wa.me/233503192094"
     target="_blank"
     rel="noopener"
-    aria-label="Chat with us"
->◉</a>
+    aria-label="Chat with Kikis Amber Touch on WhatsApp"
+>
+    <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+</a>
 
 <script type="module">
 import { createClient } from
@@ -516,7 +570,7 @@ function money(value) {
     return "GH₵ " + Number(value || 0).toFixed(2);
 }
 
-// CART STORAGE
+/* CART STORAGE */
 
 function getCart() {
     try {
@@ -539,7 +593,7 @@ function updateCartCount() {
     $("cart-count").textContent = total;
 }
 
-// LOAD PRODUCTS FROM SUPABASE
+/* LOAD PRODUCTS FROM SUPABASE */
 
 async function loadProducts() {
     const container = $("products");
@@ -585,7 +639,7 @@ async function loadProducts() {
     displayProducts();
 }
 
-// DISPLAY PRODUCTS
+/* DISPLAY PRODUCTS */
 
 function displayProducts() {
     const search = $("search").value.trim().toLowerCase();
@@ -661,6 +715,17 @@ function displayProducts() {
 
                 <h3>${escapeHTML(product.name)}</h3>
 
+                <p class="product-description collapsed" id="description-${escapeHTML(product.id)}">${escapeHTML(product.description || "Description coming soon. Please contact us for more details about this fragrance.")}</p>
+
+                ${product.description && product.description.trim().length > 100 ? `
+                    <button
+                        class="description-toggle"
+                        type="button"
+                        onclick="toggleDescription('${escapeHTML(product.id)}', this)"
+                        aria-expanded="false"
+                    >READ MORE</button>
+                ` : ""}
+
                 <div class="price">
                     ${money(product.price)}
                 </div>
@@ -704,7 +769,21 @@ function displayProducts() {
     });
 }
 
-// CHANGE QUANTITY
+/* EXPAND OR COLLAPSE DESCRIPTION */
+
+window.toggleDescription = function(id, button) {
+    const description = $("description-" + id);
+
+    if (!description || !button) return;
+
+    const isCollapsed = description.classList.toggle("collapsed");
+
+    button.textContent = isCollapsed ? "READ MORE" : "READ LESS";
+
+    button.setAttribute("aria-expanded", String(!isCollapsed));
+};
+
+/* CHANGE QUANTITY */
 
 window.changeQuantity = function(id, amount) {
 
@@ -728,7 +807,7 @@ window.changeQuantity = function(id, amount) {
     }
 };
 
-// ADD TO CART
+/* ADD TO CART */
 
 window.addToCart = function(id) {
 
@@ -788,21 +867,19 @@ window.addToCart = function(id) {
     alert(product.name + " added to your cart!");
 };
 
-// FILTER EVENTS
+/* FILTER EVENTS */
 
 $("search").addEventListener("input", displayProducts);
-
 $("category").addEventListener("change", displayProducts);
-
 $("sort").addEventListener("change", displayProducts);
 
-// MOBILE MENU
+/* MOBILE MENU */
 
 window.toggleMenu = function() {
     $("navigation").classList.toggle("active");
 };
 
-// START
+/* START */
 
 $("year").textContent = new Date().getFullYear();
 
