@@ -4,7 +4,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Track Your Order | Kikis Amber Touch</title>
 
 <style>
@@ -28,13 +27,18 @@ body {
     color: var(--black);
 }
 
+/* HEADER */
+
 header {
     background: var(--black);
     color: white;
-    padding: 20px 7%;
+    padding: 18px 7%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 20px;
+    position: relative;
+    z-index: 100;
 }
 
 .logo {
@@ -42,33 +46,32 @@ header {
     font-family: Georgia, serif;
     font-size: 20px;
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
 }
 
 .logo span {
     display: block;
     text-align: center;
     color: white;
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     font-size: 9px;
     letter-spacing: 4px;
     margin-top: 5px;
 }
+
 .logo img {
     display: none;
     width: 170px;
-    max-height: 65px;
+    max-width: 100%;
+    height: 58px;
     object-fit: contain;
-}
-
-@media (max-width: 768px) {
-    .logo img {
-        width: 135px;
-        max-height: 55px;
-    }
 }
 
 nav {
     display: flex;
+    align-items: center;
     gap: 22px;
 }
 
@@ -81,6 +84,17 @@ nav a {
 nav a:hover {
     color: var(--gold);
 }
+
+.menu-toggle {
+    display: none;
+    background: transparent;
+    color: white;
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+/* HERO */
 
 .hero {
     background: linear-gradient(100deg, #15120e, #51402a);
@@ -106,6 +120,8 @@ nav a:hover {
     font-size: 13px;
     line-height: 1.8;
 }
+
+/* MAIN CONTAINER */
 
 .container {
     width: 92%;
@@ -135,6 +151,8 @@ nav a:hover {
     line-height: 1.8;
     margin-bottom: 20px;
 }
+
+/* FORM */
 
 label {
     display: block;
@@ -184,6 +202,8 @@ button:disabled {
     line-height: 1.6;
 }
 
+/* RESULT CARD */
+
 .result-card {
     display: none;
 }
@@ -207,6 +227,8 @@ button:disabled {
     color: #947039;
     overflow-wrap: anywhere;
 }
+
+/* SUMMARY */
 
 .summary {
     display: grid;
@@ -232,6 +254,8 @@ button:disabled {
     text-transform: capitalize;
     overflow-wrap: anywhere;
 }
+
+/* STATUS BADGES */
 
 .status {
     display: inline-block;
@@ -342,6 +366,8 @@ button:disabled {
     color: #999;
 }
 
+/* CANCELLED MESSAGE */
+
 .cancelled-message {
     display: none;
     background: #fff0f0;
@@ -351,6 +377,8 @@ button:disabled {
     line-height: 1.7;
     margin-top: 20px;
 }
+
+/* ORDERED PRODUCTS */
 
 .products {
     margin-top: 25px;
@@ -377,6 +405,7 @@ button:disabled {
     border-top: 1px solid #ddd;
     font-weight: bold;
     color: #947039;
+    gap: 10px;
 }
 
 .last-updated {
@@ -392,6 +421,8 @@ button:disabled {
     color: var(--black);
 }
 
+/* FOOTER */
+
 footer {
     background: #080807;
     color: #aaa;
@@ -405,62 +436,13 @@ footer strong {
     color: var(--gold);
 }
 
-@media(max-width: 600px) {
-    header {
-        padding: 17px 5%;
-    }
+/* MOBILE HEADER */
 
-    .logo {
-        font-size: 15px;
-    }
-
-    nav {
-        gap: 12px;
-    }
-
-    nav a {
-        font-size: 10px;
-    }
-
-    .hero h1 {
-        font-size: 29px;
-    }
-
-    .search-card,
-    .result-card {
-        padding: 20px;
-    }
-
-    .summary {
-        grid-template-columns: 1fr;
-    }
-}
-    
-/* FINAL HEADER AND MOBILE RESPONSIVENESS FIX */
-
-/* Desktop logo */
-.logo {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-}
-
-.logo img {
-    width: 170px;
-    max-width: 100%;
-    height: 58px;
-    object-fit: contain;
-}
-
-/* Mobile */
 @media (max-width: 768px) {
 
     header {
         min-height: 64px;
         padding: 9px 4%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
         gap: 8px;
         flex-wrap: nowrap;
     }
@@ -497,9 +479,11 @@ footer strong {
         height: 42px;
         margin-left: auto;
         padding: 0;
+        border: 0;
+        background: transparent;
+        color: white;
         font-size: 25px;
         line-height: 1;
-        cursor: pointer;
     }
 
     nav {
@@ -513,6 +497,7 @@ footer strong {
         align-items: stretch;
         padding: 18px 5%;
         gap: 18px;
+        z-index: 110;
     }
 
     nav.active {
@@ -522,15 +507,25 @@ footer strong {
     nav a {
         width: 100%;
         padding: 8px 0;
+        font-size: 12px;
     }
 
-    nav .cart-link {
-        width: fit-content;
-        padding: 9px 14px;
+    .hero h1 {
+        font-size: 29px;
+    }
+
+    .search-card,
+    .result-card {
+        padding: 20px;
+    }
+
+    .summary {
+        grid-template-columns: 1fr;
     }
 }
 
-/* Very small phones */
+/* VERY SMALL PHONES */
+
 @media (max-width: 380px) {
 
     header {
@@ -542,37 +537,62 @@ footer strong {
         width: 86px;
         height: 36px;
     }
-}
 
+    .hero h1 {
+        font-size: 26px;
+    }
+
+    .container {
+        width: 94%;
+    }
+
+    .product {
+        font-size: 12px;
+    }
+}
 </style>
 </head>
 
 <body>
 
-<header>
-   <a href="index.html" class="logo" id="storeLogoLink">
-    <img id="storeLogoImage" alt="Kikis Amber Touch Logo">
+<!-- HEADER -->
 
-    <span id="logoFallback">
-        KIKIS AMBER TOUCH
-        <small>LUXURY FRAGRANCES</small>
-    </span>
-</a>
-<button class="menu-toggle" onclick="toggleMenu()">☰</button>
+<header>
+
+    <a href="index.html" class="logo" id="storeLogoLink">
+        <img id="storeLogoImage" alt="Kikis Amber Touch Logo">
+
+        <span id="logoFallback">
+            KIKIS AMBER TOUCH
+            <small>LUXURY FRAGRANCES</small>
+        </span>
+    </a>
+
+    <button
+        class="menu-toggle"
+        type="button"
+        onclick="toggleMenu()"
+        aria-label="Toggle navigation"
+        aria-expanded="false"
+    >☰</button>
+
     <nav id="navigation">
         <a href="index.html">HOME</a>
         <a href="shop.html">SHOP</a>
         <a href="cart.html">CART</a>
     </nav>
+
 </header>
+
+<!-- HERO -->
 
 <section class="hero">
     <small>KIKIS AMBER TOUCH</small>
     <h1>Track Your Order</h1>
-    <p>
-        Your order journey, from confirmation to delivery.
-    </p>
+    <p>Your order journey, from confirmation to delivery.</p>
 </section>
+
+<!-- MAIN CONTENT -->
 
 <main class="container">
 
@@ -615,6 +635,8 @@ footer strong {
 
     </section>
 
+    <!-- ORDER RESULTS -->
+
     <section class="result-card" id="resultCard">
 
         <h2>Order Tracking Details</h2>
@@ -648,6 +670,8 @@ footer strong {
 
         </div>
 
+        <!-- DELIVERY PROGRESS -->
+
         <div class="tracking">
 
             <h2>Delivery Progress</h2>
@@ -660,6 +684,8 @@ footer strong {
             </div>
 
         </div>
+
+        <!-- ITEMS ORDERED -->
 
         <div class="products">
 
@@ -678,7 +704,7 @@ footer strong {
             Waiting for tracking information...
         </p>
 
-        <button class="track-again" id="trackAgain">
+        <button class="track-again" id="trackAgain" type="button">
             CHECK LATEST STATUS
         </button>
 
@@ -686,12 +712,16 @@ footer strong {
 
 </main>
 
+<!-- FOOTER -->
+
 <footer>
     <strong>KIKIS AMBER TOUCH</strong>
     <p>Luxury fragrances. Elegance in every drop.</p>
     <p>WhatsApp: 0503192094</p>
     <p>© <span id="year"></span> Kikis Amber Touch. All Rights Reserved.</p>
 </footer>
+
+<!-- SUPABASE AND TRACKING LOGIC -->
 
 <script type="module">
 
@@ -708,11 +738,16 @@ const supabase = createClient(
     SUPABASE_URL,
     SUPABASE_KEY
 );
+
+/* LOAD STORE LOGO */
+
 async function loadStoreLogo() {
+
     const image = document.getElementById("storeLogoImage");
     const fallback = document.getElementById("logoFallback");
 
     try {
+
         const { data, error } = await supabase
             .from("store_settings")
             .select("logo_url")
@@ -722,6 +757,7 @@ async function loadStoreLogo() {
         if (error) throw error;
 
         if (data?.logo_url) {
+
             image.onload = () => {
                 image.style.display = "block";
                 fallback.style.display = "none";
@@ -735,12 +771,15 @@ async function loadStoreLogo() {
 
             image.src = data.logo_url;
         }
+
     } catch (error) {
         console.error("Store logo loading failed:", error);
     }
 }
 
 loadStoreLogo();
+
+/* GENERAL HELPERS */
 
 const $ = id => document.getElementById(id);
 
@@ -757,28 +796,40 @@ function money(value) {
 }
 
 function formatDate(value) {
+
     if (!value) return "-";
+
     const date = new Date(value);
+
     return Number.isNaN(date.getTime())
         ? "-"
         : date.toLocaleString();
 }
 
+/* STATUS COLOURS */
+
 function statusClass(value) {
+
     const s = normalise(value);
 
-    if (["verified", "paid", "approved", "completed"].includes(s))
+    if (
+        ["verified", "paid", "approved", "completed"].includes(s)
+    ) {
         return "verified";
+    }
 
-    if (["rejected", "failed", "cancelled"].includes(s))
+    if (
+        ["rejected", "failed", "cancelled"].includes(s)
+    ) {
         return "rejected";
+    }
 
-    if (["processing", "shipped"].includes(s))
+    if (["processing", "shipped"].includes(s)) {
         return s;
+    }
 
     return "pending";
 }
-
 
 /* DELIVERY TRACKING */
 
@@ -795,12 +846,14 @@ function renderSteps(order) {
         fulfilment === "cancelled";
 
     const stages = [
+
         {
             title: "Order Received",
             description: "Your order has been received successfully.",
             done: true,
             current: false
         },
+
         {
             title: "Payment Verification",
             description: paymentVerified
@@ -811,18 +864,21 @@ function renderSteps(order) {
             done: paymentVerified,
             current: !paymentVerified && !cancelled
         },
+
         {
             title: "Preparing Your Order",
             description: "Your order is being prepared for dispatch.",
             done: ["processing", "shipped", "completed"].includes(fulfilment),
             current: fulfilment === "processing"
         },
+
         {
             title: "Order Shipped",
             description: "Your order has been dispatched.",
             done: ["shipped", "completed"].includes(fulfilment),
             current: fulfilment === "shipped"
         },
+
         {
             title: "Delivered",
             description: fulfilment === "completed"
@@ -831,6 +887,7 @@ function renderSteps(order) {
             done: fulfilment === "completed",
             current: fulfilment === "completed"
         }
+
     ];
 
     $("steps").innerHTML = "";
@@ -861,12 +918,12 @@ function renderSteps(order) {
         element.append(circle, content);
 
         $("steps").appendChild(element);
+
     });
 
     $("cancelledMessage").style.display =
         cancelled ? "block" : "none";
 }
-
 
 /* DISPLAY ORDER */
 
@@ -883,27 +940,39 @@ function displayOrder(order) {
     $("orderDate").textContent =
         formatDate(order.created_at);
 
+    /* PAYMENT STATUS */
+
     $("paymentStatus").innerHTML = "";
 
     const paymentBadge = document.createElement("span");
+
     paymentBadge.className =
         "status " + statusClass(order.payment_status);
+
     paymentBadge.textContent =
         order.payment_status || "pending";
 
     $("paymentStatus").appendChild(paymentBadge);
 
+    /* FULFILMENT STATUS */
+
     $("fulfilmentStatus").innerHTML = "";
 
     const fulfilmentBadge = document.createElement("span");
+
     fulfilmentBadge.className =
         "status " + statusClass(order.fulfillment_status);
+
     fulfilmentBadge.textContent =
         order.fulfillment_status || "pending";
 
     $("fulfilmentStatus").appendChild(fulfilmentBadge);
 
+    /* ORDER TOTAL */
+
     $("orderTotal").textContent = money(order.total);
+
+    /* ORDER ITEMS */
 
     $("productList").innerHTML = "";
 
@@ -913,20 +982,25 @@ function displayOrder(order) {
         row.className = "product";
 
         const name = document.createElement("span");
+
         name.textContent =
             item.product_name + " × " + item.quantity;
 
         const price = document.createElement("strong");
+
         price.textContent = money(item.line_total);
 
         row.append(name, price);
 
         $("productList").appendChild(row);
+
     });
 
     if (!order.items || !order.items.length) {
+
         $("productList").textContent =
             "No product details available.";
+
     }
 
     renderSteps(order);
@@ -935,12 +1009,11 @@ function displayOrder(order) {
         "Last checked: " + new Date().toLocaleTimeString();
 }
 
-
 /* FETCH ORDER FROM SUPABASE */
 
 async function trackOrder(showErrors = true) {
 
-    if (!currentReference || !currentPhone) return;
+    if (!currentReference || !currentPhone) return false;
 
     const button = $("trackButton");
 
@@ -959,9 +1032,11 @@ async function trackOrder(showErrors = true) {
         if (error) throw error;
 
         if (!data || data.success !== true) {
+
             throw new Error(
                 data?.message || "No matching order was found."
             );
+
         }
 
         displayOrder(data);
@@ -975,8 +1050,10 @@ async function trackOrder(showErrors = true) {
         console.error("Tracking error:", error);
 
         if (showErrors) {
+
             $("error").textContent =
                 error.message || "Unable to retrieve your order.";
+
         }
 
         $("resultCard").style.display = "none";
@@ -984,10 +1061,11 @@ async function trackOrder(showErrors = true) {
         return false;
 
     } finally {
+
         button.disabled = false;
+
     }
 }
-
 
 /* CUSTOMER SEARCH */
 
@@ -999,8 +1077,10 @@ $("trackingForm").addEventListener("submit", async event => {
     currentPhone = $("phone").value.trim();
 
     if (!currentReference || !currentPhone) {
+
         $("error").textContent =
             "Enter both your order reference and phone number.";
+
         return;
     }
 
@@ -1008,8 +1088,12 @@ $("trackingForm").addEventListener("submit", async event => {
 
     if (success) {
 
-        // Remember the details on this device for convenience.
-        // Customers can still track from other devices by entering them again.
+        /*
+         * Remember details on this device.
+         * Customers can still track from another device
+         * by entering their reference and phone number again.
+         */
+
         localStorage.setItem(
             "kikisTrackingReference",
             currentReference
@@ -1020,7 +1104,11 @@ $("trackingForm").addEventListener("submit", async event => {
             currentPhone
         );
 
-        if (refreshTimer) clearInterval(refreshTimer);
+        if (refreshTimer) {
+            clearInterval(refreshTimer);
+        }
+
+        /* Refresh status every 20 seconds */
 
         refreshTimer = setInterval(() => {
             trackOrder(false);
@@ -1030,16 +1118,16 @@ $("trackingForm").addEventListener("submit", async event => {
             behavior: "smooth",
             block: "start"
         });
-    }
-});
 
+    }
+
+});
 
 /* CHECK LATEST STATUS */
 
 $("trackAgain").addEventListener("click", () => {
     trackOrder();
 });
-
 
 /* RESTORE SAVED DETAILS ON SAME DEVICE */
 
@@ -1068,9 +1156,32 @@ async function initialise() {
             refreshTimer = setInterval(() => {
                 trackOrder(false);
             }, 20000);
+
         }
+
     }
+
 }
+
+/* MOBILE NAVIGATION */
+
+window.toggleMenu = function () {
+
+    const navigation = $("navigation");
+    const button = document.querySelector(".menu-toggle");
+
+    if (!navigation || !button) return;
+
+    navigation.classList.toggle("active");
+
+    button.setAttribute(
+        "aria-expanded",
+        String(navigation.classList.contains("active"))
+    );
+
+};
+
+/* START */
 
 initialise();
 
