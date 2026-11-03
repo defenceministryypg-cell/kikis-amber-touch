@@ -53,6 +53,19 @@ header {
     letter-spacing: 4px;
     margin-top: 5px;
 }
+.logo img {
+    display: none;
+    width: 170px;
+    max-height: 65px;
+    object-fit: contain;
+}
+
+@media (max-width: 768px) {
+    .logo img {
+        width: 135px;
+        max-height: 55px;
+    }
+}
 
 nav {
     display: flex;
@@ -428,14 +441,19 @@ footer strong {
 <body>
 
 <header>
-    <a href="index.html" class="logo">
+   <a href="index.html" class="logo" id="storeLogoLink">
+    <img id="storeLogoImage" alt="Kikis Amber Touch Logo">
+
+    <span id="logoFallback">
         KIKIS AMBER TOUCH
-        <span>LUXURY FRAGRANCES</span>
-    </a>
+        <small>LUXURY FRAGRANCES</small>
+    </span>
+</a>
 
     <nav>
         <a href="index.html">HOME</a>
         <a href="shop.html">SHOP</a>
+        <a href="cart.html">CART</a>
     </nav>
 </header>
 
@@ -581,6 +599,39 @@ const supabase = createClient(
     SUPABASE_URL,
     SUPABASE_KEY
 );
+async function loadStoreLogo() {
+    const image = document.getElementById("storeLogoImage");
+    const fallback = document.getElementById("logoFallback");
+
+    try {
+        const { data, error } = await supabase
+            .from("store_settings")
+            .select("logo_url")
+            .eq("id", 1)
+            .maybeSingle();
+
+        if (error) throw error;
+
+        if (data?.logo_url) {
+            image.onload = () => {
+                image.style.display = "block";
+                fallback.style.display = "none";
+            };
+
+            image.onerror = () => {
+                image.style.display = "none";
+                fallback.style.display = "block";
+                console.error("Could not load store logo.");
+            };
+
+            image.src = data.logo_url;
+        }
+    } catch (error) {
+        console.error("Store logo loading failed:", error);
+    }
+}
+
+loadStoreLogo();
 
 const $ = id => document.getElementById(id);
 
