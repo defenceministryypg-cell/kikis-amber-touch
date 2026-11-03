@@ -67,6 +67,19 @@ header {
     text-align: center;
     margin-top: 5px;
 }
+.logo img {
+    display: none;
+    width: 170px;
+    max-height: 65px;
+    object-fit: contain;
+}
+
+@media (max-width: 768px) {
+    .logo img {
+        width: 135px;
+        max-height: 55px;
+    }
+}
 
 nav {
     display: flex;
@@ -415,10 +428,14 @@ footer strong {
 
 <header>
 
-    <a href="index.html" class="logo">
+   <a href="index.html" class="logo" id="storeLogoLink">
+    <img id="storeLogoImage" alt="Kikis Amber Touch Logo">
+
+    <span id="logoFallback">
         KIKIS AMBER TOUCH
-        <span>LUXURY FRAGRANCES</span>
-    </a>
+        <small>LUXURY FRAGRANCES</small>
+    </span>
+</a>
 
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
 
@@ -427,6 +444,7 @@ footer strong {
         <a href="shop.html">SHOP</a>
         <a href="cart.html" class="cart-link">
             MY CART (<span id="cart-count">0</span>)
+             <a href="track-order.html">Track Order</a>
         </a>
     </nav>
 
@@ -538,6 +556,39 @@ const supabase = createClient(
     "https://mgxeyjyhuzbsgnbpbkst.supabase.co",
     "sb_publishable_ANZvxJnS89wrYo0MTx6LRA_Nu2XPss5"
 );
+async function loadStoreLogo() {
+    const image = document.getElementById("storeLogoImage");
+    const fallback = document.getElementById("logoFallback");
+
+    try {
+        const { data, error } = await supabase
+            .from("store_settings")
+            .select("logo_url")
+            .eq("id", 1)
+            .maybeSingle();
+
+        if (error) throw error;
+
+        if (data?.logo_url) {
+            image.onload = () => {
+                image.style.display = "block";
+                fallback.style.display = "none";
+            };
+
+            image.onerror = () => {
+                image.style.display = "none";
+                fallback.style.display = "block";
+                console.error("Could not load store logo.");
+            };
+
+            image.src = data.logo_url;
+        }
+    } catch (error) {
+        console.error("Store logo loading failed:", error);
+    }
+}
+
+loadStoreLogo();
 
 const $ = id => document.getElementById(id);
 
