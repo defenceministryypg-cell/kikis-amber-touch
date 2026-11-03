@@ -1,0 +1,1385 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customers | Kikis Amber Touch</title>
+
+<style>
+:root {
+    --black: #11100e;
+    --gold: #c9a45c;
+    --light-gold: #e5c985;
+    --cream: #f7f3eb;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: var(--cream);
+    color: #25221d;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 245px;
+    min-height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: var(--black);
+    color: white;
+    padding: 30px 20px;
+}
+
+.logo {
+    color: var(--light-gold);
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    line-height: 1.5;
+    margin-bottom: 40px;
+}
+
+.logo small {
+    color: #aaa49a;
+    letter-spacing: 2px;
+    font-size: 10px;
+    font-weight: normal;
+}
+
+.nav a {
+    display: block;
+    color: #ddd;
+    text-decoration: none;
+    padding: 13px 12px;
+    margin: 7px 0;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.nav a.active,
+.nav a:hover {
+    background: #302a20;
+    color: var(--light-gold);
+}
+
+/* MAIN */
+
+.main {
+    margin-left: 245px;
+    padding: 30px;
+    max-width: 1600px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.topbar h1 {
+    font-size: 26px;
+}
+
+.admin-label {
+    color: #8b6b32;
+    font-size: 12px;
+    background: #f0e5ce;
+    padding: 10px 15px;
+    border-radius: 30px;
+}
+
+/* WELCOME */
+
+.welcome {
+    background: var(--black);
+    color: white;
+    padding: 24px;
+    border-radius: 12px;
+    margin-bottom: 22px;
+}
+
+.welcome h2 {
+    color: var(--light-gold);
+    margin-bottom: 8px;
+    font-family: Georgia, serif;
+    font-weight: normal;
+}
+
+.welcome p {
+    color: #c7c0b4;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* STATISTICS */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 22px;
+}
+
+.stat,
+.panel {
+    background: white;
+    border: 1px solid #eee7da;
+    border-radius: 10px;
+}
+
+.stat {
+    padding: 19px;
+}
+
+.stat p {
+    font-size: 12px;
+    color: #777;
+    margin-bottom: 10px;
+}
+
+.stat h2 {
+    font-size: 25px;
+    color: #a17b39;
+}
+
+/* PANEL */
+
+.panel {
+    padding: 20px;
+    margin-bottom: 22px;
+}
+
+.panel-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 17px;
+}
+
+.panel-heading h2 {
+    font-size: 18px;
+}
+
+.controls {
+    display: flex;
+    gap: 9px;
+    flex-wrap: wrap;
+}
+
+input,
+select {
+    padding: 11px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: white;
+    font: inherit;
+    font-size: 13px;
+    min-width: 150px;
+}
+
+#search {
+    min-width: 230px;
+}
+
+.btn {
+    border: 0;
+    padding: 11px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.primary {
+    background: var(--black);
+    color: var(--light-gold);
+}
+
+.secondary {
+    background: #eee8dc;
+    color: #4d402b;
+}
+
+/* CUSTOMER TABLE */
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 850px;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 13px 11px;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+th {
+    background: #faf8f3;
+    color: #82765f;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.customer-name {
+    font-weight: bold;
+}
+
+.action {
+    background: #eee8dc;
+    color: #4d402b;
+    border: 0;
+    padding: 8px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.empty {
+    text-align: center;
+    padding: 30px;
+    color: #888;
+}
+
+/* CUSTOMER DETAILS */
+
+.details {
+    display: none;
+    background: #faf8f3;
+    padding: 20px;
+    border: 1px solid #e9dfce;
+    border-radius: 8px;
+    margin-top: 18px;
+}
+
+.details h3 {
+    color: #9a7435;
+    margin: 0 0 12px;
+}
+
+.details p {
+    font-size: 13px;
+    margin: 8px 0;
+    overflow-wrap: anywhere;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 20px;
+    margin: 12px 0 20px;
+}
+
+.order-block {
+    background: white;
+    border: 1px solid #eee7da;
+    padding: 13px;
+    border-radius: 7px;
+    margin: 10px 0;
+}
+
+.order-block h4 {
+    font-size: 13px;
+    margin-bottom: 7px;
+}
+
+.order-block ul {
+    padding-left: 18px;
+    color: #666;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.note {
+    font-size: 12px;
+    color: #777;
+    line-height: 1.6;
+    margin-top: 12px;
+}
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+    color: #888;
+    font-size: 12px;
+    margin: 30px 0 5px;
+}
+
+/* LOGIN */
+
+#loginOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: #11100e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    background: #1b1916;
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #c9a45c;
+}
+
+.login-card h2 {
+    color: #e5c985;
+    margin-bottom: 8px;
+}
+
+.login-card p {
+    color: #aaa;
+    margin-bottom: 20px;
+    font-size: 13px;
+}
+
+.login-card label {
+    display: block;
+    font-size: 13px;
+}
+
+.login-card input {
+    width: 100%;
+    margin: 7px 0 16px;
+}
+
+.login-card button {
+    width: 100%;
+    background: #c9a45c;
+    color: #111;
+    padding: 13px;
+    border: 0;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#error {
+    color: #ff8585;
+    margin-top: 12px;
+    font-size: 13px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1050px) {
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width:700px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        min-height: 0;
+        padding: 18px;
+    }
+
+    .logo {
+        margin-bottom: 15px;
+    }
+
+    .nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .nav a {
+        margin: 0;
+        padding: 9px;
+    }
+
+    .main {
+        margin: 0;
+        padding: 17px;
+    }
+
+    .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .panel {
+        padding: 14px;
+    }
+
+    .panel-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    #search {
+        min-width: 100%;
+        width: 100%;
+    }
+
+    .controls {
+        width: 100%;
+    }
+
+    .controls select {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width:380px) {
+    .stats {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+        KIKIS<br>
+        AMBER TOUCH<br>
+        <small>ADMINISTRATION</small>
+    </div>
+
+    <nav class="nav">
+        <a href="admin.html">Dashboard</a>
+        <a href="products.html">Manage Products</a>
+        <a href="customers.html" class="active">Customers</a>
+        <a href="settings.html">Store Settings</a>
+        <a href="shop.html">View Shop</a>
+        <a href="index.html">Visit Website</a>
+    </nav>
+
+</aside>
+
+<!-- MAIN CONTENT -->
+
+<main class="main">
+
+    <header class="topbar">
+        <h1>Customer Management</h1>
+        <span class="admin-label">CUSTOMER RELATIONSHIPS</span>
+    </header>
+
+    <section class="welcome">
+        <h2>Know your customers. Build lasting relationships.</h2>
+        <p>
+            View customers from your existing orders, understand their
+            purchase history and follow up with them.
+            Customer records are grouped by phone number where available.
+        </p>
+    </section>
+
+    <!-- STATISTICS -->
+
+    <section class="stats">
+
+        <div class="stat">
+            <p>Total Customers</p>
+            <h2 id="totalCustomers">—</h2>
+        </div>
+
+        <div class="stat">
+            <p>Total Orders</p>
+            <h2 id="totalOrders">—</h2>
+        </div>
+
+        <div class="stat">
+            <p>Returning Customers</p>
+            <h2 id="returningCustomers">—</h2>
+        </div>
+
+        <div class="stat">
+            <p>Customer Revenue</p>
+            <h2 id="totalRevenue">—</h2>
+        </div>
+
+    </section>
+
+    <!-- CUSTOMER DIRECTORY -->
+
+    <section class="panel">
+
+        <div class="panel-heading">
+
+            <h2>Customer Directory</h2>
+
+            <div class="controls">
+
+                <input
+                    type="search"
+                    id="search"
+                    placeholder="Search name, phone or email..."
+                >
+
+                <select id="customerFilter">
+                    <option value="all">All customers</option>
+                    <option value="returning">Returning customers</option>
+                    <option value="one">One-time customers</option>
+                </select>
+
+                <button
+                    class="btn secondary"
+                    id="exportButton"
+                    type="button"
+                >
+                    Export CSV
+                </button>
+
+                <button
+                    class="btn primary"
+                    id="refreshButton"
+                    type="button"
+                >
+                    Refresh
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Orders</th>
+                        <th>Total Spent</th>
+                        <th>Last Purchase</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="customersTable">
+                    <tr>
+                        <td colspan="7" class="empty">
+                            Loading customers...
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div id="emptyMessage" class="empty" style="display:none">
+            No customers found.
+        </div>
+
+        <p class="note">
+            Customer information is retrieved from your existing
+            orders and order_items tables. This page does not send
+            promotional messages automatically.
+        </p>
+
+        <div id="customerDetails" class="details"></div>
+
+    </section>
+
+    <footer>
+        Kikis Amber Touch &copy;
+        <span id="year"></span>.
+        Customer Management.
+    </footer>
+
+</main>
+
+<!-- ADMIN LOGIN -->
+
+<div id="loginOverlay">
+
+    <form class="login-card" id="loginForm">
+
+        <h2>KIKIS AMBER TOUCH</h2>
+
+        <p>Administrator Login</p>
+
+        <label for="email">Email Address</label>
+
+        <input
+            id="email"
+            type="email"
+            required
+            autocomplete="username"
+        >
+
+        <label for="password">Password</label>
+
+        <input
+            id="password"
+            type="password"
+            required
+            autocomplete="current-password"
+        >
+
+        <button id="loginButton" type="submit">
+            Sign In
+        </button>
+
+        <div id="error"></div>
+
+    </form>
+
+</div>
+
+<script type="module">
+
+import { createClient } from
+"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const supabase = createClient(
+    "https://mgxeyjyhuzbsgnbpbkst.supabase.co",
+    "sb_publishable_ANZvxJnS89wrYo0MTx6LRA_Nu2XPss5"
+);
+const SHOP_LINK = "https://kikis-amber-touch.vercel.app/";
+
+const $ = id => document.getElementById(id);
+
+let currentAdmin = null;
+let orders = [];
+let orderItems = [];
+let customers = [];
+
+/* GENERAL FUNCTIONS */
+
+function esc(value) {
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    })[char]);
+}
+
+function money(value) {
+    return "GH₵ " + Number(value || 0).toFixed(2);
+}
+
+function dateText(value) {
+
+    if (!value) return "Not available";
+
+    const date = new Date(value);
+
+    return Number.isNaN(date.getTime())
+        ? "Not available"
+        : date.toLocaleDateString();
+}
+
+function phoneKey(value) {
+    return String(value || "").replace(/\D/g, "");
+}
+
+/* CUSTOMER IDENTIFICATION */
+
+function keyFor(order) {
+
+    const phone = phoneKey(order.phone);
+
+    if (phone) {
+        return "phone:" + phone;
+    }
+
+    const email = String(order.email || "")
+        .trim()
+        .toLowerCase();
+
+    if (email) {
+        return "email:" + email;
+    }
+
+    return "order:" + String(order.id);
+}
+
+/* GHANA WHATSAPP NUMBER */
+
+function waNumber(value) {
+
+    let digits = phoneKey(value);
+
+    if (digits.startsWith("0")) {
+        digits = "233" + digits.slice(1);
+    }
+
+    return digits;
+}
+
+/* GROUP CUSTOMER RECORDS */
+
+function buildCustomers() {
+
+    const groups = new Map();
+
+    for (const order of orders) {
+
+        const key = keyFor(order);
+
+        if (!groups.has(key)) {
+
+            groups.set(key, {
+                key,
+                name: order.customer_name || "Customer",
+                phone: order.phone || "",
+                email: order.email || "",
+                orders: [],
+                totalSpent: 0,
+                lastPurchase: null
+            });
+
+        }
+
+        const customer = groups.get(key);
+
+        customer.orders.push(order);
+
+        customer.totalSpent += Number(order.total || 0);
+
+        if (
+            (!customer.name || customer.name === "Customer") &&
+            order.customer_name
+        ) {
+            customer.name = order.customer_name;
+        }
+
+        if (!customer.phone && order.phone) {
+            customer.phone = order.phone;
+        }
+
+        if (!customer.email && order.email) {
+            customer.email = order.email;
+        }
+
+        if (
+            !customer.lastPurchase ||
+            new Date(order.created_at) >
+            new Date(customer.lastPurchase)
+        ) {
+            customer.lastPurchase = order.created_at;
+        }
+
+    }
+
+    customers = [...groups.values()]
+        .map(customer => {
+
+            customer.orders.sort(
+                (a, b) =>
+                    new Date(b.created_at) -
+                    new Date(a.created_at)
+            );
+
+            return customer;
+
+        })
+        .sort(
+            (a, b) =>
+                new Date(b.lastPurchase || 0) -
+                new Date(a.lastPurchase || 0)
+        );
+
+}
+
+/* STATISTICS */
+
+function updateStats() {
+
+    $("totalCustomers").textContent = customers.length;
+
+    $("totalOrders").textContent = orders.length;
+
+    $("returningCustomers").textContent =
+        customers.filter(c => c.orders.length > 1).length;
+
+    $("totalRevenue").textContent = money(
+        orders.reduce(
+            (sum, order) => sum + Number(order.total || 0),
+            0
+        )
+    );
+
+}
+
+/* DISPLAY CUSTOMERS */
+
+function renderCustomers() {
+
+    const term = $("search").value.trim().toLowerCase();
+
+    const filter = $("customerFilter").value;
+
+    const list = customers.filter(customer => {
+
+        const searchable = [
+            customer.name,
+            customer.phone,
+            customer.email
+        ].join(" ").toLowerCase();
+
+        const matchesSearch = searchable.includes(term);
+
+        const matchesFilter =
+            filter === "all" ||
+            (
+                filter === "returning" &&
+                customer.orders.length > 1
+            ) ||
+            (
+                filter === "one" &&
+                customer.orders.length === 1
+            );
+
+        return matchesSearch && matchesFilter;
+
+    });
+
+    $("customersTable").innerHTML = "";
+
+    $("emptyMessage").style.display =
+        list.length ? "none" : "block";
+
+    list.forEach(customer => {
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>
+                <span class="customer-name">
+                    ${esc(customer.name)}
+                </span>
+            </td>
+
+            <td>${esc(customer.phone || "Not provided")}</td>
+
+            <td>${esc(customer.email || "Not provided")}</td>
+
+            <td>${customer.orders.length}</td>
+
+            <td>${money(customer.totalSpent)}</td>
+
+            <td>${dateText(customer.lastPurchase)}</td>
+
+            <td>
+                <button
+                    class="action"
+                    type="button"
+                    data-customer="${esc(customer.key)}"
+                >
+                    View Profile
+                </button>
+            </td>
+        `;
+
+        $("customersTable").appendChild(row);
+
+    });
+
+}
+
+/* FIND PRODUCTS IN EACH ORDER */
+
+function itemsFor(orderId) {
+
+    return orderItems.filter(
+        item => String(item.order_id) === String(orderId)
+    );
+
+}
+
+/* CUSTOMER PROFILE */
+
+function showCustomer(key) {
+
+    const customer = customers.find(
+        item => item.key === key
+    );
+
+    if (!customer) return;
+
+    const number = waNumber(customer.phone);
+
+    const message =
+    `Hello ${customer.name}, this is Kikis Amber Touch. ` +
+    `We hope you are doing well. Thank you for shopping with us. ` +
+    `We would love to hear about your experience. ` +
+    `Visit our shop: ${SHOP_LINK}`;
+
+
+    const link = number
+        ? `https://wa.me/${number}?text=${encodeURIComponent(message)}`
+        : "";
+
+    /* PURCHASE HISTORY */
+
+    const history = customer.orders.map(order => {
+
+        const items = itemsFor(order.id);
+
+        const list = items.length
+            ? `
+                <ul>
+                    ${items.map(item => `
+                        <li>
+                            ${esc(item.product_name || "Product")}
+                            × ${Number(item.quantity || 0)}
+                            — ${money(item.line_total)}
+                        </li>
+                    `).join("")}
+                </ul>
+            `
+            : "<p>No item details were found for this order.</p>";
+
+        return `
+            <div class="order-block">
+
+                <h4>
+                    Order ${esc(order.order_number || order.id)}
+                    · ${dateText(order.created_at)}
+                </h4>
+
+                <p>
+                    Amount: <strong>${money(order.total)}</strong>
+                    · Payment: ${esc(order.payment_status || "Not available")}
+                    · Delivery: ${esc(order.fulfillment_status || "pending")}
+                </p>
+
+                ${list}
+
+            </div>
+        `;
+
+    }).join("");
+
+    const box = $("customerDetails");
+
+    box.style.display = "block";
+
+    box.innerHTML = `
+
+        <h3>Customer Profile</h3>
+
+        <div class="detail-grid">
+
+            <p>
+                <strong>Name:</strong>
+                ${esc(customer.name)}
+            </p>
+
+            <p>
+                <strong>Phone:</strong>
+                ${esc(customer.phone || "Not provided")}
+            </p>
+
+            <p>
+                <strong>Email:</strong>
+                ${esc(customer.email || "Not provided")}
+            </p>
+
+            <p>
+                <strong>Total orders:</strong>
+                ${customer.orders.length}
+            </p>
+
+            <p>
+                <strong>Total spent:</strong>
+                ${money(customer.totalSpent)}
+            </p>
+
+            <p>
+                <strong>Last purchase:</strong>
+                ${dateText(customer.lastPurchase)}
+            </p>
+
+        </div>
+
+        <h3>Purchase History</h3>
+
+        ${history || "<p>No order history found.</p>"}
+
+        <div style="margin-top:16px;display:flex;gap:9px;flex-wrap:wrap">
+
+            ${link ? `
+                <a
+                    class="btn primary"
+                    style="text-decoration:none"
+                    href="${link}"
+                    target="_blank"
+                    rel="noopener"
+                >
+                    Open WhatsApp Message
+                </a>
+            ` : ""}
+
+            <button
+                class="btn secondary"
+                id="closeDetails"
+                type="button"
+            >
+                Close Profile
+            </button>
+
+        </div>
+
+        <p class="note">
+            WhatsApp opens a prepared individual message.
+            Review it and press Send yourself.
+            Only contact customers for marketing when they
+            have agreed to receive promotional messages.
+        </p>
+
+    `;
+
+    $("closeDetails").addEventListener("click", () => {
+
+        box.style.display = "none";
+
+        box.innerHTML = "";
+
+    });
+
+    box.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+    });
+
+}
+
+/* LOAD CUSTOMER DATA */
+
+async function loadData() {
+
+    $("customersTable").innerHTML = `
+        <tr>
+            <td colspan="7" class="empty">
+                Loading customer records...
+            </td>
+        </tr>
+    `;
+
+    const { data, error } = await supabase
+        .from("orders")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    orders = data || [];
+
+    if (orders.length) {
+
+        const ids = orders.map(order => order.id);
+
+        const result = await supabase
+            .from("order_items")
+            .select("*")
+            .in("order_id", ids);
+
+        if (result.error) throw result.error;
+
+        orderItems = result.data || [];
+
+    } else {
+
+        orderItems = [];
+
+    }
+
+    buildCustomers();
+
+    updateStats();
+
+    renderCustomers();
+
+    $("customerDetails").style.display = "none";
+
+}
+
+/* VERIFY ADMIN */
+
+async function verifyAdmin(user) {
+
+    if (!user) return false;
+
+    const { data, error } = await supabase
+        .from("admin_users")
+        .select("user_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+    if (error) {
+
+        console.error(error);
+
+        return false;
+
+    }
+
+    return !!data;
+
+}
+
+/* LOGIN */
+
+function showLogin() {
+
+    $("loginOverlay").style.display = "flex";
+
+}
+
+/* INITIALISE */
+
+async function start() {
+
+    $("year").textContent = new Date().getFullYear();
+
+    const { data, error } = await supabase.auth.getSession();
+
+    if (error) {
+
+        $("error").textContent = error.message;
+
+        return;
+
+    }
+
+    const user = data.session?.user;
+
+    if (!user || !(await verifyAdmin(user))) {
+
+        if (user) {
+            await supabase.auth.signOut();
+        }
+
+        showLogin();
+
+        return;
+
+    }
+
+    currentAdmin = user;
+
+    $("loginOverlay").style.display = "none";
+
+    try {
+
+        await loadData();
+
+    } catch (error) {
+
+        console.error(error);
+
+        $("customersTable").innerHTML = `
+            <tr>
+                <td colspan="7" class="empty">
+                    Unable to load customers:
+                    ${esc(error.message)}
+                </td>
+            </tr>
+        `;
+
+    }
+
+}
+
+/* LOGIN FORM */
+
+$("loginForm").addEventListener("submit", async event => {
+
+    event.preventDefault();
+
+    const button = $("loginButton");
+
+    button.disabled = true;
+
+    button.textContent = "Signing in...";
+
+    $("error").textContent = "";
+
+    try {
+
+        const { data, error } =
+            await supabase.auth.signInWithPassword({
+
+                email: $("email").value.trim(),
+
+                password: $("password").value
+
+            });
+
+        if (error) throw error;
+
+        if (!(await verifyAdmin(data.user))) {
+
+            await supabase.auth.signOut();
+
+            throw new Error(
+                "This account is not authorised to access customer records."
+            );
+
+        }
+
+        currentAdmin = data.user;
+
+        $("loginOverlay").style.display = "none";
+
+        await loadData();
+
+    } catch (error) {
+
+        $("error").textContent = error.message;
+
+    } finally {
+
+        button.disabled = false;
+
+        button.textContent = "Sign In";
+
+    }
+
+});
+
+/* CUSTOMER PROFILE BUTTON */
+
+$("customersTable").addEventListener("click", event => {
+
+    const button = event.target.closest("[data-customer]");
+
+    if (button) {
+        showCustomer(button.dataset.customer);
+    }
+
+});
+
+/* SEARCH AND FILTER */
+
+$("search").addEventListener("input", renderCustomers);
+
+$("customerFilter").addEventListener("change", renderCustomers);
+
+/* REFRESH */
+
+$("refreshButton").addEventListener("click", async () => {
+
+    try {
+
+        await loadData();
+
+    } catch (error) {
+
+        alert("Unable to refresh customers: " + error.message);
+
+    }
+
+});
+
+/* EXPORT CUSTOMER RECORDS */
+
+$("exportButton").addEventListener("click", () => {
+
+    const rows = [[
+        "Customer Name",
+        "Phone",
+        "Email",
+        "Orders",
+        "Total Spent",
+        "Last Purchase"
+    ]];
+
+    customers.forEach(customer => {
+
+        rows.push([
+            customer.name,
+            customer.phone,
+            customer.email,
+            customer.orders.length,
+            customer.totalSpent,
+            dateText(customer.lastPurchase)
+        ]);
+
+    });
+
+    const csv = rows.map(row =>
+        row.map(value =>
+            `"${String(value ?? "").replace(/"/g, '""')}"`
+        ).join(",")
+    ).join("\r\n");
+
+    const url = URL.createObjectURL(
+        new Blob([csv], { type: "text/csv;charset=utf-8;" })
+    );
+
+    const a = document.createElement("a");
+
+    a.href = url;
+
+    a.download = "kikis-amber-touch-customers.csv";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+});
+
+/* AUTH SESSION MONITOR */
+
+supabase.auth.onAuthStateChange((_event, session) => {
+
+    if (!session && currentAdmin) {
+
+        currentAdmin = null;
+
+        showLogin();
+
+    }
+
+});
+
+/* START */
+
+start();
+
+</script>
+
+</body>
+</html>

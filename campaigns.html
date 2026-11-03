@@ -1,0 +1,1080 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campaigns | Kikis Amber Touch</title>
+
+<style>
+:root{
+ --black:#11100e;
+ --gold:#c9a45c;
+ --light-gold:#e5c985;
+ --cream:#f7f3eb;
+ --white:#fff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:var(--cream);color:#25221d}
+
+.sidebar{
+ width:245px;min-height:100vh;position:fixed;left:0;top:0;
+ background:var(--black);color:white;padding:30px 20px;
+}
+.logo{
+ color:var(--light-gold);font-size:20px;font-weight:bold;
+ letter-spacing:2px;line-height:1.5;margin-bottom:40px;
+}
+.logo small{color:#aaa49a;letter-spacing:2px;font-size:10px;font-weight:normal}
+.nav a{
+ display:block;color:#ddd;text-decoration:none;padding:13px 12px;
+ margin:7px 0;border-radius:6px;font-size:14px;
+}
+.nav a.active,.nav a:hover{background:#302a20;color:var(--light-gold)}
+
+.main{margin-left:245px;padding:30px;max-width:1600px}
+.topbar{
+ display:flex;justify-content:space-between;align-items:center;
+ gap:15px;flex-wrap:wrap;margin-bottom:25px;
+}
+.topbar h1{font-size:26px}
+.admin-label{
+ color:#8b6b32;font-size:12px;background:#f0e5ce;
+ padding:10px 15px;border-radius:30px;
+}
+.welcome{
+ background:var(--black);color:white;padding:25px;
+ border-radius:12px;margin-bottom:22px;
+}
+.welcome h2{
+ color:var(--light-gold);font-family:Georgia,serif;
+ font-weight:normal;margin-bottom:9px;
+}
+.welcome p{color:#c7c0b4;font-size:14px;line-height:1.7}
+
+.layout{
+ display:grid;grid-template-columns:minmax(0,1.1fr) minmax(300px,.9fr);
+ gap:20px;align-items:start;
+}
+.panel{
+ background:white;border:1px solid #eee7da;
+ border-radius:10px;padding:21px;margin-bottom:20px;
+}
+.panel h2{font-size:18px;margin-bottom:17px}
+label{display:block;font-size:13px;font-weight:bold;margin-bottom:7px}
+input,select,textarea{
+ width:100%;padding:12px;border:1px solid #ddd;
+ border-radius:6px;background:white;font:inherit;
+ font-size:13px;margin-bottom:15px;
+}
+textarea{min-height:190px;resize:vertical;line-height:1.6}
+.btn{
+ border:0;padding:12px 15px;border-radius:6px;
+ cursor:pointer;font-size:12px;font-weight:bold;
+}
+.primary{background:var(--black);color:var(--light-gold)}
+.secondary{background:#eee8dc;color:#4d402b}
+.gold{background:var(--gold);color:#17130d}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+.template-grid{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;
+}
+.template{
+ background:#faf8f3;border:1px solid #eee7da;
+ border-radius:7px;padding:12px;text-align:left;
+ cursor:pointer;color:#443b2c;
+}
+.template strong{display:block;font-size:13px;margin-bottom:5px}
+.template span{font-size:11px;color:#888}
+.template.active{border:1px solid var(--gold);background:#f5eddd}
+
+.customer-tools{
+ display:flex;gap:9px;flex-wrap:wrap;margin-bottom:15px;
+}
+.customer-tools input{flex:1;min-width:180px;margin:0}
+.customer-tools select{width:auto;min-width:145px;margin:0}
+.customer-list{
+ max-height:430px;overflow-y:auto;border:1px solid #eee7da;
+ border-radius:7px;
+}
+.customer-row{
+ display:flex;align-items:center;gap:12px;
+ padding:12px;border-bottom:1px solid #eee;
+}
+.customer-row:last-child{border-bottom:0}
+.customer-row input{width:17px;height:17px;margin:0;accent-color:#a17b39}
+.customer-info{flex:1;min-width:0}
+.customer-info strong{display:block;font-size:13px}
+.customer-info small{display:block;color:#888;font-size:11px;margin-top:4px}
+.customer-count{font-size:12px;color:#8b6b32;font-weight:bold}
+
+.preview{
+ background:#f8f5ee;border:1px solid #e9dfce;
+ border-radius:8px;padding:17px;white-space:pre-wrap;
+ overflow-wrap:anywhere;line-height:1.7;font-size:13px;
+ min-height:170px;
+}
+.preview-title{font-size:12px;color:#9a7435;margin-bottom:10px;font-weight:bold}
+.stats{
+ display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;
+}
+.stat{background:#faf8f3;border:1px solid #eee7da;border-radius:8px;padding:13px}
+.stat small{color:#888;font-size:11px}
+.stat strong{display:block;font-size:22px;color:#a17b39;margin-top:7px}
+
+.progress{
+ width:100%;height:8px;background:#eee8dc;border-radius:20px;
+ overflow:hidden;margin:12px 0;
+}
+.progress-bar{height:100%;width:0;background:var(--gold);transition:width .2s}
+.notice{
+ background:#fff8e9;border:1px solid #ead9b5;color:#705728;
+ padding:13px;border-radius:7px;font-size:12px;line-height:1.6;margin-top:15px;
+}
+.status{font-size:12px;color:#777;line-height:1.6;margin-top:12px}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}
+.consent{
+ display:flex;align-items:flex-start;gap:9px;
+ font-size:12px;line-height:1.6;margin-top:15px;
+}
+.consent input{width:17px;height:17px;margin:0;flex-shrink:0}
+footer{text-align:center;color:#888;font-size:12px;margin:30px 0 5px}
+
+#loginOverlay{
+ position:fixed;inset:0;z-index:99999;background:#11100e;
+ display:flex;align-items:center;justify-content:center;padding:20px;
+}
+.login-card{
+ width:100%;max-width:400px;background:#1b1916;color:white;
+ padding:30px;border-radius:12px;border:1px solid var(--gold);
+}
+.login-card h2{color:var(--light-gold);margin-bottom:8px}
+.login-card p{color:#aaa;margin-bottom:20px;font-size:13px}
+.login-card label{display:block}
+.login-card input{width:100%;margin:7px 0 16px}
+.login-card button{
+ width:100%;background:var(--gold);color:#111;
+ padding:13px;border:0;border-radius:6px;font-weight:bold;cursor:pointer;
+}
+#error{color:#ff8585;margin-top:12px;font-size:13px}
+
+@media(max-width:1000px){
+ .layout{grid-template-columns:1fr}
+}
+@media(max-width:700px){
+ .sidebar{position:relative;width:100%;min-height:0;padding:18px}
+ .logo{margin-bottom:15px}
+ .nav{display:flex;flex-wrap:wrap;gap:5px}
+ .nav a{margin:0;padding:9px}
+ .main{margin:0;padding:17px}
+ .topbar{align-items:flex-start;flex-direction:column}
+ .panel{padding:15px}
+ .template-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:380px){
+ .template-grid{grid-template-columns:1fr}
+ .stats{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+ <div class="logo">
+  KIKIS<br>AMBER TOUCH<br>
+  <small>ADMINISTRATION</small>
+ </div>
+
+ <nav class="nav">
+  <a href="admin.html">Dashboard</a>
+  <a href="products.html">Manage Products</a>
+  <a href="customers.html">Customers</a>
+  <a href="campaigns.html" class="active">Campaigns</a>
+  <a href="settings.html">Store Settings</a>
+  <a href="shop.html">View Shop</a>
+  <a href="index.html">Visit Website</a>
+ </nav>
+</aside>
+
+<main class="main">
+
+ <header class="topbar">
+  <h1>Marketing Campaigns</h1>
+  <span class="admin-label">CUSTOMER ENGAGEMENT</span>
+ </header>
+
+ <section class="welcome">
+  <h2>Make every occasion memorable.</h2>
+  <p>
+   Connect with your customers through personalised WhatsApp
+   promotions, seasonal greetings, special offers and product announcements.
+  </p>
+ </section>
+
+ <div class="layout">
+
+  <!-- LEFT COLUMN -->
+  <div>
+
+   <section class="panel">
+    <h2>1. Choose a Campaign</h2>
+
+    <div class="template-grid" id="templateGrid">
+     <button class="template active" data-template="newyear">
+      <strong>🎉 New Year</strong>
+      <span>New year greetings</span>
+     </button>
+
+     <button class="template" data-template="christmas">
+      <strong>🎄 Christmas</strong>
+      <span>Christmas wishes</span>
+     </button>
+
+     <button class="template" data-template="easter">
+      <strong>🐣 Easter</strong>
+      <span>Easter greetings</span>
+     </button>
+
+     <button class="template" data-template="valentine">
+      <strong>❤️ Valentine's Day</strong>
+      <span>Love and special offers</span>
+     </button>
+
+     <button class="template" data-template="mothers">
+      <strong>🌷 Mother's Day</strong>
+      <span>Celebrate mothers</span>
+     </button>
+
+     <button class="template" data-template="fathers">
+      <strong>👔 Father's Day</strong>
+      <span>Celebrate fathers</span>
+     </button>
+
+     <button class="template" data-template="blackfriday">
+      <strong>🛍️ Black Friday</strong>
+      <span>Special promotions</span>
+     </button>
+
+     <button class="template" data-template="birthday">
+      <strong>🎂 Birthday</strong>
+      <span>Birthday greetings</span>
+     </button>
+
+     <button class="template" data-template="promotion">
+      <strong>✨ Special Promotion</strong>
+      <span>Discounts and offers</span>
+     </button>
+
+     <button class="template" data-template="newproduct">
+      <strong>🌸 New Arrivals</strong>
+      <span>Announce new perfumes</span>
+     </button>
+
+     <button class="template" data-template="thankyou">
+      <strong>💛 Thank You</strong>
+      <span>Appreciate your customers</span>
+     </button>
+
+     <button class="template" data-template="custom">
+      <strong>✍️ Custom Campaign</strong>
+      <span>Write your own message</span>
+     </button>
+    </div>
+   </section>
+
+   <section class="panel">
+    <h2>2. Compose Your Message</h2>
+
+    <label for="campaignTitle">Campaign name</label>
+    <input id="campaignTitle" type="text" placeholder="e.g. Christmas 2026 Campaign">
+
+    <label for="message">WhatsApp message</label>
+    <textarea id="message"></textarea>
+
+    <p class="note">
+     Available personalisation:
+     <strong>{name}</strong> inserts the customer's name.
+     <strong>{shop}</strong> inserts your shop link.
+    </p>
+
+    <div class="actions">
+     <button class="btn secondary" id="previewButton" type="button">Update Preview</button>
+     <button class="btn secondary" id="copyButton" type="button">Copy Message</button>
+    </div>
+   </section>
+
+   <section class="panel">
+    <h2>3. Select Your Customers</h2>
+
+    <div class="customer-tools">
+     <input id="customerSearch" type="search" placeholder="Search customers...">
+     <select id="customerFilter">
+      <option value="all">All customers</option>
+      <option value="returning">Returning customers</option>
+      <option value="one">One-time customers</option>
+     </select>
+    </div>
+
+    <div class="actions" style="margin:0 0 13px">
+     <button class="btn secondary" id="selectVisible" type="button">Select Visible</button>
+     <button class="btn secondary" id="clearSelection" type="button">Clear Selection</button>
+    </div>
+
+    <div class="customer-list" id="customerList">
+     <p style="padding:20px;color:#888;font-size:13px">Loading customers...</p>
+    </div>
+
+    <p class="status" id="customerStatus">Loading customer records...</p>
+   </section>
+
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div>
+
+   <section class="panel">
+    <h2>Campaign Preview</h2>
+
+    <div class="stats">
+     <div class="stat">
+      <small>Customers</small>
+      <strong id="totalCustomers">0</strong>
+     </div>
+     <div class="stat">
+      <small>Selected</small>
+      <strong id="selectedCount">0</strong>
+     </div>
+     <div class="stat">
+      <small>Remaining</small>
+      <strong id="remainingCount">0</strong>
+     </div>
+    </div>
+
+    <div class="preview-title">PERSONALISED MESSAGE PREVIEW</div>
+    <div class="preview" id="messagePreview">
+     Your campaign message will appear here.
+    </div>
+
+    <p class="status">
+     The customer's name and your official store link are inserted
+     into each personalised message.
+    </p>
+   </section>
+
+   <section class="panel">
+    <h2>Send Campaign on WhatsApp</h2>
+
+    <p style="font-size:13px;line-height:1.7;color:#777">
+     Open the next selected customer's WhatsApp chat. The message
+     will be prepared automatically for you to review and send.
+    </p>
+
+    <div class="progress">
+     <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <p class="status" id="sendStatus">No campaign started.</p>
+
+    <label class="consent">
+     <input type="checkbox" id="consentCheck">
+     <span>
+      I confirm that the selected customers have agreed to receive
+      promotional or marketing messages from Kikis Amber Touch.
+     </span>
+    </label>
+
+    <div class="actions">
+     <button class="btn gold" id="startCampaign" type="button" disabled>
+      Start WhatsApp Campaign
+     </button>
+
+     <button class="btn secondary" id="resetCampaign" type="button">
+      Reset Progress
+     </button>
+    </div>
+
+    <div class="actions">
+     <button class="btn primary" id="nextCustomer" type="button" disabled>
+      Open Next WhatsApp Chat
+     </button>
+    </div>
+
+    <div class="notice">
+     <strong>Important:</strong> This is a manual WhatsApp campaign tool.
+     It does not send messages automatically. WhatsApp opens one
+     customer chat at a time. Review each message and press Send yourself.
+     Do not send unsolicited marketing messages.
+    </div>
+   </section>
+
+   <section class="panel">
+    <h2>Official Store Link</h2>
+    <p style="font-size:13px;line-height:1.7">
+     Kikis Amber Touch
+    </p>
+    <p style="font-size:13px;font-weight:bold;color:#987337;overflow-wrap:anywhere">
+     https://kikis-amber-touch.vercel.app/
+    </p>
+    <button class="btn secondary" id="copyShop" type="button" style="margin-top:12px">
+     Copy Shop Link
+    </button>
+   </section>
+
+  </div>
+ </div>
+
+ <footer>
+  Kikis Amber Touch &copy; <span id="year"></span>. Campaign Management.
+ </footer>
+
+</main>
+
+<!-- LOGIN -->
+<div id="loginOverlay">
+ <form class="login-card" id="loginForm">
+  <h2>KIKIS AMBER TOUCH</h2>
+  <p>Administrator Login</p>
+
+  <label for="email">Email Address</label>
+  <input id="email" type="email" required autocomplete="username">
+
+  <label for="password">Password</label>
+  <input id="password" type="password" required autocomplete="current-password">
+
+  <button id="loginButton" type="submit">Sign In</button>
+  <div id="error"></div>
+ </form>
+</div>
+
+<script type="module">
+import {createClient} from
+"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const supabase=createClient(
+ "https://mgxeyjyhuzbsgnbpbkst.supabase.co",
+ "sb_publishable_ANZvxJnS89wrYo0MTx6LRA_Nu2XPss5"
+);
+
+const SHOP_LINK="https://kikis-amber-touch.vercel.app/";
+
+const $=id=>document.getElementById(id);
+
+let currentAdmin=null;
+let customers=[];
+let selected=new Set();
+let campaignQueue=[];
+let campaignIndex=0;
+let currentTemplate="newyear";
+
+const templates={
+ newyear:{
+  title:"New Year Greetings",
+  message:`Happy New Year, {name}! 🎉
+
+From all of us at Kikis Amber Touch, we wish you a wonderful year filled with happiness, success and beautiful moments.
+
+Thank you for being part of our journey. We look forward to serving you again.
+
+Discover your favourite fragrances:
+{shop}
+
+With love,
+Kikis Amber Touch.`
+ },
+
+ christmas:{
+  title:"Christmas Greetings",
+  message:`Merry Christmas, {name}! 🎄✨
+
+May this beautiful season bring you joy, peace and happiness.
+
+Thank you for choosing Kikis Amber Touch. We truly appreciate your support and wish you and your family a wonderful Christmas.
+
+Celebrate the season with beautiful fragrances:
+{shop}
+
+Warm wishes,
+Kikis Amber Touch.`
+ },
+
+ easter:{
+  title:"Easter Greetings",
+  message:`Happy Easter, {name}! 🐣🌸
+
+May this season bring you renewed hope, peace and happiness.
+
+Thank you for supporting Kikis Amber Touch. We appreciate having you as part of our family.
+
+Explore our fragrance collection:
+{shop}
+
+With warm wishes,
+Kikis Amber Touch.`
+ },
+
+ valentine:{
+  title:"Valentine's Day Campaign",
+  message:`Happy Valentine's Day, {name}! ❤️
+
+Make this special season even more memorable with a beautiful fragrance from Kikis Amber Touch.
+
+Whether it is a gift for someone special or a treat for yourself, we have something lovely for you.
+
+Explore our collection:
+{shop}
+
+With love,
+Kikis Amber Touch.`
+ },
+
+ mothers:{
+  title:"Mother's Day Greetings",
+  message:`Happy Mother's Day, {name}! 🌷
+
+Today we celebrate the love, strength and sacrifices of mothers.
+
+Kikis Amber Touch wishes you a beautiful and memorable celebration.
+
+Explore our fragrance collection:
+{shop}
+
+With appreciation,
+Kikis Amber Touch.`
+ },
+
+ fathers:{
+  title:"Father's Day Greetings",
+  message:`Happy Father's Day, {name}! 👔
+
+Today we celebrate fathers and the important role they play.
+
+Kikis Amber Touch wishes you a wonderful celebration filled with happiness and appreciation.
+
+Discover our fragrances:
+{shop}
+
+Warm wishes,
+Kikis Amber Touch.`
+ },
+
+ blackfriday:{
+  title:"Black Friday Promotion",
+  message:`Hello {name}! 🛍️
+
+Something special is happening at Kikis Amber Touch!
+
+Our Black Friday offers are here. It is a great opportunity to discover beautiful fragrances at special promotional prices.
+
+Visit our shop and explore the offers:
+{shop}
+
+Kikis Amber Touch.`
+ },
+
+ birthday:{
+  title:"Birthday Greetings",
+  message:`Happy Birthday, {name}! 🎂🎉
+
+Everyone at Kikis Amber Touch wishes you a beautiful birthday filled with happiness, love and unforgettable memories.
+
+Thank you for being part of our customer family.
+
+Have a wonderful celebration!
+
+With love,
+Kikis Amber Touch.`
+ },
+
+ promotion:{
+  title:"Special Promotion",
+  message:`Hello {name}! ✨
+
+We have something special for you at Kikis Amber Touch!
+
+Enjoy our latest promotions and discover fragrances that match your style.
+
+Visit our online shop to explore our collection:
+{shop}
+
+Thank you for choosing Kikis Amber Touch.`
+ },
+
+ newproduct:{
+  title:"New Arrivals Announcement",
+  message:`Hello {name}! 🌸
+
+Fresh fragrances have arrived at Kikis Amber Touch!
+
+Discover our latest additions and find a scent that speaks to your personality.
+
+Explore the new collection here:
+{shop}
+
+We look forward to serving you.
+Kikis Amber Touch.`
+ },
+
+ thankyou:{
+  title:"Customer Appreciation",
+  message:`Hello {name}! 💛
+
+We just want to say a big thank you for choosing Kikis Amber Touch.
+
+Your support means a lot to us, and we appreciate having you as part of our growing family.
+
+Whenever you need your favourite fragrance, we are here for you.
+
+Visit our shop:
+{https://kikis-amber-touch.vercel.app/}
+
+With appreciation,
+Kikis Amber Touch.`
+ },
+
+ custom:{
+  title:"Custom Campaign",
+  message:`Hello {name}!
+
+We have something special for you from Kikis Amber Touch.
+
+Visit our online shop:
+{shop}
+
+Thank you for choosing us.`
+ }
+};
+
+function esc(value){
+ return String(value??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+ }[c]));
+}
+
+function phoneDigits(value){
+ return String(value||"").replace(/\D/g,"");
+}
+
+function normaliseGhanaNumber(value){
+ let number=phoneDigits(value);
+
+ if(number.startsWith("00"))number=number.slice(2);
+ if(number.startsWith("0"))number="233"+number.slice(1);
+
+ return number;
+}
+
+function customerKey(order){
+ const phone=normaliseGhanaNumber(order.phone);
+ if(phone)return "phone:"+phone;
+
+ const email=String(order.email||"").trim().toLowerCase();
+ if(email)return "email:"+email;
+
+ return "order:"+String(order.id);
+}
+
+function buildCustomers(orders){
+ const groups=new Map();
+
+ for(const order of orders){
+  const key=customerKey(order);
+
+  if(!groups.has(key)){
+   groups.set(key,{
+    key,
+    name:order.customer_name||"Customer",
+    phone:order.phone||"",
+    email:order.email||"",
+    orders:[],
+    total:0,
+    lastPurchase:order.created_at
+   });
+  }
+
+  const customer=groups.get(key);
+  customer.orders.push(order);
+  customer.total+=Number(order.total||0);
+
+  if((!customer.name||customer.name==="Customer")&&order.customer_name){
+   customer.name=order.customer_name;
+  }
+
+  if(!customer.phone&&order.phone)customer.phone=order.phone;
+  if(!customer.email&&order.email)customer.email=order.email;
+
+  if(new Date(order.created_at)>new Date(customer.lastPurchase)){
+   customer.lastPurchase=order.created_at;
+  }
+ }
+
+ customers=[...groups.values()].sort((a,b)=>
+  new Date(b.lastPurchase)-new Date(a.lastPurchase)
+ );
+}
+
+async function verifyAdmin(user){
+ if(!user)return false;
+
+ const {data,error}=await supabase
+  .from("admin_users")
+  .select("user_id")
+  .eq("user_id",user.id)
+  .maybeSingle();
+
+ if(error){
+  console.error(error);
+  return false;
+ }
+
+ return !!data;
+}
+
+async function loadCustomers(){
+ $("customerList").innerHTML=
+  '<p style="padding:20px;color:#888">Loading customer records...</p>';
+
+ const {data,error}=await supabase
+  .from("orders")
+  .select("*")
+  .order("created_at",{ascending:false});
+
+ if(error)throw error;
+
+ buildCustomers(data||[]);
+
+ selected.clear();
+ campaignQueue=[];
+ campaignIndex=0;
+
+ $("totalCustomers").textContent=customers.length;
+ renderCustomers();
+ updateCampaignStats();
+ updateProgress();
+}
+
+function visibleCustomers(){
+ const term=$("customerSearch").value.trim().toLowerCase();
+ const filter=$("customerFilter").value;
+
+ return customers.filter(c=>{
+  const searchText=[c.name,c.phone,c.email].join(" ").toLowerCase();
+
+  const matchesSearch=searchText.includes(term);
+
+  const matchesFilter=
+   filter==="all"||
+   (filter==="returning"&&c.orders.length>1)||
+   (filter==="one"&&c.orders.length===1);
+
+  return matchesSearch&&matchesFilter;
+ });
+}
+
+function renderCustomers(){
+ const list=visibleCustomers();
+
+ $("customerList").innerHTML="";
+
+ if(!list.length){
+  $("customerList").innerHTML=
+   '<p style="padding:20px;color:#888;font-size:13px">No customers found.</p>';
+ }else{
+  list.forEach(c=>{
+   const row=document.createElement("label");
+   row.className="customer-row";
+
+   row.innerHTML=`
+    <input type="checkbox" data-key="${esc(c.key)}" ${selected.has(c.key)?"checked":""}>
+    <span class="customer-info">
+     <strong>${esc(c.name)}</strong>
+     <small>${esc(c.phone||"No phone number")} · ${esc(c.email||"No email")}</small>
+    </span>
+    <span class="customer-count">${c.orders.length} order(s)</span>
+   `;
+
+   $("customerList").appendChild(row);
+  });
+ }
+
+ $("customerStatus").textContent=
+  `${list.length} customer(s) shown · ${selected.size} selected`;
+
+ updateCampaignStats();
+}
+
+function updateCampaignStats(){
+ $("selectedCount").textContent=selected.size;
+ $("remainingCount").textContent=
+  Math.max(0,campaignQueue.length-campaignIndex);
+}
+
+function getMessage(customer){
+ return $("message").value
+  .replaceAll("{name}",customer.name||"Customer")
+  .replaceAll("{shop}",SHOP_LINK);
+}
+
+function updatePreview(){
+ const customer=customers.find(c=>selected.has(c.key))||customers[0];
+
+ if(!customer){
+  $("messagePreview").textContent=
+   $("message").value.replaceAll("{shop}",SHOP_LINK);
+  return;
+ }
+
+ $("messagePreview").textContent=getMessage(customer);
+}
+
+function updateProgress(){
+ const total=campaignQueue.length;
+ const done=campaignIndex;
+
+ const percentage=total?Math.min(100,(done/total)*100):0;
+
+ $("progressBar").style.width=percentage+"%";
+
+ $("sendStatus").textContent=total
+  ?`${done} of ${total} WhatsApp chats opened.`
+  :"No campaign started.";
+
+ $("nextCustomer").disabled=
+  !total||campaignIndex>=total||!$("consentCheck").checked;
+
+ updateCampaignStats();
+}
+
+function selectTemplate(name){
+ currentTemplate=name;
+
+ document.querySelectorAll(".template").forEach(button=>{
+  button.classList.toggle("active",button.dataset.template===name);
+ });
+
+ const template=templates[name];
+
+ $("campaignTitle").value=template.title;
+ $("message").value=template.message;
+
+ updatePreview();
+}
+
+function startCampaign(){
+ if(!$("consentCheck").checked){
+  alert("Please confirm that your selected customers agreed to receive marketing messages.");
+  return;
+ }
+
+ if(selected.size===0){
+  alert("Please select at least one customer.");
+  return;
+ }
+
+ const missing=customers.filter(c=>
+  selected.has(c.key)&&!normaliseGhanaNumber(c.phone)
+ );
+
+ if(missing.length){
+  alert(`${missing.length} selected customer(s) do not have a valid phone number. Remove them or update their order records first.`);
+  return;
+ }
+
+ campaignQueue=customers.filter(c=>selected.has(c.key));
+ campaignIndex=0;
+
+ $("sendStatus").textContent=
+  `Campaign ready for ${campaignQueue.length} customers.`;
+
+ updateProgress();
+
+ $("nextCustomer").disabled=false;
+}
+
+function openNextChat(){
+ if(!campaignQueue.length||campaignIndex>=campaignQueue.length)return;
+
+ if(!$("consentCheck").checked){
+  alert("Please confirm customer consent before continuing.");
+  return;
+ }
+
+ const customer=campaignQueue[campaignIndex];
+ const number=normaliseGhanaNumber(customer.phone);
+
+ const message=getMessage(customer);
+
+ const url=`https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+
+ // Open only one customer chat per click.
+ window.open(url,"_blank","noopener,noreferrer");
+
+ campaignIndex++;
+
+ updateProgress();
+
+ if(campaignIndex>=campaignQueue.length){
+  $("sendStatus").textContent=
+   "All selected WhatsApp chats have been opened. Remember to check that each message was actually sent.";
+  $("nextCustomer").disabled=true;
+ }
+}
+
+async function start(){
+ $("year").textContent=new Date().getFullYear();
+
+ const {data,error}=await supabase.auth.getSession();
+
+ if(error){
+  $("error").textContent=error.message;
+  return;
+ }
+
+ const user=data.session?.user;
+
+ if(!user||!(await verifyAdmin(user))){
+  if(user)await supabase.auth.signOut();
+  $("loginOverlay").style.display="flex";
+  return;
+ }
+
+ currentAdmin=user;
+ $("loginOverlay").style.display="none";
+
+ try{
+  await loadCustomers();
+ }catch(error){
+  console.error(error);
+  $("customerList").innerHTML=
+   `<p style="padding:20px;color:#b33">Unable to load customers: ${esc(error.message)}</p>`;
+ }
+}
+
+// Template selection
+$("templateGrid").addEventListener("click",event=>{
+ const button=event.target.closest("[data-template]");
+ if(button)selectTemplate(button.dataset.template);
+});
+
+// Customer selection
+$("customerList").addEventListener("change",event=>{
+ const checkbox=event.target;
+
+ if(!checkbox.matches('input[type="checkbox"][data-key]'))return;
+
+ const key=checkbox.dataset.key;
+
+ if(checkbox.checked)selected.add(key);
+ else selected.delete(key);
+
+ renderCustomers();
+ updatePreview();
+});
+
+$("selectVisible").addEventListener("click",()=>{
+ visibleCustomers().forEach(c=>selected.add(c.key));
+ renderCustomers();
+ updatePreview();
+});
+
+$("clearSelection").addEventListener("click",()=>{
+ selected.clear();
+ renderCustomers();
+ updatePreview();
+});
+
+// Search and filter
+$("customerSearch").addEventListener("input",renderCustomers);
+$("customerFilter").addEventListener("change",renderCustomers);
+
+// Message preview
+$("message").addEventListener("input",updatePreview);
+$("previewButton").addEventListener("click",updatePreview);
+
+$("copyButton").addEventListener("click",async()=>{
+ try{
+  await navigator.clipboard.writeText($("message").value.replaceAll("{shop}",SHOP_LINK));
+  alert("Message copied.");
+ }catch{
+  alert("Unable to copy automatically. Please select and copy the message.");
+ }
+});
+
+$("copyShop").addEventListener("click",async()=>{
+ try{
+  await navigator.clipboard.writeText(SHOP_LINK);
+  alert("Shop link copied.");
+ }catch{
+  alert(SHOP_LINK);
+ }
+});
+
+// Campaign sending controls
+$("startCampaign").addEventListener("click",startCampaign);
+$("nextCustomer").addEventListener("click",openNextChat);
+
+$("resetCampaign").addEventListener("click",()=>{
+ campaignQueue=[];
+ campaignIndex=0;
+ updateProgress();
+});
+
+$("consentCheck").addEventListener("change",()=>{
+ $("startCampaign").disabled=!$("consentCheck").checked;
+ $("nextCustomer").disabled=
+  !campaignQueue.length||
+  campaignIndex>=campaignQueue.length||
+  !$("consentCheck").checked;
+});
+
+// Login
+$("loginForm").addEventListener("submit",async event=>{
+ event.preventDefault();
+
+ const button=$("loginButton");
+ button.disabled=true;
+ button.textContent="Signing in...";
+ $("error").textContent="";
+
+ try{
+  const {data,error}=await supabase.auth.signInWithPassword({
+   email:$("email").value.trim(),
+   password:$("password").value
+  });
+
+  if(error)throw error;
+
+  if(!(await verifyAdmin(data.user))){
+   await supabase.auth.signOut();
+   throw new Error("This account is not authorised to access campaigns.");
+  }
+
+  currentAdmin=data.user;
+  $("loginOverlay").style.display="none";
+
+  await loadCustomers();
+
+ }catch(error){
+  $("error").textContent=error.message;
+ }finally{
+  button.disabled=false;
+  button.textContent="Sign In";
+ }
+});
+
+supabase.auth.onAuthStateChange((_event,session)=>{
+ if(!session&&currentAdmin){
+  currentAdmin=null;
+  $("loginOverlay").style.display="flex";
+ }
+});
+
+$("startCampaign").disabled=true;
+
+selectTemplate("newyear");
+start();
+</script>
+
+</body>
+</html>
