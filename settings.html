@@ -7,301 +7,70 @@
 <title>Store Settings | Kikis Amber Touch</title>
 
 <style>
-:root {
-    --black: #11100e;
-    --gold: #c9a45c;
-    --light-gold: #e5c985;
-    --cream: #f7f3eb;
-    --white: #fff;
-    --border: #e8e0d2;
+:root{
+ --black:#11100e;--gold:#c9a45c;--light-gold:#e5c985;
+ --cream:#f7f3eb;--border:#e8e0d2;
 }
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background: var(--cream);
-    color: #25221d;
-}
-
-.sidebar {
-    width: 245px;
-    height: 100vh;
-    position: fixed;
-    left: 0;
-    top: 0;
-    background: var(--black);
-    color: white;
-    padding: 30px 20px;
-}
-
-.logo {
-    color: var(--light-gold);
-    font-size: 20px;
-    font-weight: bold;
-    letter-spacing: 2px;
-    line-height: 1.5;
-    margin-bottom: 45px;
-}
-
-.logo small {
-    display: block;
-    color: #aaa49a;
-    font-size: 10px;
-    letter-spacing: 2px;
-}
-
-.nav a {
-    display: block;
-    color: #ddd;
-    text-decoration: none;
-    padding: 14px 12px;
-    margin: 8px 0;
-    border-radius: 6px;
-    font-size: 14px;
-}
-
-.nav a:hover,
-.nav a.active {
-    background: #302a20;
-    color: var(--light-gold);
-}
-
-.main {
-    margin-left: 245px;
-    padding: 30px;
-}
-
-.topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.topbar h1 {
-    font-size: 26px;
-}
-
-.topbar p {
-    color: #777;
-    font-size: 13px;
-    margin-top: 7px;
-}
-
-.admin-label {
-    color: #8b6b32;
-    font-size: 12px;
-    background: #f0e5ce;
-    padding: 10px 15px;
-    border-radius: 30px;
-}
-
-.panel {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 25px;
-    margin-bottom: 25px;
-}
-
-.panel h2 {
-    font-size: 19px;
-    margin-bottom: 8px;
-}
-
-.panel > p {
-    color: #777;
-    font-size: 13px;
-    margin-bottom: 22px;
-    line-height: 1.6;
-}
-
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-}
-
-.form-group {
-    margin-bottom: 17px;
-}
-
-.form-group.full {
-    grid-column: 1 / -1;
-}
-
-.form-group label {
-    display: block;
-    font-size: 13px;
-    font-weight: bold;
-    margin-bottom: 8px;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 13px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 13px;
-    font-family: Arial;
-    outline: none;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    border-color: var(--gold);
-}
-
-.form-group textarea {
-    min-height: 85px;
-    resize: vertical;
-}
-
-.logo-preview {
-    width: 110px;
-    height: 110px;
-    border: 1px dashed #c9b78f;
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    margin-top: 12px;
-    background: #faf8f3;
-}
-
-.logo-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-.toggle-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 0;
-    border-bottom: 1px solid #eee;
-    gap: 15px;
-}
-
-.toggle-row strong {
-    font-size: 14px;
-}
-
-.toggle-row p {
-    font-size: 12px;
-    color: #777;
-    margin-top: 5px;
-}
-
-.toggle-row input {
-    width: 20px;
-    height: 20px;
-    accent-color: var(--gold);
-}
-
-.save-btn {
-    background: var(--black);
-    color: var(--light-gold);
-    border: none;
-    padding: 14px 22px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 12px;
-    letter-spacing: 1px;
-}
-
-.save-btn:hover {
-    background: var(--gold);
-    color: var(--black);
-}
-
-.reset-btn {
-    background: #eee;
-    color: #333;
-    border: none;
-    padding: 14px 22px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.form-actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.notice {
-    background: #f8f1df;
-    border-left: 4px solid var(--gold);
-    padding: 13px;
-    color: #745a2b;
-    font-size: 12px;
-    line-height: 1.6;
-    margin-bottom: 20px;
-}
-
-footer {
-    text-align: center;
-    color: #888;
-    font-size: 12px;
-    margin-top: 30px;
-}
-
-@media(max-width: 700px) {
-    .sidebar {
-        position: relative;
-        width: 100%;
-        height: auto;
-        padding: 18px;
-    }
-
-    .logo {
-        margin-bottom: 15px;
-    }
-
-    .nav {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
-    }
-
-    .nav a {
-        margin: 0;
-        padding: 10px;
-    }
-
-    .main {
-        margin-left: 0;
-        padding: 18px;
-    }
-
-    .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .form-group.full {
-        grid-column: auto;
-    }
-
-    .panel {
-        padding: 18px;
-    }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:var(--cream);color:#25221d}
+.sidebar{width:245px;min-height:100vh;position:fixed;left:0;top:0;background:var(--black);color:white;padding:30px 20px}
+.logo{color:var(--light-gold);font-size:20px;font-weight:bold;letter-spacing:2px;line-height:1.5;margin-bottom:40px}
+.logo small{display:block;color:#aaa49a;font-size:10px;letter-spacing:2px}
+.nav a{display:block;color:#ddd;text-decoration:none;padding:13px 12px;margin:7px 0;border-radius:6px;font-size:14px}
+.nav a:hover,.nav a.active{background:#302a20;color:var(--light-gold)}
+.main{margin-left:245px;padding:30px;max-width:1500px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:30px;flex-wrap:wrap}
+.topbar h1{font-size:26px}
+.topbar p{color:#777;font-size:13px;margin-top:7px}
+.admin-label{color:#8b6b32;font-size:12px;background:#f0e5ce;padding:10px 15px;border-radius:30px}
+.panel{background:white;border:1px solid var(--border);border-radius:10px;padding:25px;margin-bottom:25px}
+.panel h2{font-size:19px;margin-bottom:8px}
+.panel>p{color:#777;font-size:13px;margin-bottom:22px;line-height:1.6}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.form-group{margin-bottom:17px}
+.form-group.full{grid-column:1/-1}
+.form-group label{display:block;font-size:13px;font-weight:bold;margin-bottom:8px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:13px;border:1px solid #ddd;border-radius:5px;font-size:13px;font-family:Arial;outline:none;background:white}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold)}
+.form-group textarea{min-height:85px;resize:vertical}
+.logo-area{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.logo-preview{width:155px;height:125px;border:1px dashed #c9b78f;border-radius:8px;display:flex;justify-content:center;align-items:center;overflow:hidden;background:#faf8f3}
+.logo-preview img{width:100%;height:100%;object-fit:contain}
+.logo-controls{flex:1;min-width:220px}
+.logo-controls input{width:100%;margin:10px 0}
+.logo-help{font-size:12px;color:#888;line-height:1.6}
+.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:15px 0;border-bottom:1px solid #eee;gap:15px}
+.toggle-row strong{font-size:14px}
+.toggle-row p{font-size:12px;color:#777;margin-top:5px}
+.toggle-row input{width:20px;height:20px;accent-color:var(--gold)}
+.save-btn{background:var(--black);color:var(--light-gold);border:none;padding:14px 22px;border-radius:5px;cursor:pointer;font-size:12px;letter-spacing:1px}
+.save-btn:hover{background:var(--gold);color:var(--black)}
+.reset-btn,.remove-btn{background:#eee;color:#333;border:none;padding:14px 18px;border-radius:5px;cursor:pointer}
+.remove-btn{background:#f8e8e5;color:#9b392e;padding:10px 13px;font-size:12px}
+.form-actions{display:flex;gap:10px;flex-wrap:wrap}
+.notice{background:#f8f1df;border-left:4px solid var(--gold);padding:13px;color:#745a2b;font-size:12px;line-height:1.6;margin-bottom:20px}
+.status{font-size:13px;margin-top:12px;line-height:1.5}
+.success{color:#287544}.error{color:#b33}
+footer{text-align:center;color:#888;font-size:12px;margin-top:30px}
+#loginOverlay{position:fixed;inset:0;z-index:99999;background:#11100e;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-card{width:100%;max-width:400px;background:#1b1916;color:white;padding:30px;border-radius:12px;border:1px solid var(--gold)}
+.login-card h2{color:var(--light-gold);margin-bottom:8px}
+.login-card p{color:#aaa;margin-bottom:20px;font-size:13px}
+.login-card label{display:block;font-size:13px}
+.login-card input{width:100%;padding:12px;margin:7px 0 16px;border:1px solid #555;border-radius:5px}
+.login-card button{width:100%;background:var(--gold);color:#111;padding:13px;border:0;border-radius:6px;font-weight:bold;cursor:pointer}
+#loginError{color:#ff8585;margin-top:12px;font-size:13px}
+button:disabled{opacity:.55;cursor:not-allowed}
+@media(max-width:700px){
+ .sidebar{position:relative;width:100%;min-height:0;padding:18px}
+ .logo{margin-bottom:15px}
+ .nav{display:flex;flex-wrap:wrap;gap:5px}
+ .nav a{margin:0;padding:9px}
+ .main{margin:0;padding:18px}
+ .topbar{align-items:flex-start;flex-direction:column}
+ .form-grid{grid-template-columns:1fr}
+ .form-group.full{grid-column:auto}
+ .panel{padding:18px}
 }
 </style>
 </head>
@@ -309,12 +78,7 @@ footer {
 <body>
 
 <aside class="sidebar">
-
-    <div class="logo">
-        KIKIS<br>AMBER TOUCH
-        <small>ADMINISTRATION</small>
-    </div>
-
+ <div class="logo">KIKIS<br>AMBER TOUCH<small>ADMINISTRATION</small></div>
    <nav class="nav">
         <a href="admin.html" class="active">Dashboard</a>
         <a href="products.html">Manage Products</a>
@@ -324,363 +88,531 @@ footer {
         <a href="customers.html">Customers</a>
         <a href="campaigns.html">Campaigns</a>
     </nav>
-</aside>
+</aside>>
 
 <main class="main">
 
-    <header class="topbar">
-        <div>
-            <h1>Store Settings</h1>
-            <p>Manage your shop information and business preferences.</p>
-        </div>
+<header class="topbar">
+ <div>
+  <h1>Store Settings</h1>
+  <p>Manage your shop information and business preferences.</p>
+ </div>
+ <span class="admin-label">STORE MANAGEMENT</span>
+</header>
 
-        <span class="admin-label">STORE MANAGEMENT</span>
-    </header>
+<form id="settingsForm">
 
-    <form id="settingsForm">
+<section class="panel">
+ <h2>01. Store Information</h2>
+ <p>Update the public information displayed for your business.</p>
 
-        <!-- STORE INFORMATION -->
+ <div class="form-grid">
+  <div class="form-group">
+   <label for="storeName">Store Name</label>
+   <input type="text" id="storeName" required>
+  </div>
 
-        <section class="panel">
+  <div class="form-group">
+   <label for="storeTagline">Store Tagline</label>
+   <input type="text" id="storeTagline">
+  </div>
 
-            <h2>01. Store Information</h2>
-            <p>Update the public information displayed for your business.</p>
+  <div class="form-group">
+   <label for="storeEmail">Business Email</label>
+   <input type="email" id="storeEmail">
+  </div>
 
-            <div class="form-grid">
+  <div class="form-group">
+   <label for="storePhone">Business Phone</label>
+   <input type="tel" id="storePhone">
+  </div>
 
-                <div class="form-group">
-                    <label for="storeName">Store Name</label>
-                    <input type="text" id="storeName" required>
-                </div>
+  <div class="form-group full">
+   <label for="storeAddress">Business Address</label>
+   <textarea id="storeAddress"></textarea>
+  </div>
 
-                <div class="form-group">
-                    <label for="storeTagline">Store Tagline</label>
-                    <input type="text" id="storeTagline">
-                </div>
+  <div class="form-group full">
+   <label>Store Logo</label>
+   <div class="logo-area">
+    <div class="logo-preview">
+     <img id="logoPreview" alt="Kikis Amber Touch logo" style="display:none">
+     <span id="logoPlaceholder">Logo Preview</span>
+    </div>
+    <div class="logo-controls">
+     <input type="file" id="storeLogo" accept="image/png,image/jpeg,image/webp">
+     <p class="logo-help">PNG, JPG or WebP. Maximum file size: 2MB. A transparent PNG is recommended.</p>
+     <button type="button" class="remove-btn" id="removeLogo">Remove Current Logo</button>
+     <p id="logoStatus" class="status"></p>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
 
-                <div class="form-group">
-                    <label for="storeEmail">Business Email</label>
-                    <input type="email" id="storeEmail">
-                </div>
+<section class="panel">
+ <h2>02. Payment Information</h2>
+ <p>Manage the payment details customers see during checkout.</p>
 
-                <div class="form-group">
-                    <label for="storePhone">Business Phone</label>
-                    <input type="tel" id="storePhone">
-                </div>
+ <div class="notice">
+  Make sure your Mobile Money account details are correct before customers place orders.
+ </div>
 
-                <div class="form-group full">
-                    <label for="storeAddress">Business Address</label>
-                    <textarea id="storeAddress"></textarea>
-                </div>
+ <div class="form-grid">
+  <div class="form-group">
+   <label for="momoNumber">Mobile Money Number</label>
+   <input type="tel" id="momoNumber" required>
+  </div>
 
-                <div class="form-group full">
-                    <label for="storeLogo">Store Logo</label>
-                    <input type="file" id="storeLogo"
-                    accept="image/jpeg,image/png,image/webp">
+  <div class="form-group">
+   <label for="momoName">Mobile Money Account Name</label>
+   <input type="text" id="momoName" required>
+  </div>
 
-                    <div class="logo-preview">
-                        <img id="logoPreview" alt="Store logo preview"
-                        style="display:none;">
-                        <span id="logoPlaceholder">Logo Preview</span>
-                    </div>
-                </div>
+  <div class="form-group">
+   <label for="paystackKey">Paystack Public Key</label>
+   <input type="text" id="paystackKey" placeholder="pk_test_...">
+  </div>
 
-            </div>
+  <div class="form-group">
+   <label for="currency">Store Currency</label>
+   <select id="currency">
+    <option value="GHS">Ghana Cedis (GH₵)</option>
+   </select>
+  </div>
+ </div>
+</section>
 
-        </section>
+<section class="panel">
+ <h2>03. Delivery Settings</h2>
+ <p>Configure delivery charges and free delivery conditions.</p>
 
-        <!-- PAYMENT SETTINGS -->
+ <div class="form-grid">
+  <div class="form-group">
+   <label for="deliveryFee">Standard Delivery Fee (GH₵)</label>
+   <input type="number" id="deliveryFee" min="0" step="0.01" required>
+  </div>
 
-        <section class="panel">
+  <div class="form-group">
+   <label for="freeDelivery">Free Delivery Minimum Order (GH₵)</label>
+   <input type="number" id="freeDelivery" min="0" step="0.01">
+  </div>
 
-            <h2>02. Payment Information</h2>
-            <p>Manage the payment details customers see during checkout.</p>
+  <div class="form-group">
+   <label for="deliveryTime">Estimated Delivery Time</label>
+   <input type="text" id="deliveryTime" placeholder="e.g. 2–5 working days">
+  </div>
+ </div>
+</section>
 
-            <div class="notice">
-                Make sure your Mobile Money account details are correct
-                before customers place orders.
-            </div>
+<section class="panel">
+ <h2>04. WhatsApp Settings</h2>
+ <p>Set the WhatsApp number customers use to contact the store.</p>
+ <div class="form-grid">
+  <div class="form-group">
+   <label for="whatsappNumber">WhatsApp Number</label>
+   <input type="tel" id="whatsappNumber" required>
+  </div>
+ </div>
+</section>
 
-            <div class="form-grid">
+<section class="panel">
+ <h2>05. Store Availability</h2>
+ <p>Control whether customers can place orders.</p>
 
-                <div class="form-group">
-                    <label for="momoNumber">Mobile Money Number</label>
-                    <input type="tel" id="momoNumber" required>
-                </div>
+ <div class="toggle-row">
+  <div>
+   <strong>Store Open</strong>
+   <p>Allow customers to browse and place orders.</p>
+  </div>
+  <input type="checkbox" id="storeOpen">
+ </div>
 
-                <div class="form-group">
-                    <label for="momoName">Mobile Money Account Name</label>
-                    <input type="text" id="momoName" required>
-                </div>
+ <div class="toggle-row">
+  <div>
+   <strong>Accept New Orders</strong>
+   <p>Allow checkout submissions.</p>
+  </div>
+  <input type="checkbox" id="acceptOrders">
+ </div>
+</section>
 
-                <div class="form-group">
-                    <label for="paystackKey">Paystack Public Key</label>
-                    <input type="text" id="paystackKey"
-                    placeholder="pk_test_...">
-                </div>
+<div class="form-actions">
+ <button type="submit" class="save-btn" id="saveButton">SAVE SETTINGS</button>
+ <button type="button" class="reset-btn" id="resetButton">RESET DEFAULTS</button>
+</div>
+<p id="saveStatus" class="status"></p>
 
-                <div class="form-group">
-                    <label for="currency">Store Currency</label>
-                    <select id="currency">
-                        <option value="GHS">Ghana Cedis (GH₵)</option>
-                    </select>
-                </div>
+</form>
 
-            </div>
-
-        </section>
-
-        <!-- DELIVERY SETTINGS -->
-
-        <section class="panel">
-
-            <h2>03. Delivery Settings</h2>
-            <p>Configure delivery charges and free delivery conditions.</p>
-
-            <div class="form-grid">
-
-                <div class="form-group">
-                    <label for="deliveryFee">Standard Delivery Fee (GH₵)</label>
-                    <input type="number" id="deliveryFee"
-                    min="0" step="0.01" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="freeDelivery">Free Delivery Minimum Order (GH₵)</label>
-                    <input type="number" id="freeDelivery"
-                    min="0" step="0.01">
-                </div>
-
-                <div class="form-group">
-                    <label for="deliveryTime">Estimated Delivery Time</label>
-                    <input type="text" id="deliveryTime"
-                    placeholder="e.g. 2–5 working days">
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- WHATSAPP SETTINGS -->
-
-        <section class="panel">
-
-            <h2>04. WhatsApp Settings</h2>
-            <p>Set the WhatsApp number customers use to contact the store.</p>
-
-            <div class="form-grid">
-
-                <div class="form-group">
-                    <label for="whatsappNumber">WhatsApp Number</label>
-                    <input type="tel" id="whatsappNumber" required>
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- STORE STATUS -->
-
-        <section class="panel">
-
-            <h2>05. Store Availability</h2>
-            <p>Control whether customers can place orders.</p>
-
-            <div class="toggle-row">
-                <div>
-                    <strong>Store Open</strong>
-                    <p>Allow customers to browse and place orders.</p>
-                </div>
-                <input type="checkbox" id="storeOpen">
-            </div>
-
-            <div class="toggle-row">
-                <div>
-                    <strong>Accept New Orders</strong>
-                    <p>Allow checkout submissions.</p>
-                </div>
-                <input type="checkbox" id="acceptOrders">
-            </div>
-
-        </section>
-
-        <div class="form-actions">
-            <button type="submit" class="save-btn">
-                SAVE SETTINGS
-            </button>
-
-            <button type="button" class="reset-btn"
-            onclick="resetSettings()">
-                RESET DEFAULTS
-            </button>
-        </div>
-
-    </form>
-
-    <footer>
-        Kikis Amber Touch © 2026. Store Settings.
-    </footer>
-
+<footer>Kikis Amber Touch © 2026. Store Settings.</footer>
 </main>
 
-<script>
+<div id="loginOverlay">
+ <form class="login-card" id="loginForm">
+  <h2>KIKIS AMBER TOUCH</h2>
+  <p>Administrator Login</p>
+  <label for="email">Email Address</label>
+  <input id="email" type="email" required autocomplete="username">
+  <label for="password">Password</label>
+  <input id="password" type="password" required autocomplete="current-password">
+  <button id="loginButton" type="submit">Sign In</button>
+  <div id="loginError"></div>
+ </form>
+</div>
 
-const DEFAULT_SETTINGS = {
-    storeName: "KIKIS AMBER TOUCH",
-    storeTagline: "Luxury fragrances. Elegance in every drop.",
-    storeEmail: "",
-    storePhone: "0503192094",
-    storeAddress: "",
-    logo: "",
-    momoNumber: "0537367236",
-    momoName: "NANA AKUA AMPOFOAH YAMOAH",
-    paystackKey: "",
-    currency: "GHS",
-    deliveryFee: 0,
-    freeDelivery: 0,
-    deliveryTime: "2–5 working days",
-    whatsappNumber: "233503192094",
-    storeOpen: true,
-    acceptOrders: true
+<script type="module">
+import {createClient} from
+"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const supabase=createClient(
+ "https://mgxeyjyhuzbsgnbpbkst.supabase.co",
+ "sb_publishable_ANZvxJnS89wrYo0MTx6LRA_Nu2XPss5"
+);
+
+const BUCKET="store-assets";
+const SETTINGS_ID=1;
+const $=id=>document.getElementById(id);
+
+let adminUser=null;
+let currentLogoUrl="";
+let selectedLogoFile=null;
+let removeLogoRequested=false;
+
+const DEFAULTS={
+ storeName:"KIKIS AMBER TOUCH",
+ storeTagline:"Luxury fragrances. Elegance in every drop.",
+ storeEmail:"",
+ storePhone:"0503192094",
+ storeAddress:"",
+ momoNumber:"0537367236",
+ momoName:"NANA AKUA AMPOFOAH YAMOAH",
+ paystackKey:"",
+ currency:"GHS",
+ deliveryFee:0,
+ freeDelivery:0,
+ deliveryTime:"2–5 working days",
+ whatsappNumber:"233503192094",
+ storeOpen:true,
+ acceptOrders:true
 };
 
-let settings = {};
-
-function loadSettings() {
-
-    try {
-        settings = {
-            ...DEFAULT_SETTINGS,
-            ...JSON.parse(localStorage.getItem("kikisSettings") || "{}")
-        };
-    } catch (error) {
-        settings = { ...DEFAULT_SETTINGS };
-    }
-
-    Object.keys(DEFAULT_SETTINGS).forEach(key => {
-
-        const field = document.getElementById(key);
-
-        if (!field) return;
-
-        if (field.type === "checkbox") {
-            field.checked = settings[key];
-        } else if (field.type !== "file") {
-            field.value = settings[key] ?? "";
-        }
-
-    });
-
-    showLogo(settings.logo);
+function setStatus(id,message,type=""){
+ const el=$(id);
+ el.textContent=message;
+ el.className="status "+type;
 }
 
-function showLogo(logo) {
+function showLogo(url){
+ const image=$("logoPreview");
+ const placeholder=$("logoPlaceholder");
 
-    const preview = document.getElementById("logoPreview");
-    const placeholder = document.getElementById("logoPlaceholder");
-
-    if (logo) {
-        preview.src = logo;
-        preview.style.display = "block";
-        placeholder.style.display = "none";
-    } else {
-        preview.style.display = "none";
-        placeholder.style.display = "block";
-    }
+ if(url){
+  image.src=url;
+  image.style.display="block";
+  placeholder.style.display="none";
+ }else{
+  image.removeAttribute("src");
+  image.style.display="none";
+  placeholder.style.display="block";
+ }
 }
 
-document.getElementById("storeLogo").addEventListener(
-    "change",
-    function() {
+function fillForm(row){
+ $("storeName").value=row.store_name??DEFAULTS.storeName;
+ $("storeTagline").value=row.store_tagline??DEFAULTS.storeTagline;
+ $("momoNumber").value=row.momo_number??DEFAULTS.momoNumber;
+ $("momoName").value=row.momo_name??DEFAULTS.momoName;
+ $("deliveryFee").value=row.delivery_fee??DEFAULTS.deliveryFee;
+ $("freeDelivery").value=row.free_delivery_threshold??DEFAULTS.freeDelivery;
+ $("deliveryTime").value=row.delivery_time??DEFAULTS.deliveryTime;
+ $("whatsappNumber").value=row.whatsapp_number??DEFAULTS.whatsappNumber;
+ $("storeOpen").checked=row.store_open??true;
+ $("acceptOrders").checked=row.accept_orders??true;
 
-        const file = this.files[0];
+ currentLogoUrl=row.logo_url||"";
+ showLogo(currentLogoUrl);
 
-        if (!file) return;
+ // These additional fields are retained locally because
+ // they are not among the database columns confirmed so far.
+ let extras={};
+ try{
+  extras=JSON.parse(localStorage.getItem("kikisSettingsExtras")||"{}");
+ }catch{}
 
-        if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
-            alert("Please upload a JPG, PNG or WEBP logo.");
-            this.value = "";
-            return;
-        }
-
-        if (file.size > 2 * 1024 * 1024) {
-            alert("Logo must not exceed 2MB.");
-            this.value = "";
-            return;
-        }
-
-        const reader = new FileReader();
-
-        reader.onload = function(event) {
-            settings.logo = event.target.result;
-            showLogo(settings.logo);
-        };
-
-        reader.readAsDataURL(file);
-    }
-);
-
-document.getElementById("settingsForm").addEventListener(
-    "submit",
-    function(event) {
-
-        event.preventDefault();
-
-        const updatedSettings = {};
-
-        Object.keys(DEFAULT_SETTINGS).forEach(key => {
-
-            const field = document.getElementById(key);
-
-            if (!field) return;
-
-            if (field.type === "checkbox") {
-                updatedSettings[key] = field.checked;
-            } else if (field.type !== "file") {
-                updatedSettings[key] = field.value.trim();
-            }
-
-        });
-
-        updatedSettings.logo = settings.logo || "";
-
-        updatedSettings.deliveryFee =
-            Math.max(0, Number(updatedSettings.deliveryFee) || 0);
-
-        updatedSettings.freeDelivery =
-            Math.max(0, Number(updatedSettings.freeDelivery) || 0);
-
-        localStorage.setItem(
-            "kikisSettings",
-            JSON.stringify(updatedSettings)
-        );
-
-        settings = updatedSettings;
-
-        alert("Store settings saved successfully.");
-    }
-);
-
-function resetSettings() {
-
-    if (!confirm("Reset all store settings to the default values?")) {
-        return;
-    }
-
-    settings = { ...DEFAULT_SETTINGS };
-
-    localStorage.setItem(
-        "kikisSettings",
-        JSON.stringify(settings)
-    );
-
-    loadSettings();
-
-    alert("Default settings restored.");
+ $("storeEmail").value=extras.storeEmail||"";
+ $("storePhone").value=extras.storePhone||DEFAULTS.storePhone;
+ $("storeAddress").value=extras.storeAddress||"";
+ $("paystackKey").value=extras.paystackKey||"";
+ $("currency").value=extras.currency||"GHS";
 }
 
-loadSettings();
+async function verifyAdmin(user){
+ if(!user)return false;
 
+ const {data,error}=await supabase
+  .from("admin_users")
+  .select("user_id")
+  .eq("user_id",user.id)
+  .maybeSingle();
+
+ if(error){
+  console.error(error);
+  return false;
+ }
+ return !!data;
+}
+
+async function loadSettings(){
+ setStatus("saveStatus","Loading store settings...");
+
+ const {data,error}=await supabase
+  .from("store_settings")
+  .select("*")
+  .eq("id",SETTINGS_ID)
+  .maybeSingle();
+
+ if(error)throw error;
+
+ if(!data){
+  throw new Error("No store settings record was found with id 1.");
+ }
+
+ fillForm(data);
+ setStatus("saveStatus","Store settings loaded.","success");
+}
+
+async function uploadLogo(file){
+ const extension=file.name.split(".").pop().toLowerCase();
+ const safeExtension=["png","jpg","jpeg","webp"].includes(extension)
+  ?extension:"png";
+
+ const path=`${adminUser.id}/${crypto.randomUUID()}.${safeExtension}`;
+
+ const {error}=await supabase.storage
+  .from(BUCKET)
+  .upload(path,file,{
+   contentType:file.type,
+   upsert:false,
+   cacheControl:"3600"
+  });
+
+ if(error)throw error;
+
+ const {data}=supabase.storage
+  .from(BUCKET)
+  .getPublicUrl(path);
+
+ return data.publicUrl;
+}
+
+async function saveSettings(event){
+ event.preventDefault();
+
+ const button=$("saveButton");
+ button.disabled=true;
+ button.textContent="SAVING...";
+
+ try{
+  let logoUrl=currentLogoUrl;
+
+  if(selectedLogoFile){
+   setStatus("logoStatus","Uploading logo...");
+   logoUrl=await uploadLogo(selectedLogoFile);
+  }
+
+  if(removeLogoRequested){
+   logoUrl=null;
+  }
+
+  const row={
+   store_name:$("storeName").value.trim(),
+   store_tagline:$("storeTagline").value.trim(),
+   whatsapp_number:$("whatsappNumber").value.trim(),
+   momo_number:$("momoNumber").value.trim(),
+   momo_name:$("momoName").value.trim(),
+   delivery_fee:Math.max(0,Number($("deliveryFee").value)||0),
+   free_delivery_threshold:Math.max(0,Number($("freeDelivery").value)||0),
+   delivery_time:$("deliveryTime").value.trim(),
+   store_open:$("storeOpen").checked,
+   accept_orders:$("acceptOrders").checked,
+   logo_url:logoUrl,
+   updated_at:new Date().toISOString()
+  };
+
+  const {error}=await supabase
+   .from("store_settings")
+   .update(row)
+   .eq("id",SETTINGS_ID);
+
+  if(error)throw error;
+
+  const extras={
+   storeEmail:$("storeEmail").value.trim(),
+   storePhone:$("storePhone").value.trim(),
+   storeAddress:$("storeAddress").value.trim(),
+   paystackKey:$("paystackKey").value.trim(),
+   currency:$("currency").value
+  };
+
+  localStorage.setItem("kikisSettingsExtras",JSON.stringify(extras));
+
+  currentLogoUrl=logoUrl||"";
+  selectedLogoFile=null;
+  removeLogoRequested=false;
+  $("storeLogo").value="";
+  showLogo(currentLogoUrl);
+
+  setStatus("logoStatus","Logo and settings saved.","success");
+  setStatus("saveStatus","Your store settings have been saved successfully.","success");
+
+ }catch(error){
+  console.error(error);
+  setStatus("saveStatus","Save failed: "+error.message,"error");
+ }finally{
+  button.disabled=false;
+  button.textContent="SAVE SETTINGS";
+ }
+}
+
+$("storeLogo").addEventListener("change",()=>{
+ const file=$("storeLogo").files[0];
+ if(!file)return;
+
+ if(!["image/png","image/jpeg","image/webp"].includes(file.type)){
+  alert("Please select a PNG, JPG or WebP image.");
+  $("storeLogo").value="";
+  return;
+ }
+
+ if(file.size>2*1024*1024){
+  alert("Your logo must not exceed 2MB.");
+  $("storeLogo").value="";
+  return;
+ }
+
+ selectedLogoFile=file;
+ removeLogoRequested=false;
+
+ const reader=new FileReader();
+ reader.onload=event=>{
+  showLogo(event.target.result);
+  setStatus("logoStatus","New logo selected. Click SAVE SETTINGS to upload it.","success");
+ };
+ reader.readAsDataURL(file);
+});
+
+$("removeLogo").addEventListener("click",()=>{
+ if(!currentLogoUrl&&!selectedLogoFile){
+  alert("There is no logo to remove.");
+  return;
+ }
+
+ if(!confirm("Remove the current logo from your store settings?"))return;
+
+ selectedLogoFile=null;
+ removeLogoRequested=true;
+ $("storeLogo").value="";
+ showLogo("");
+ setStatus("logoStatus","Logo will be removed when you save settings.");
+});
+
+$("settingsForm").addEventListener("submit",saveSettings);
+
+$("resetButton").addEventListener("click",()=>{
+ if(!confirm("Restore the default store information? This will save the defaults to your database."))return;
+
+ $("storeName").value=DEFAULTS.storeName;
+ $("storeTagline").value=DEFAULTS.storeTagline;
+ $("storeEmail").value=DEFAULTS.storeEmail;
+ $("storePhone").value=DEFAULTS.storePhone;
+ $("storeAddress").value=DEFAULTS.storeAddress;
+ $("momoNumber").value=DEFAULTS.momoNumber;
+ $("momoName").value=DEFAULTS.momoName;
+ $("paystackKey").value="";
+ $("currency").value="GHS";
+ $("deliveryFee").value=DEFAULTS.deliveryFee;
+ $("freeDelivery").value=DEFAULTS.freeDelivery;
+ $("deliveryTime").value=DEFAULTS.deliveryTime;
+ $("whatsappNumber").value=DEFAULTS.whatsappNumber;
+ $("storeOpen").checked=true;
+ $("acceptOrders").checked=true;
+
+ selectedLogoFile=null;
+ removeLogoRequested=true;
+ $("storeLogo").value="";
+ showLogo("");
+ setStatus("logoStatus","Logo will be removed when you save.");
+});
+
+$("loginForm").addEventListener("submit",async event=>{
+ event.preventDefault();
+
+ const button=$("loginButton");
+ button.disabled=true;
+ button.textContent="Signing in...";
+ $("loginError").textContent="";
+
+ try{
+  const {data,error}=await supabase.auth.signInWithPassword({
+   email:$("email").value.trim(),
+   password:$("password").value
+  });
+
+  if(error)throw error;
+
+  if(!(await verifyAdmin(data.user))){
+   await supabase.auth.signOut();
+   throw new Error("This account is not authorised to manage store settings.");
+  }
+
+  adminUser=data.user;
+  $("loginOverlay").style.display="none";
+  await loadSettings();
+
+ }catch(error){
+  $("loginError").textContent=error.message;
+ }finally{
+  button.disabled=false;
+  button.textContent="Sign In";
+ }
+});
+
+async function initialise(){
+ const {data,error}=await supabase.auth.getSession();
+
+ if(error){
+  $("loginError").textContent=error.message;
+  return;
+ }
+
+ const user=data.session?.user;
+
+ if(!user||!(await verifyAdmin(user))){
+  if(user)await supabase.auth.signOut();
+  $("loginOverlay").style.display="flex";
+  return;
+ }
+
+ adminUser=user;
+ $("loginOverlay").style.display="none";
+
+ try{
+  await loadSettings();
+ }catch(error){
+  console.error(error);
+  setStatus("saveStatus","Unable to load settings: "+error.message,"error");
+ }
+}
+
+supabase.auth.onAuthStateChange((_event,session)=>{
+ if(!session&&adminUser){
+  adminUser=null;
+  $("loginOverlay").style.display="flex";
+ }
+});
+
+initialise();
 </script>
 
 </body>
