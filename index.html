@@ -72,6 +72,19 @@
       margin-top: 5px;
       color: white;
     }
+    .logo img {
+    display: none;
+    width: 170px;
+    max-height: 65px;
+    object-fit: contain;
+}
+
+@media (max-width: 768px) {
+    .logo img {
+        width: 135px;
+        max-height: 55px;
+    }
+}
 
     nav {
       display: flex;
@@ -412,10 +425,14 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
   </div>
 
   <header>
-    <a href="index.html" class="logo">
-      KIKIS AMBER TOUCH
-      <span>LUXURY FRAGRANCES</span>
-    </a>
+ <a href="index.html" class="logo" id="storeLogoLink">
+    <img id="storeLogoImage" alt="Kikis Amber Touch Logo">
+
+    <span id="logoFallback">
+        KIKIS AMBER TOUCH
+        <small>LUXURY FRAGRANCES</small>
+    </span>
+</a>
 
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
 
@@ -537,27 +554,49 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     <i class="fa-brands fa-whatsapp"></i>
 </a>
 
-  <script>
-    function toggleMenu() {
-      document.getElementById("navigation").classList.toggle("active");
+  <script type="module">
+import { createClient } from
+"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const supabase = createClient(
+    "https://mgxeyjyhuzbsgnbpbkst.supabase.co",
+    "sb_publishable_ANZvxJnS89wrYo0MTx6LRA_Nu2XPss5"
+);
+
+async function loadStoreLogo() {
+    const image = document.getElementById("storeLogoImage");
+    const fallback = document.getElementById("logoFallback");
+
+    try {
+        const { data, error } = await supabase
+            .from("store_settings")
+            .select("logo_url")
+            .eq("id", 1)
+            .maybeSingle();
+
+        if (error) throw error;
+
+        if (data && data.logo_url) {
+            image.onload = () => {
+                image.style.display = "block";
+                fallback.style.display = "none";
+            };
+
+            image.onerror = () => {
+                image.style.display = "none";
+                fallback.style.display = "block";
+                console.error("Logo image could not be loaded.");
+            };
+
+            image.src = data.logo_url;
+        }
+    } catch (error) {
+        console.error("Store logo loading error:", error);
     }
+}
 
-    // Display cart quantity saved by the shop
-    function updateCartCount() {
-      const cart = JSON.parse(localStorage.getItem("kikisCart") || "[]");
-
-      const count = cart.reduce(
-        (total, item) => total + Number(item.quantity || 0), 0
-      );
-
-      document.getElementById("cart-count").textContent = count;
-    }
-
-    document.getElementById("year").textContent =
-      new Date().getFullYear();
-
-    updateCartCount();
-  </script>
+loadStoreLogo();
+</script>
 
 </body>
 </html>
