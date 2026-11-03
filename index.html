@@ -2,608 +2,649 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Discover elegant and luxurious fragrances at Kikis Amber Touch. Shop your favourite perfumes in Ghana.">
-  <title>Kikis Amber Touch | Luxury Fragrances</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Discover elegant and luxurious fragrances at Kikis Amber Touch. Shop your favourite perfumes in Ghana.">
+<title>Kikis Amber Touch | Luxury Fragrances</title>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
 
-    :root {
-      --black: #11100e;
-      --gold: #c6a15b;
-      --champagne: #e4d0a5;
-      --ivory: #f8f5ef;
-      --white: #ffffff;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      background: var(--ivory);
-      color: var(--black);
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    /* Announcement bar */
-    .announcement {
-      background: var(--gold);
-      color: var(--black);
-      text-align: center;
-      padding: 10px;
-      font-size: 12px;
-      letter-spacing: 1.5px;
-    }
-
-    /* Navigation */
-    header {
-      background: var(--black);
-      color: white;
-      padding: 18px 7%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .logo {
-      font-family: Georgia, serif;
-      font-size: 23px;
-      color: var(--champagne);
-      letter-spacing: 1px;
-    }
-
- 
-@media (max-width: 768px) {
-    header {
-        padding: 10px 4%;
-        min-height: 65px;
-        gap: 10px;
-    }
-
-    .logo {
-        font-size: 15px;
-        flex-shrink: 1;
-        min-width: 0;
-    }
-
-    .logo img {
-        width: 105px;
-        max-width: 100%;
-        height: 40px;
-        object-fit: contain;
-    }
-
-    .logo span {
-        font-size: 8px;
-        letter-spacing: 2px;
-    }
-
-    .menu-toggle {
-        display: block;
-        flex-shrink: 0;
-        margin-left: auto;
-        font-size: 25px;
-    }
+:root{
+--black:#11100e;
+--gold:#c6a15b;
+--champagne:#e4d0a5;
+--ivory:#f8f5ef;
+--white:#fff;
 }
 
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 28px;
-    }
-
-    nav a {
-      font-size: 13px;
-      transition: .3s;
-    }
-
-    nav a:hover {
-      color: var(--gold);
-    }
-
-    .cart-link {
-      border: 1px solid var(--gold);
-      padding: 10px 17px;
-      border-radius: 3px;
-      color: var(--champagne);
-    }
-
-    .menu-toggle {
-      display: none;
-      background: none;
-      border: none;
-      color: white;
-      font-size: 26px;
-      cursor: pointer;
-    }
-
-    /* Hero */
-    .hero {
-      min-height: 570px;
-      display: flex;
-      align-items: center;
-      padding: 70px 8%;
-      background:
-        linear-gradient(90deg, rgba(12,11,9,.96), rgba(12,11,9,.55)),
-        url("images/hero-perfume.jpg") center/cover no-repeat;
-      color: white;
-    }
-
-    .hero-content {
-      max-width: 560px;
-    }
-
-    .eyebrow {
-      color: var(--gold);
-      letter-spacing: 4px;
-      font-size: 12px;
-      margin-bottom: 22px;
-    }
-
-    .hero h1 {
-      font-family: Georgia, serif;
-      font-size: clamp(42px, 6vw, 70px);
-      line-height: 1.12;
-      font-weight: normal;
-      margin-bottom: 22px;
-    }
-
-    .hero h1 span {
-      color: var(--champagne);
-      font-style: italic;
-    }
-
-    .hero p {
-      font-size: 15px;
-      line-height: 1.9;
-      color: #dedbd4;
-      margin-bottom: 32px;
-    }
-
-    .btn {
-      display: inline-block;
-      background: var(--gold);
-      color: var(--black);
-      padding: 15px 30px;
-      font-size: 12px;
-      letter-spacing: 1.5px;
-      font-weight: bold;
-      border: 1px solid var(--gold);
-      transition: .3s;
-    }
-
-    .btn:hover {
-      background: transparent;
-      color: var(--champagne);
-    }
-
-    /* Benefits */
-    .benefits {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      background: white;
-      padding: 28px 7%;
-      text-align: center;
-      gap: 20px;
-    }
-
-    .benefit h3 {
-      font-family: Georgia, serif;
-      font-size: 16px;
-      margin-bottom: 8px;
-    }
-
-    .benefit p {
-      color: #777;
-      font-size: 12px;
-    }
-
-    /* Featured section */
-    .section {
-      padding: 75px 7%;
-    }
-
-    .section-heading {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    .section-heading small {
-      color: var(--gold);
-      letter-spacing: 3px;
-      font-size: 11px;
-    }
-
-    .section-heading h2 {
-      font-family: Georgia, serif;
-      font-size: 36px;
-      font-weight: normal;
-      margin: 12px 0;
-    }
-
-    .section-heading p {
-      color: #777;
-      font-size: 14px;
-    }
-
-    .products {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 25px;
-    }
-
-    .product {
-      background: white;
-      padding-bottom: 22px;
-      text-align: center;
-      transition: .3s;
-    }
-
-    .product:hover {
-      transform: translateY(-5px);
-    }
-
-.product img {
-  width: 100%;
-  height: 340px;
-  object-fit: contain;
-  object-position: center;
-  background: #f8f5ef;
-  padding: 0;
-  display: block;
-  transform: scale(1.08);
+body{
+font-family:Arial,sans-serif;
+background:var(--ivory);
+color:var(--black);
 }
 
-    .product h3 {
-      font-family: Georgia, serif;
-      font-size: 19px;
-      margin: 20px 10px 8px;
-    }
+a{text-decoration:none;color:inherit}
 
-    .product p {
-      color: #997a43;
-      font-weight: bold;
-      margin-bottom: 18px;
-    }
-
-    .product a {
-      display: inline-block;
-      border: 1px solid var(--gold);
-      padding: 11px 22px;
-      font-size: 11px;
-      letter-spacing: 1px;
-    }
-
-    .product a:hover {
-      background: var(--black);
-      color: white;
-    }
-
-    /* Brand banner */
-    .brand-banner {
-      background: var(--black);
-      color: white;
-      text-align: center;
-      padding: 75px 20px;
-    }
-
-    .brand-banner h2 {
-      font-family: Georgia, serif;
-      font-size: 38px;
-      color: var(--champagne);
-      font-weight: normal;
-      margin-bottom: 15px;
-    }
-
-    .brand-banner p {
-      color: #ccc;
-      margin-bottom: 28px;
-      line-height: 1.8;
-    }
-
-    /* Footer */
-    footer {
-      background: #080807;
-      color: #aaa;
-      padding: 35px 7%;
-      text-align: center;
-      font-size: 12px;
-      line-height: 2;
-    }
-
-    footer strong {
-      color: var(--champagne);
-    }
-
-  .whatsapp {
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-    width: 58px;
-    height: 58px;
-    background: #25D366;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 34px;
-    z-index: 200;
-    box-shadow: 0 4px 15px #0003;
+/* Announcement */
+.announcement{
+background:var(--gold);
+color:var(--black);
+text-align:center;
+padding:10px;
+font-size:12px;
+letter-spacing:1.5px;
 }
 
-.whatsapp i {
-    color: white;
-}
-    @media(max-width: 768px) {
-      header {
-        padding: 15px 5%;
-      }
-
-      .logo {
-        font-size: 18px;
-      }
-
-      .menu-toggle {
-        display: block;
-      }
-
-      nav {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background: var(--black);
-        flex-direction: column;
-        padding: 25px;
-        gap: 25px;
-      }
-
-      nav.active {
-        display: flex;
-      }
-
-      .hero {
-        min-height: 510px;
-        padding: 55px 7%;
-        background-position: 65% center;
-      }
-
-      .benefits {
-        grid-template-columns: 1fr;
-        gap: 25px;
-      }
-
-      .products {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-      }
-
-      .product img {
-        height: 190px;
-      }
-
-      .product h3 {
-        font-size: 16px;
-      }
-
-      .section {
-        padding: 55px 5%;
-      }
-
-      .section-heading h2 {
-        font-size: 29px;
-      }
-
-      .brand-banner h2 {
-        font-size: 29px;
-      }
-    }
-
-@media(max-width: 768px) {
-  .product img {
-    height: 250px;
-    transform: scale(1.05);
-  }
+/* Header */
+header{
+background:var(--black);
+color:white;
+padding:18px 7%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+position:sticky;
+top:0;
+z-index:100;
+gap:20px;
 }
 
-@media(max-width: 380px) {
-  .product img {
-    height: 280px;
-  }
+.logo{
+font-family:Georgia,serif;
+font-size:23px;
+color:var(--champagne);
+letter-spacing:1px;
+display:flex;
+align-items:center;
+flex-shrink:0;
 }
-  </style>
-  <link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+.logo img{
+display:none;
+width:170px;
+max-width:100%;
+height:58px;
+object-fit:contain;
+}
+
+.logo span{
+display:block;
+font-family:Arial,sans-serif;
+font-size:9px;
+letter-spacing:4px;
+text-align:center;
+margin-top:5px;
+color:white;
+}
+
+nav{
+display:flex;
+align-items:center;
+gap:28px;
+}
+
+nav a{
+font-size:13px;
+transition:.3s;
+}
+
+nav a:hover{color:var(--gold)}
+
+.cart-link{
+border:1px solid var(--gold);
+padding:10px 17px;
+border-radius:3px;
+color:var(--champagne);
+}
+
+.menu-toggle{
+display:none;
+background:none;
+border:none;
+color:white;
+font-size:26px;
+cursor:pointer;
+}
+
+/* Hero */
+.hero{
+min-height:570px;
+display:flex;
+align-items:center;
+padding:70px 8%;
+background:
+linear-gradient(90deg,rgba(12,11,9,.96),rgba(12,11,9,.55)),
+url("images/hero-perfume.jpg") center/cover no-repeat;
+color:white;
+}
+
+.hero-content{max-width:560px}
+
+.eyebrow{
+color:var(--gold);
+letter-spacing:4px;
+font-size:12px;
+margin-bottom:22px;
+}
+
+.hero h1{
+font-family:Georgia,serif;
+font-size:clamp(42px,6vw,70px);
+line-height:1.12;
+font-weight:normal;
+margin-bottom:22px;
+}
+
+.hero h1 span{
+color:var(--champagne);
+font-style:italic;
+}
+
+.hero p{
+font-size:15px;
+line-height:1.9;
+color:#dedbd4;
+margin-bottom:32px;
+}
+
+.btn{
+display:inline-block;
+background:var(--gold);
+color:var(--black);
+padding:15px 30px;
+font-size:12px;
+letter-spacing:1.5px;
+font-weight:bold;
+border:1px solid var(--gold);
+transition:.3s;
+}
+
+.btn:hover{
+background:transparent;
+color:var(--champagne);
+}
+
+/* Benefits */
+.benefits{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+background:white;
+padding:28px 7%;
+text-align:center;
+gap:20px;
+}
+
+.benefit h3{
+font-family:Georgia,serif;
+font-size:16px;
+margin-bottom:8px;
+}
+
+.benefit p{
+color:#777;
+font-size:12px;
+}
+
+/* Featured products */
+.section{padding:75px 7%}
+
+.section-heading{
+text-align:center;
+margin-bottom:40px;
+}
+
+.section-heading small{
+color:var(--gold);
+letter-spacing:3px;
+font-size:11px;
+}
+
+.section-heading h2{
+font-family:Georgia,serif;
+font-size:36px;
+font-weight:normal;
+margin:12px 0;
+}
+
+.section-heading p{
+color:#777;
+font-size:14px;
+}
+
+.products{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:25px;
+}
+
+.product{
+background:white;
+padding-bottom:22px;
+text-align:center;
+transition:.3s;
+}
+
+.product:hover{transform:translateY(-5px)}
+
+.product img{
+width:100%;
+height:340px;
+object-fit:contain;
+object-position:center;
+background:#f8f5ef;
+padding:0;
+display:block;
+transform:scale(1.08);
+}
+
+.product h3{
+font-family:Georgia,serif;
+font-size:19px;
+margin:20px 10px 8px;
+}
+
+.product p{
+color:#997a43;
+font-weight:bold;
+margin-bottom:18px;
+}
+
+.product a{
+display:inline-block;
+border:1px solid var(--gold);
+padding:11px 22px;
+font-size:11px;
+letter-spacing:1px;
+}
+
+.product a:hover{
+background:var(--black);
+color:white;
+}
+
+/* Brand banner */
+.brand-banner{
+background:var(--black);
+color:white;
+text-align:center;
+padding:75px 20px;
+}
+
+.brand-banner h2{
+font-family:Georgia,serif;
+font-size:38px;
+color:var(--champagne);
+font-weight:normal;
+margin-bottom:15px;
+}
+
+.brand-banner p{
+color:#ccc;
+margin-bottom:28px;
+line-height:1.8;
+}
+
+/* Footer */
+footer{
+background:#080807;
+color:#aaa;
+padding:35px 7%;
+text-align:center;
+font-size:12px;
+line-height:2;
+}
+
+footer strong{color:var(--champagne)}
+
+/* WhatsApp */
+.whatsapp{
+position:fixed;
+right:20px;
+bottom:20px;
+width:58px;
+height:58px;
+background:#25D366;
+color:white;
+border-radius:50%;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:34px;
+z-index:200;
+box-shadow:0 4px 15px #0003;
+}
+
+.whatsapp i{color:white}
+
+/* Tablet and mobile */
+@media(max-width:768px){
+
+header{
+padding:9px 4%;
+min-height:64px;
+gap:8px;
+flex-wrap:nowrap;
+}
+
+.logo{
+display:flex;
+align-items:center;
+flex:1 1 auto;
+min-width:0;
+max-width:calc(100% - 48px);
+font-size:14px;
+line-height:1.15;
+overflow:hidden;
+}
+
+.logo img{
+width:100px;
+max-width:100%;
+height:40px;
+flex:0 1 auto;
+object-fit:contain;
+}
+
+.logo span{
+font-size:8px;
+letter-spacing:1.5px;
+text-align:left;
+margin-top:0;
+white-space:nowrap;
+}
+
+.menu-toggle{
+display:block;
+flex:0 0 38px;
+width:38px;
+height:42px;
+margin-left:auto;
+padding:0;
+font-size:25px;
+line-height:1;
+}
+
+nav{
+display:none;
+position:absolute;
+top:100%;
+left:0;
+width:100%;
+background:var(--black);
+flex-direction:column;
+align-items:stretch;
+padding:18px 5%;
+gap:18px;
+}
+
+nav.active{display:flex}
+
+nav a{
+width:100%;
+padding:8px 0;
+}
+
+nav .cart-link{
+width:fit-content;
+padding:9px 14px;
+}
+
+.hero{
+min-height:510px;
+padding:55px 7%;
+background-position:65% center;
+}
+
+.benefits{
+grid-template-columns:1fr;
+gap:25px;
+}
+
+.products{
+grid-template-columns:repeat(2,1fr);
+gap:12px;
+}
+
+.product img{
+height:250px;
+transform:scale(1.05);
+}
+
+.product h3{font-size:16px}
+
+.section{padding:55px 5%}
+
+.section-heading h2{font-size:29px}
+
+.brand-banner h2{font-size:29px}
+}
+
+/* Smaller phones */
+@media(max-width:380px){
+
+.logo img{
+width:86px;
+height:36px;
+}
+
+header{
+padding-left:3%;
+padding-right:3%;
+}
+
+.product img{height:220px}
+
+.announcement{
+font-size:10px;
+letter-spacing:1px;
+}
+}
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
 
-  <div class="announcement">
-    DISCOVER YOUR SIGNATURE SCENT — KIKIS AMBER TOUCH
-  </div>
+<div class="announcement">
+DISCOVER YOUR SIGNATURE SCENT — KIKIS AMBER TOUCH
+</div>
 
-  <header>
- <a href="index.html" class="logo" id="storeLogoLink">
-    <img id="storeLogoImage" alt="Kikis Amber Touch Logo">
+<header>
 
-    <span id="logoFallback">
-        KIKIS AMBER TOUCH
-        <small>LUXURY FRAGRANCES</small>
-    </span>
+<a href="index.html" class="logo" id="storeLogoLink">
+<img id="storeLogoImage" alt="Kikis Amber Touch Logo">
+
+<span id="logoFallback">
+KIKIS AMBER TOUCH
+<small>LUXURY FRAGRANCES</small>
+</span>
 </a>
 
-    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+<button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu" aria-expanded="false">☰</button>
 
-    <nav id="navigation">
-      <a href="index.html">HOME</a>
-      <a href="shop.html">SHOP</a>
-      <a href="cart.html" class="cart-link">
-        
-        MY CART (<span id="cart-count">0</span>)
-        <a href="track-order.html">Track Order</a>
-      </a>
-    </nav>
-  </header>
+<nav id="navigation">
+<a href="index.html">HOME</a>
+<a href="shop.html">SHOP</a>
+<a href="cart.html" class="cart-link">MY CART (<span id="cart-count">0</span>)</a>
+<a href="track-order.html">TRACK ORDER</a>
+</nav>
 
-  <main>
+</header>
 
-    <!-- HERO SECTION -->
-    <section class="hero">
-      <div class="hero-content">
-        <div class="eyebrow">WELCOME TO KIKIS AMBER TOUCH</div>
+<main>
 
-        <h1>
-          Leave a <span>Lasting</span> Impression.
-        </h1>
+<!-- HERO SECTION -->
+<section class="hero">
+<div class="hero-content">
 
-        <p>
-          Discover fragrances that express your personality,
-          elevate your presence and make every moment unforgettable.
-          Your signature scent begins here.
-        </p>
+<div class="eyebrow">WELCOME TO KIKIS AMBER TOUCH</div>
 
-        <a href="shop.html" class="btn">EXPLORE OUR COLLECTION</a>
-      </div>
-    </section>
+<h1>
+Leave a <span>Lasting</span> Impression.
+</h1>
 
-    <!-- BENEFITS -->
-    <section class="benefits">
+<p>
+Discover fragrances that express your personality,
+elevate your presence and make every moment unforgettable.
+Your signature scent begins here.
+</p>
 
-      <div class="benefit">
-        <h3>Luxury Fragrances</h3>
-        <p>Beautiful scents for every occasion.</p>
-      </div>
+<a href="shop.html" class="btn">EXPLORE OUR COLLECTION</a>
 
-      <div class="benefit">
-        <h3>Easy Shopping</h3>
-        <p>Choose your favourite fragrance with ease.</p>
-      </div>
+</div>
+</section>
 
-      <div class="benefit">
-        <h3>Secure Payments</h3>
-        <p>Pay conveniently with MoMo or Paystack.</p>
-      </div>
+<!-- BENEFITS -->
+<section class="benefits">
 
-    </section>
+<div class="benefit">
+<h3>Luxury Fragrances</h3>
+<p>Beautiful scents for every occasion.</p>
+</div>
 
-    <!-- FEATURED PRODUCTS -->
-    <section class="section">
+<div class="benefit">
+<h3>Easy Shopping</h3>
+<p>Choose your favourite fragrance with ease.</p>
+</div>
 
-      <div class="section-heading">
-        <small>OUR SELECTION</small>
-        <h2>Discover Our Fragrances</h2>
-        <p>Find a fragrance that speaks your style.</p>
-      </div>
+<div class="benefit">
+<h3>Secure Payments</h3>
+<p>Pay conveniently with MoMo or Paystack.</p>
+</div>
 
-      <div class="products">
+</section>
 
-        <div class="product">
-          <img src="product-images/amber touch.jpeg" alt="Luxury perfume">
-          <h3>Signature Collection</h3>
-          <p>Explore price in shop</p>
-          <a href="shop.html">SHOP NOW</a>
-        </div>
+<!-- FEATURED PRODUCTS -->
+<section class="section">
 
-        <div class="product">
-          <img src="product-images/amber1.jpeg" alt="Elegant fragrance">
-          <h3>Amber Collection</h3>
-          <p>Explore price in shop</p>
-          <a href="shop.html">SHOP NOW</a>
-        </div>
+<div class="section-heading">
+<small>OUR SELECTION</small>
+<h2>Discover Our Fragrances</h2>
+<p>Find a fragrance that speaks your style.</p>
+</div>
 
-        <div class="product">
-          <img src="product-images/amber2.jpeg" alt="Premium fragrance">
-          <h3>Luxury Collection</h3>
-          <p>Explore price in shop</p>
-          <a href="shop.html">SHOP NOW</a>
-        </div>
+<div class="products">
 
-      </div>
+<div class="product">
+<img src="product-images/amber touch.jpeg" alt="Luxury perfume">
+<h3>Signature Collection</h3>
+<p>Explore price in shop</p>
+<a href="shop.html">SHOP NOW</a>
+</div>
 
-    </section>
+<div class="product">
+<img src="product-images/amber1.jpeg" alt="Elegant fragrance">
+<h3>Amber Collection</h3>
+<p>Explore price in shop</p>
+<a href="shop.html">SHOP NOW</a>
+</div>
 
-    <!-- BRAND MESSAGE -->
-    <section class="brand-banner">
-      <h2>Your Scent. Your Identity.</h2>
-      <p>
-        More than just a fragrance. It's the impression you leave
-        wherever you go.
-      </p>
-      <a href="shop.html" class="btn">SHOP OUR COLLECTION</a>
-    </section>
+<div class="product">
+<img src="product-images/amber2.jpeg" alt="Premium fragrance">
+<h3>Luxury Collection</h3>
+<p>Explore price in shop</p>
+<a href="shop.html">SHOP NOW</a>
+</div>
 
-  </main>
+</div>
+</section>
 
-  <footer>
-    <strong>KIKIS AMBER TOUCH</strong>
-    <p>Luxury fragrances. Elegance in every drop.</p>
-    <p>WhatsApp: 0503192094</p>
-    <p>© <span id="year"></span> Kikis Amber Touch. All Rights Reserved.</p>
-  </footer>
+<!-- BRAND MESSAGE -->
+<section class="brand-banner">
+<h2>Your Scent. Your Identity.</h2>
+<p>
+More than just a fragrance. It's the impression you leave
+wherever you go.
+</p>
+<a href="shop.html" class="btn">SHOP OUR COLLECTION</a>
+</section>
+
+</main>
+
+<footer>
+<strong>KIKIS AMBER TOUCH</strong>
+<p>Luxury fragrances. Elegance in every drop.</p>
+<p>WhatsApp: 0503192094</p>
+<p>© <span id="year"></span> Kikis Amber Touch. All Rights Reserved.</p>
+</footer>
 
 <!-- WHATSAPP CHAT -->
 <a
-    class="whatsapp"
-    href="https://wa.me/233503192094"
-    target="_blank"
-    rel="noopener"
-    aria-label="Chat with Kikis Amber Touch on WhatsApp"
+class="whatsapp"
+href="https://wa.me/233503192094"
+target="_blank"
+rel="noopener"
+aria-label="Chat with Kikis Amber Touch on WhatsApp"
 >
-    <i class="fa-brands fa-whatsapp"></i>
+<i class="fa-brands fa-whatsapp"></i>
 </a>
 
-  <script type="module">
-import { createClient } from
+<script>
+function toggleMenu(){
+const navigation=document.getElementById("navigation");
+const button=document.getElementById("menuToggle");
+navigation.classList.toggle("active");
+button.setAttribute("aria-expanded",navigation.classList.contains("active"));
+}
+
+document.getElementById("menuToggle").addEventListener("click",toggleMenu);
+
+document.getElementById("year").textContent=new Date().getFullYear();
+
+function updateCartCount(){
+try{
+const cart=JSON.parse(localStorage.getItem("kikisCart")||"[]");
+const count=cart.reduce((total,item)=>total+Number(item.quantity||0),0);
+document.getElementById("cart-count").textContent=count;
+}catch(error){
+console.error("Cart count error:",error);
+}
+}
+
+updateCartCount();
+</script>
+
+<script type="module">
+import {createClient} from
 "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-const supabase = createClient(
-    "https://mgxeyjyhuzbsgnbpbkst.supabase.co",
-    "sb_publishable_ANZvxJnS89wrYo0MTx6LRA_Nu2XPss5"
+const supabase=createClient(
+"https://mgxeyjyhuzbsgnbpbkst.supabase.co",
+"sb_publishable_ANZvxJnS89wrYo0MTx6LRA_Nu2XPss5"
 );
 
-async function loadStoreLogo() {
-    const image = document.getElementById("storeLogoImage");
-    const fallback = document.getElementById("logoFallback");
+async function loadStoreLogo(){
+const image=document.getElementById("storeLogoImage");
+const fallback=document.getElementById("logoFallback");
 
-    try {
-        const { data, error } = await supabase
-            .from("store_settings")
-            .select("logo_url")
-            .eq("id", 1)
-            .maybeSingle();
+try{
+const {data,error}=await supabase
+.from("store_settings")
+.select("logo_url")
+.eq("id",1)
+.maybeSingle();
 
-        if (error) throw error;
+if(error)throw error;
 
-        if (data && data.logo_url) {
-            image.onload = () => {
-                image.style.display = "block";
-                fallback.style.display = "none";
-            };
+if(data?.logo_url){
+image.onload=()=>{
+image.style.display="block";
+fallback.style.display="none";
+};
 
-            image.onerror = () => {
-                image.style.display = "none";
-                fallback.style.display = "block";
-                console.error("Logo image could not be loaded.");
-            };
+image.onerror=()=>{
+image.style.display="none";
+fallback.style.display="block";
+console.error("Could not load store logo image.");
+};
 
-            image.src = data.logo_url;
-        }
-    } catch (error) {
-        console.error("Store logo loading error:", error);
-    }
+image.src=data.logo_url;
+}
+}catch(error){
+console.error("Store logo loading failed:",error);
+}
 }
 
 loadStoreLogo();
