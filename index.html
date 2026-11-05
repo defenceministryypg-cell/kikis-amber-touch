@@ -566,6 +566,66 @@ letter-spacing:1px;
         height: 280px;
     }
 }
+/* LETTER-BY-LETTER HERO ANIMATION */
+
+.hero-content .eyebrow {
+    animation: fadeIn 1s ease both;
+}
+
+.hero-content h1 .letter {
+    display: inline-block;
+    opacity: 0;
+    animation: letterReveal 0.6s ease forwards;
+    animation-delay: var(--delay);
+}
+
+.hero-content p {
+    animation: textReveal 1.2s ease both;
+    animation-delay: 1.5s;
+}
+
+.hero-content .btn {
+    animation: buttonReveal 1s ease both;
+    animation-delay: 2s;
+}
+
+@keyframes letterReveal {
+    from {
+        opacity: 0;
+        transform: translateY(35px) rotateX(90deg);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) rotateX(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes textReveal {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes buttonReveal {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -607,8 +667,8 @@ KIKIS AMBER TOUCH
 
 <div class="eyebrow">WELCOME TO KIKIS AMBER TOUCH</div>
 
-<h1>
-Leave a <span>Lasting</span> Impression.
+<h1 id="animatedHeading">
+    Leave a <span>Lasting</span> Impression.
 </h1>
 
 <p>
@@ -814,6 +874,46 @@ async function loadHomepageSettings() {
 
 loadHomepageSettings();
 
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const heading = document.getElementById("animatedHeading");
+
+    if (!heading) return;
+
+    const originalHTML = heading.innerHTML;
+
+    function animateLetters() {
+        const parts = [
+            { text: "Leave a ", special: false },
+            { text: "Lasting", special: true },
+            { text: " Impression.", special: false }
+        ];
+
+        heading.innerHTML = "";
+
+        parts.forEach(part => {
+            const wrapper = document.createElement("span");
+
+            if (part.special) {
+                wrapper.style.color = "var(--champagne)";
+                wrapper.style.fontStyle = "italic";
+            }
+
+            [...part.text].forEach((character, index) => {
+                const letter = document.createElement("span");
+                letter.className = "letter";
+                letter.textContent = character === " " ? "\u00A0" : character;
+                letter.style.setProperty("--delay", `${0.5 + index * 0.07}s`);
+                wrapper.appendChild(letter);
+            });
+
+            heading.appendChild(wrapper);
+        });
+    }
+
+    animateLetters();
+});
 </script>
 
 </body>
