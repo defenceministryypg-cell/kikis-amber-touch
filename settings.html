@@ -149,9 +149,46 @@ button:disabled{opacity:.55;cursor:not-allowed}
   </div>
  </div>
 </section>
+<section class="panel">
+ <h2>02. Homepage Featured Image</h2>
+ <p>
+  Upload the large promotional image displayed on your homepage.
+  You can replace it whenever you want.
+ </p>
+
+ <div class="logo-area">
+  <div class="logo-preview" style="width:100%;max-width:420px;height:220px;">
+   <img id="featuredImagePreview"
+        alt="Homepage featured image"
+        style="display:none;object-fit:cover;">
+   <span id="featuredImagePlaceholder">
+    Featured Image Preview
+   </span>
+  </div>
+
+  <div class="logo-controls">
+   <input type="file"
+          id="featuredImage"
+          accept="image/png,image/jpeg,image/webp">
+
+   <p class="logo-help">
+    Recommended: a high-quality landscape image.
+    PNG, JPG or WebP. Maximum size: 5MB.
+   </p>
+
+   <button type="button"
+           class="remove-btn"
+           id="removeFeaturedImage">
+    Remove Featured Image
+   </button>
+
+   <p id="featuredImageStatus" class="status"></p>
+  </div>
+ </div>
+</section>
 
 <section class="panel">
- <h2>02. Payment Information</h2>
+ <h2>03. Payment Information</h2>
  <p>Manage the payment details customers see during checkout.</p>
 
  <div class="notice">
@@ -184,7 +221,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 </section>
 
 <section class="panel">
- <h2>03. Delivery Settings</h2>
+ <h2>04. Delivery Settings</h2>
  <p>Configure delivery charges and free delivery conditions.</p>
 
  <div class="form-grid">
@@ -206,7 +243,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 </section>
 
 <section class="panel">
- <h2>04. WhatsApp Settings</h2>
+ <h2>05. WhatsApp Settings</h2>
  <p>Set the WhatsApp number customers use to contact the store.</p>
  <div class="form-grid">
   <div class="form-group">
@@ -217,7 +254,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 </section>
 
 <section class="panel">
- <h2>05. Store Availability</h2>
+ <h2>06. Store Availability</h2>
  <p>Control whether customers can place orders.</p>
 
  <div class="toggle-row">
@@ -278,6 +315,9 @@ let adminUser=null;
 let currentLogoUrl="";
 let selectedLogoFile=null;
 let removeLogoRequested=false;
+let currentFeaturedImageUrl="";
+let selectedFeaturedImageFile=null;
+let removeFeaturedImageRequested=false;
 
 const DEFAULTS={
  storeName:"KIKIS AMBER TOUCH",
@@ -317,6 +357,22 @@ function showLogo(url){
   placeholder.style.display="block";
  }
 }
+function showFeaturedImage(url) {
+    const img = $("featuredImagePreview");
+    const placeholder = $("featuredImagePlaceholder");
+
+    currentFeaturedImageUrl = url || "";
+
+    if (currentFeaturedImageUrl) {
+        img.src = currentFeaturedImageUrl;
+        img.style.display = "block";
+        placeholder.style.display = "none";
+    } else {
+        img.removeAttribute("src");
+        img.style.display = "none";
+        placeholder.style.display = "block";
+    }
+}
 
 function fillForm(row){
  $("storeName").value=row.store_name??DEFAULTS.storeName;
@@ -332,6 +388,8 @@ function fillForm(row){
 
  currentLogoUrl=row.logo_url||"";
  showLogo(currentLogoUrl);
+ showFeaturedImage(row.featured_image_url||"");
+ 
 
  // These additional fields are retained locally because
  // they are not among the database columns confirmed so far.
@@ -424,6 +482,20 @@ async function saveSettings(event){
   if(removeLogoRequested){
    logoUrl=null;
   }
+  let featuredImageUrl=currentFeaturedImageUrl;
+
+if(selectedFeaturedImageFile){
+    setStatus(
+        "featuredImageStatus",
+        "Uploading featured image..."
+    );
+
+    featuredImageUrl=await uploadLogo(selectedFeaturedImageFile);
+}
+
+if(removeFeaturedImageRequested){
+    featuredImageUrl=null;
+}
 
   const row={
    store_name:$("storeName").value.trim(),
@@ -437,6 +509,7 @@ async function saveSettings(event){
    store_open:$("storeOpen").checked,
    accept_orders:$("acceptOrders").checked,
    logo_url:logoUrl,
+   featured_image_url:featuredImageUrl,
    updated_at:new Date().toISOString()
   };
 
@@ -456,15 +529,26 @@ async function saveSettings(event){
   };
 
   localStorage.setItem("kikisSettingsExtras",JSON.stringify(extras));
+currentLogoUrl=logoUrl||"";
+selectedLogoFile=null;
+removeLogoRequested=false;
+$("storeLogo").value="";
+showLogo(currentLogoUrl);
 
-  currentLogoUrl=logoUrl||"";
-  selectedLogoFile=null;
-  removeLogoRequested=false;
-  $("storeLogo").value="";
-  showLogo(currentLogoUrl);
+currentFeaturedImageUrl = featuredImageUrl || "";
+selectedFeaturedImageFile = null;
+removeFeaturedImageRequested = false;
+$("featuredImage").value = "";
+showFeaturedImage(currentFeaturedImageUrl);
 
-  setStatus("logoStatus","Logo and settings saved.","success");
-  setStatus("saveStatus","Your store settings have been saved successfully.","success");
+setStatus(
+    "featuredImageStatus",
+    "Featured image saved successfully.",
+    "success"
+);
+
+setStatus("logoStatus","Logo and settings saved.","success");
+setStatus("saveStatus","Your store settings have been saved successfully.","success");
 
  }catch(error){
   console.error(error);
@@ -502,6 +586,40 @@ $("storeLogo").addEventListener("change",()=>{
  reader.readAsDataURL(file);
 });
 
+$("featuredImage").addEventListener("change",()=>{
+    const file=$("featuredImage").files[0];
+    if(!file)return;
+
+    if(!["image/png","image/jpeg","image/webp"].includes(file.type)){
+        alert("Please select a PNG, JPG or WebP image.");
+        $("featuredImage").value="";
+        return;
+    }
+
+    if(file.size>5*1024*1024){
+        alert("Featured image must not exceed 5MB.");
+        $("featuredImage").value="";
+        return;
+    }
+
+    selectedFeaturedImageFile=file;
+    removeFeaturedImageRequested=false;
+
+    const reader=new FileReader();
+
+    reader.onload=event=>{
+        showFeaturedImage(event.target.result);
+
+        setStatus(
+            "featuredImageStatus",
+            "New image selected. Click SAVE SETTINGS to upload it.",
+            "success"
+        );
+    };
+
+    reader.readAsDataURL(file);
+});
+
 $("removeLogo").addEventListener("click",()=>{
  if(!currentLogoUrl&&!selectedLogoFile){
   alert("There is no logo to remove.");
@@ -515,6 +633,26 @@ $("removeLogo").addEventListener("click",()=>{
  $("storeLogo").value="";
  showLogo("");
  setStatus("logoStatus","Logo will be removed when you save settings.");
+});
+$("removeFeaturedImage").addEventListener("click",()=>{
+    if(!currentFeaturedImageUrl&&!selectedFeaturedImageFile){
+        alert("There is no featured image to remove.");
+        return;
+    }
+
+    if(!confirm("Remove the homepage featured image?"))return;
+
+    selectedFeaturedImageFile=null;
+    removeFeaturedImageRequested=true;
+
+    $("featuredImage").value="";
+
+    showFeaturedImage("");
+
+    setStatus(
+        "featuredImageStatus",
+        "Featured image will be removed when you save settings."
+    );
 });
 
 $("settingsForm").addEventListener("submit",saveSettings);
