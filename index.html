@@ -440,6 +440,120 @@ font-size:10px;
 letter-spacing:1px;
 }
 }
+
+.hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 570px;
+    display: flex;
+    align-items: center;
+    padding: 70px 8%;
+    background: linear-gradient(
+        90deg,
+        rgba(12, 11, 9, .96),
+        rgba(12, 11, 9, .72)
+    ), #171410;
+    color: white;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--hero-logo-bg, none);
+    background-repeat: no-repeat;
+    background-position: right 12% center;
+    background-size: min(42vw, 520px);
+    opacity: .16;
+    filter: grayscale(1);
+    pointer-events: none;
+}
+
+.hero-content {
+    max-width: 560px;
+    position: relative;
+    z-index: 1;
+}
+/* FEATURED PRODUCT */
+
+.featured-section {
+    padding-top: 65px;
+}
+
+.featured-product {
+    position: relative;
+    display: block;
+    width: min(100%, 1050px);
+    height: clamp(340px, 55vw, 590px);
+    margin: 0 auto;
+    overflow: hidden;
+    background: #e9e1d2;
+}
+
+.featured-product img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform .5s ease;
+}
+
+.featured-product:hover img {
+    transform: scale(1.035);
+}
+
+.featured-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 25px;
+    color: white;
+    background: linear-gradient(
+        90deg,
+        rgba(10,9,8,.58),
+        rgba(10,9,8,.12),
+        rgba(10,9,8,.58)
+    );
+}
+
+.featured-overlay > span:first-child {
+    color: var(--champagne);
+    font-size: 11px;
+    letter-spacing: 4px;
+}
+
+.featured-overlay h3 {
+    font-family: Georgia, serif;
+    font-size: clamp(30px, 5vw, 54px);
+    font-weight: normal;
+    margin: 18px 0 25px;
+}
+
+.featured-cta {
+    border: 1px solid var(--gold);
+    background: var(--gold);
+    color: var(--black);
+    padding: 14px 24px;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    font-weight: bold;
+}
+
+@media(max-width:768px) {
+    .featured-product {
+        height: 360px;
+    }
+}
+
+@media(max-width:380px) {
+    .featured-product {
+        height: 280px;
+    }
+}
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -515,42 +629,46 @@ Your signature scent begins here.
 </div>
 
 </section>
+<!-- FEATURED PRODUCT -->
 
-<!-- FEATURED PRODUCTS -->
-<section class="section">
+<section class="section featured-section">
 
-<div class="section-heading">
-<small>OUR SELECTION</small>
-<h2>Discover Our Fragrances</h2>
-<p>Find a fragrance that speaks your style.</p>
-</div>
+    <div class="section-heading">
 
-<div class="products">
+        <small>THE FEATURED FRAGRANCE</small>
 
-<div class="product">
-<img src="product-images/amber touch.jpeg" alt="Luxury perfume">
-<h3>Signature Collection</h3>
-<p>Explore price in shop</p>
-<a href="shop.html">SHOP NOW</a>
-</div>
+        <h2>Discover Our Signature</h2>
 
-<div class="product">
-<img src="product-images/amber1.jpeg" alt="Elegant fragrance">
-<h3>Amber Collection</h3>
-<p>Explore price in shop</p>
-<a href="shop.html">SHOP NOW</a>
-</div>
+        <p>
+            A closer look at a fragrance selected by Kikis Amber Touch.
+        </p>
 
-<div class="product">
-<img src="product-images/amber2.jpeg" alt="Premium fragrance">
-<h3>Luxury Collection</h3>
-<p>Explore price in shop</p>
-<a href="shop.html">SHOP NOW</a>
-</div>
+    </div>
 
-</div>
+    <a href="shop.html"
+       class="featured-product"
+       aria-label="Explore our fragrance collection">
+
+        <img
+            id="featuredProductImage"
+            alt="Featured Kikis Amber Touch fragrance"
+        >
+
+        <div class="featured-overlay">
+
+            <span>CURATED FOR YOU</span>
+
+            <h3>Find Your Signature Scent</h3>
+
+            <span class="featured-cta">
+                EXPLORE THE COLLECTION
+            </span>
+
+        </div>
+
+    </a>
+
 </section>
-
 <!-- BRAND MESSAGE -->
 <section class="brand-banner">
 <h2>Your Scent. Your Identity.</h2>
@@ -605,49 +723,85 @@ console.error("Cart count error:",error);
 
 updateCartCount();
 </script>
-
 <script type="module">
-import {createClient} from
+
+import { createClient } from
 "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-const supabase=createClient(
-"https://mgxeyjyhuzbsgnbpbkst.supabase.co",
-"sb_publishable_ANZvxJnS89wrYo0MTx6LRA_Nu2XPss5"
+const supabase = createClient(
+    "https://mgxeyjyhuzbsgnbpbkst.supabase.co",
+    "sb_publishable_ANZvxJnS89wrYo0MTx6LRA_Nu2XPss5"
 );
 
-async function loadStoreLogo(){
-const image=document.getElementById("storeLogoImage");
-const fallback=document.getElementById("logoFallback");
+async function loadHomepageSettings() {
 
-try{
-const {data,error}=await supabase
-.from("store_settings")
-.select("logo_url")
-.eq("id",1)
-.maybeSingle();
+    const logo = document.getElementById("storeLogoImage");
+    const fallback = document.getElementById("logoFallback");
+    const hero = document.querySelector(".hero");
+    const featured = document.getElementById("featuredProductImage");
 
-if(error)throw error;
+    try {
 
-if(data?.logo_url){
-image.onload=()=>{
-image.style.display="block";
-fallback.style.display="none";
-};
+        const { data, error } = await supabase
+            .from("store_settings")
+            .select("logo_url, featured_image_url")
+            .eq("id", 1)
+            .maybeSingle();
 
-image.onerror=()=>{
-image.style.display="none";
-fallback.style.display="block";
-console.error("Could not load store logo image.");
-};
+        if (error) throw error;
 
-image.src=data.logo_url;
+        // HEADER LOGO
+
+        if (data?.logo_url) {
+
+            logo.onload = () => {
+                logo.style.display = "block";
+                fallback.style.display = "none";
+            };
+
+            logo.onerror = () => {
+                logo.style.display = "none";
+                fallback.style.display = "block";
+            };
+
+            logo.src = data.logo_url;
+
+            // LOGO AS HERO BACKGROUND
+
+            hero.style.setProperty(
+                "--hero-logo-bg",
+                `url("${data.logo_url}")`
+            );
+
+        }
+
+        // FEATURED PRODUCT IMAGE
+
+        if (data?.featured_image_url) {
+
+            featured.src = data.featured_image_url;
+
+        } else {
+
+            featured.alt = "Featured fragrance image coming soon";
+
+            featured.removeAttribute("src");
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Homepage settings could not load:",
+            error
+        );
+
+    }
+
 }
-}catch(error){
-console.error("Store logo loading failed:",error);
-}
-}
 
-loadStoreLogo();
+loadHomepageSettings();
+
 </script>
 
 </body>
