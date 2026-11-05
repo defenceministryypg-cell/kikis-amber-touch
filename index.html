@@ -440,21 +440,6 @@ font-size:10px;
 letter-spacing:1px;
 }
 }
-
-.hero {
-    position: relative;
-    overflow: hidden;
-    min-height: 570px;
-    display: flex;
-    align-items: center;
-    padding: 70px 8%;
-    background: linear-gradient(
-        90deg,
-        rgba(12, 11, 9, .96),
-        rgba(12, 11, 9, .72)
-    ), #171410;
-    color: white;
-}
 .hero {
     position: relative;
     overflow: hidden;
@@ -468,8 +453,8 @@ letter-spacing:1px;
 
     background-image: var(--hero-logo-bg, none);
     background-repeat: no-repeat;
-    background-position: right 8% center;
-    background-size: min(65vw, 750px);
+    background-position: right center;
+    background-size: min(75vw, 850px);
 
     opacity: 0.22;
     filter: grayscale(1);
@@ -482,6 +467,24 @@ letter-spacing:1px;
     max-width: 560px;
     position: relative;
     z-index: 1;
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+    .hero::before {
+        background-size: 90vw;
+        background-position: center;
+        opacity: 0.20;
+    }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+    .hero::before {
+        background-size: 115vw;
+        background-position: center;
+        opacity: 0.18;
+    }
 }
 /* FEATURED PRODUCT */
 
