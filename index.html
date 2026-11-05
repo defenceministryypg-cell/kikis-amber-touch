@@ -455,18 +455,27 @@ letter-spacing:1px;
     ), #171410;
     color: white;
 }
+.hero {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+}
 
 .hero::before {
     content: "";
     position: absolute;
     inset: 0;
+
     background-image: var(--hero-logo-bg, none);
     background-repeat: no-repeat;
-    background-position: right 12% center;
-    background-size: min(42vw, 520px);
-    opacity: .16;
+    background-position: right 8% center;
+    background-size: min(65vw, 750px);
+
+    opacity: 0.22;
     filter: grayscale(1);
+
     pointer-events: none;
+    z-index: 0;
 }
 
 .hero-content {
