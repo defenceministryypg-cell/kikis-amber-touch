@@ -150,7 +150,24 @@ button:disabled{opacity:.55;cursor:not-allowed}
  </div>
 </section>
 <section class="panel">
- <h2>02. Homepage Featured Image</h2>
+ <h2>02. Homepage Welcome Content</h2>
+ <p>Change the main welcome heading and description displayed on your website homepage.</p>
+ <div class="form-grid">
+  <div class="form-group full">
+   <label for="homepageWelcomeHeading">Homepage Welcome Heading</label>
+   <input type="text" id="homepageWelcomeHeading" maxlength="120"
+          placeholder="WELCOME TO KIKIS AMBER TOUCH">
+  </div>
+  <div class="form-group full">
+   <label for="homepageWelcomeDescription">Homepage Welcome Description</label>
+   <textarea id="homepageWelcomeDescription" maxlength="500"
+             placeholder="Write the welcome message customers will see on your homepage."></textarea>
+  </div>
+ </div>
+</section>
+
+<section class="panel">
+ <h2>03. Homepage Featured Image</h2>
  <p>
   Upload the large promotional image displayed on your homepage.
   You can replace it whenever you want.
@@ -322,6 +339,8 @@ let removeFeaturedImageRequested=false;
 const DEFAULTS={
  storeName:"KIKIS AMBER TOUCH",
  storeTagline:"Perfumes, men’s slippers, belt & wallet combos, and everyday accessories.",
+ homepageWelcomeHeading:"WELCOME TO KIKIS AMBER TOUCH",
+ homepageWelcomeDescription:"Explore carefully selected perfumes, men’s slippers, belt and wallet combos, and accessories. Find the pieces that complete your style, all in one place.",
  storeEmail:"",
  storePhone:"0503192094",
  storeAddress:"",
@@ -377,6 +396,8 @@ function showFeaturedImage(url) {
 function fillForm(row){
  $("storeName").value=row.store_name??DEFAULTS.storeName;
  $("storeTagline").value=row.store_tagline??DEFAULTS.storeTagline;
+ $("homepageWelcomeHeading").value=row.homepage_welcome_heading??DEFAULTS.homepageWelcomeHeading;
+ $("homepageWelcomeDescription").value=row.homepage_welcome_description??DEFAULTS.homepageWelcomeDescription;
  $("momoNumber").value=row.momo_number??DEFAULTS.momoNumber;
  $("momoName").value=row.momo_name??DEFAULTS.momoName;
  $("deliveryFee").value=row.delivery_fee??DEFAULTS.deliveryFee;
@@ -500,6 +521,8 @@ if(removeFeaturedImageRequested){
   const row={
    store_name:$("storeName").value.trim(),
    store_tagline:$("storeTagline").value.trim(),
+   homepage_welcome_heading:$("homepageWelcomeHeading").value.trim(),
+   homepage_welcome_description:$("homepageWelcomeDescription").value.trim(),
    whatsapp_number:$("whatsappNumber").value.trim(),
    momo_number:$("momoNumber").value.trim(),
    momo_name:$("momoName").value.trim(),
@@ -662,6 +685,8 @@ $("resetButton").addEventListener("click",()=>{
 
  $("storeName").value=DEFAULTS.storeName;
  $("storeTagline").value=DEFAULTS.storeTagline;
+ $("homepageWelcomeHeading").value=DEFAULTS.homepageWelcomeHeading;
+ $("homepageWelcomeDescription").value=DEFAULTS.homepageWelcomeDescription;
  $("storeEmail").value=DEFAULTS.storeEmail;
  $("storePhone").value=DEFAULTS.storePhone;
  $("storeAddress").value=DEFAULTS.storeAddress;
