@@ -493,7 +493,7 @@ footer {
         <small>ADMINISTRATION</small>
     </div>
 
-    <nav class="nav">
+  <nav class="nav">
         <a href="admin.html" class="active">Dashboard</a>
         <a href="products.html">Manage Products</a>
         <a href="settings.html">Store Settings</a>
@@ -509,7 +509,7 @@ footer {
     <header class="topbar">
         <div>
             <h1>Product Management</h1>
-            <p>Add, update and manage your perfume collection.</p>
+            <p>Add, update and manage perfumes, men's slippers, belt & wallet combos, and accessories.</p>
         </div>
 
         <span class="admin-label">STORE MANAGEMENT</span>
@@ -536,14 +536,14 @@ footer {
 
     <div style="margin-bottom:20px;">
         <button class="gold-btn" onclick="openForm()">
-            + ADD NEW PERFUME
+            + ADD NEW PRODUCT
         </button>
     </div>
 
     <section class="panel" id="productForm">
 
         <div class="panel-heading">
-            <h2 id="formTitle">Add New Perfume</h2>
+            <h2 id="formTitle">Add New Product</h2>
         </div>
 
         <form id="productFormElement">
@@ -557,15 +557,23 @@ footer {
                 </div>
 
                 <div class="form-group">
-                    <label for="productCategory">Category *</label>
+                    <label for="productCategory">Product Category *</label>
                     <select id="productCategory" required>
-                        <option value="">Select category</option>
+                        <option value="">Select product category</option>
+                        <option value="perfumes">Perfumes</option>
+                        <option value="mens_slippers">Men's Slippers</option>
+                        <option value="belt_wallet_combo">Belt &amp; Wallet Combos</option>
+                        <option value="accessories">Accessories</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="productAudience">Audience *</label>
+                    <select id="productAudience" required>
+                        <option value="">Select audience</option>
                         <option value="Men">Men</option>
                         <option value="Women">Women</option>
                         <option value="Unisex">Unisex</option>
-                        <option value="Luxury">Luxury</option>
-                        <option value="Body Mist">Body Mist</option>
-                        <option value="Oud">Oud</option>
                     </select>
                 </div>
 
@@ -581,7 +589,7 @@ footer {
                     <label>Product Discount</label>
                     <label class="discount-toggle">
                         <input type="checkbox" id="discountActive">
-                        Enable discount for this perfume
+                        Enable discount for this product
                     </label>
                 </div>
 
@@ -620,7 +628,7 @@ footer {
                 <div class="form-group full">
                     <label for="productDescription">Description</label>
                     <textarea id="productDescription"
-                    placeholder="Describe the fragrance..."></textarea>
+                    placeholder="Describe the product..."></textarea>
                 </div>
 
             </div>
@@ -643,23 +651,29 @@ footer {
     <section class="panel">
 
         <div class="panel-heading">
-            <h2>Your Perfume Collection</h2>
+            <h2>Your Product Collection</h2>
             <span id="productCount">0 products</span>
         </div>
 
         <div class="toolbar">
 
             <input type="search" id="searchInput"
-            placeholder="Search perfume...">
+            placeholder="Search products...">
 
-            <select id="categoryFilter">
-                <option value="">All Categories</option>
-                <option>Men</option>
-                <option>Women</option>
-                <option>Unisex</option>
-                <option>Luxury</option>
-                <option>Body Mist</option>
-                <option>Oud</option>
+            <select id="categoryFilter" aria-label="Filter by product category">
+                <option value="">All Product Categories</option>
+                <option value="perfumes">Perfumes</option>
+                <option value="mens_slippers">Men's Slippers</option>
+                <option value="belt_wallet_combo">Belt &amp; Wallet Combos</option>
+                <option value="accessories">Accessories</option>
+                <option value="__unassigned">Unassigned Category</option>
+            </select>
+
+            <select id="audienceFilter" aria-label="Filter by audience">
+                <option value="">All Audiences</option>
+                <option value="Men">Men</option>
+                <option value="Women">Women</option>
+                <option value="Unisex">Unisex</option>
             </select>
 
         </div>
@@ -685,6 +699,14 @@ const supabase = createClient(
 
 const BUCKET = "product-images";
 
+const DEFAULT_PRODUCT_CATEGORIES = [
+    { name: "Perfumes", slug: "perfumes" },
+    { name: "Men's Slippers", slug: "mens_slippers" },
+    { name: "Belt & Wallet Combos", slug: "belt_wallet_combo" },
+    { name: "Accessories", slug: "accessories" }
+];
+
+let productCategories = DEFAULT_PRODUCT_CATEGORIES;
 let products = [];
 let editingId = null;
 let selectedImage = "";
@@ -812,6 +834,7 @@ async function verifyAdmin(user) {
     const overlay = $("supabaseLogin");
     if (overlay) overlay.style.display = "none";
 
+    await loadProductCategories();
     await loadProducts();
     return true;
 }
@@ -833,6 +856,35 @@ async function initialiseAdmin() {
 
 // LOAD PRODUCTS FROM SUPABASE
 
+async function loadProductCategories() {
+    const { data, error } = await supabase
+        .from("product_categories")
+        .select("name,slug")
+        .order("id", { ascending: true });
+
+    if (error) {
+        console.warn("Could not load product categories; using built-in categories:", error.message);
+        productCategories = DEFAULT_PRODUCT_CATEGORIES;
+    } else {
+        productCategories = data && data.length
+            ? data
+            : DEFAULT_PRODUCT_CATEGORIES;
+    }
+
+    const categoryOptions = productCategories.map(item =>
+        `<option value="${escapeHTML(item.slug)}">${escapeHTML(item.name)}</option>`
+    ).join("");
+
+    $("productCategory").innerHTML =
+        `<option value="">Select product category</option>${categoryOptions}`;
+
+    $("categoryFilter").innerHTML =
+        `<option value="">All Product Categories</option>${categoryOptions}
+         <option value="__unassigned">Unassigned Category</option>`;
+}
+
+// LOAD PRODUCTS FROM SUPABASE
+
 async function loadProducts() {
     const grid = $("productGrid");
 
@@ -842,7 +894,7 @@ async function loadProducts() {
 
     const { data, error } = await supabase
         .from("products")
-        .select("id,name,description,category,price,image_url,stock,status,discount_active,discount_percent,created_at,updated_at")
+        .select("id,name,description,category,product_category,price,image_url,stock,status,discount_active,discount_percent,created_at,updated_at")
         .order("created_at", { ascending: false });
 
     if (error) {
@@ -867,7 +919,7 @@ async function loadProducts() {
 
 window.openForm = function () {
     $("productForm").style.display = "block";
-    $("formTitle").textContent = "Add New Perfume";
+    $("formTitle").textContent = "Add New Product";
     $("saveButton").textContent = "SAVE PRODUCT";
 
     editingId = null;
@@ -999,7 +1051,8 @@ $("productFormElement").addEventListener("submit", async function (event) {
     }
 
     const name = $("productName").value.trim();
-    const category = $("productCategory").value;
+    const productCategory = $("productCategory").value;
+    const category = $("productAudience").value;
     const price = Number($("productPrice").value);
     const stock = Number($("productStock").value);
     const description = $("productDescription").value.trim();
@@ -1010,6 +1063,7 @@ $("productFormElement").addEventListener("submit", async function (event) {
 
     if (
         !name ||
+        !productCategory ||
         !category ||
         !Number.isFinite(price) ||
         price <= 0 ||
@@ -1042,6 +1096,7 @@ $("productFormElement").addEventListener("submit", async function (event) {
         const productData = {
             name,
             category,
+            product_category: productCategory,
             price,
             stock,
             description,
@@ -1097,17 +1152,24 @@ function displayProducts() {
     const grid = $("productGrid");
 
     const search = $("searchInput").value.trim().toLowerCase();
-    const category = $("categoryFilter").value;
+    const productCategory = $("categoryFilter").value;
+    const audience = $("audienceFilter").value;
 
     const filtered = products.filter(product => {
         const matchesSearch =
             product.name.toLowerCase().includes(search) ||
             String(product.description || "").toLowerCase().includes(search);
 
-        const matchesCategory =
-            !category || product.category === category;
+        const matchesProductCategory =
+            !productCategory ||
+            (productCategory === "__unassigned"
+                ? !product.product_category
+                : product.product_category === productCategory);
 
-        return matchesSearch && matchesCategory;
+        const matchesAudience =
+            !audience || product.category === audience;
+
+        return matchesSearch && matchesProductCategory && matchesAudience;
     });
 
     grid.innerHTML = "";
@@ -1118,7 +1180,7 @@ function displayProducts() {
     if (!filtered.length) {
         grid.innerHTML = `
             <div class="empty">
-                No products found. Add your first perfume.
+                No products found. Add your first product.
             </div>
         `;
         return;
@@ -1156,7 +1218,15 @@ function displayProducts() {
         title.textContent = product.name;
 
         const categoryText = document.createElement("p");
-        categoryText.textContent = "Category: " + product.category;
+        const categoryLabels = {
+            perfumes: "Perfumes",
+            mens_slippers: "Men's Slippers",
+            belt_wallet_combo: "Belt & Wallet Combos",
+            accessories: "Accessories"
+        };
+        categoryText.textContent =
+            "Product: " + (categoryLabels[product.product_category] || "Unassigned") +
+            " • Audience: " + (product.category || "Not specified");
 
         const price = document.createElement("p");
         price.className = "product-price";
@@ -1237,7 +1307,8 @@ window.editProduct = function (id) {
     selectedImageFile = null;
 
     $("productName").value = product.name;
-    $("productCategory").value = product.category;
+    $("productCategory").value = product.product_category || "";
+    $("productAudience").value = product.category || "";
     $("productPrice").value = product.price;
     $("productStock").value = product.stock;
     $("productDescription").value = product.description || "";
@@ -1248,7 +1319,7 @@ window.editProduct = function (id) {
 
     updateDiscountPreview();
 
-    $("formTitle").textContent = "Edit Perfume";
+    $("formTitle").textContent = "Edit Product";
     $("saveButton").textContent = "UPDATE PRODUCT";
 
     const preview = $("productPreview");
@@ -1309,6 +1380,7 @@ function updateStats() {
 
 $("searchInput").addEventListener("input", displayProducts);
 $("categoryFilter").addEventListener("change", displayProducts);
+$("audienceFilter").addEventListener("change", displayProducts);
 
 // START
 
