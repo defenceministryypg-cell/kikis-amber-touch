@@ -453,7 +453,7 @@ footer strong {
 <body>
 
 <div class="announcement">
-    KIKIS AMBER TOUCH • LUXURY FRAGRANCES
+    KIKIS AMBER TOUCH • PERFUMES • MEN'S SLIPPERS • ACCESSORIES
 </div>
 
 <header>
@@ -474,7 +474,7 @@ footer strong {
 <section class="page-banner">
     <small>ALMOST THERE</small>
     <h1>Complete Your Order</h1>
-    <p>Provide your delivery details and choose your payment method.</p>
+    <p>Provide your delivery details and choose your payment method for your selected items.</p>
 </section>
 
 <main class="container">
@@ -677,7 +677,7 @@ footer strong {
 
 <footer>
     <strong>KIKIS AMBER TOUCH</strong>
-    <p>Luxury fragrances. Elegance in every drop.</p>
+    <p id="footer-tagline">Perfumes, men&#39;s slippers and accessories.</p>
     <p>WhatsApp: <span id="footer-phone">0503192094</span></p>
     <p>© <span id="year"></span> Kikis Amber Touch. All Rights Reserved.</p>
 </footer>
@@ -703,7 +703,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const DEFAULT_SETTINGS = {
     storeName: "KIKIS AMBER TOUCH",
-    storeTagline: "Luxury fragrances. Elegance in every drop.",
+    storeTagline: "Perfumes, men's slippers and accessories.",
     storePhone: "0503192094",
     momoNumber: "0537367236",
     momoName: "NANA AKUA AMPOFOAH YAMOAH",
@@ -817,6 +817,34 @@ function cleanWhatsAppNumber(number) {
     }
 
     return digits;
+}
+
+function categoryLabel(value) {
+    const key = String(value || "").trim().toLowerCase()
+        .replace(/[\s-]+/g, "_");
+
+    const labels = {
+        men: "Men's Perfume",
+        mens: "Men's Perfume",
+        women: "Women's Perfume",
+        womens: "Women's Perfume",
+        unisex: "Unisex Perfume",
+        perfume: "Perfume",
+        perfumes: "Perfume",
+        luxury: "Luxury Perfume",
+        body_mist: "Body Mist",
+        body_mists: "Body Mist",
+        oud: "Oud",
+        mens_slippers: "Men's Slippers",
+        men_slippers: "Men's Slippers",
+        slippers: "Men's Slippers",
+        belt_wallet_combo: "Belt & Wallet Combo",
+        belt_and_wallet_combo: "Belt & Wallet Combo",
+        belt_wallet: "Belt & Wallet Combo",
+        accessories: "Accessories"
+    };
+
+    return labels[key] || (value ? String(value).replace(/_/g, " ") : "General Product");
 }
 
 let ADMIN_WHATSAPP = cleanWhatsAppNumber(
@@ -985,6 +1013,7 @@ async function refreshCartProducts() {
             id: String(product.id),
             product_id: String(product.id),
             name: product.name,
+            category: product.category || item.category || "",
             original_price: originalPrice,
             discount_active: discountActive,
             discount_percent: discountPercent,
@@ -1030,6 +1059,12 @@ function applyStoreSettings() {
     if (footerPhone) {
         footerPhone.textContent =
             storeSettings.storePhone || MOMO_NUMBER;
+    }
+
+    const footerTagline = document.getElementById("footer-tagline");
+
+    if (footerTagline) {
+        footerTagline.textContent = tagline;
     }
 
     document.getElementById("momo-number").textContent = MOMO_NUMBER;
@@ -1133,6 +1168,12 @@ function displayOrder() {
 
         description.textContent =
             (item.name || "Product") + " × " + quantity;
+
+        const category = document.createElement("small");
+        category.textContent = categoryLabel(item.category);
+        category.style.cssText =
+            "display:block;color:#947039;font-size:11px;margin-top:4px;";
+        description.appendChild(category);
 
         const amount = document.createElement("strong");
 
@@ -1543,6 +1584,7 @@ Estimated Delivery: ${storeSettings.deliveryTime || "To be confirmed"}
         cart.forEach(item => {
             message +=
 `${item.name} x ${item.quantity}
+Category: ${categoryLabel(item.category)}
 ${item.discount_active ? `Original Unit Price: ${money(item.original_price)}
 Discount: ${Number(item.discount_percent)}% OFF
 Discounted Unit Price: ${money(item.price)}
