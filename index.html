@@ -682,7 +682,7 @@ letter-spacing:1px;
 }
 @media(max-width:768px) {
     .collections-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 14px;
     }
     .collection-card {
@@ -698,7 +698,7 @@ letter-spacing:1px;
 
 <body>
 
-<div class="announcement">
+<div class="announcement" id="announcementBar">
 DISCOVER YOUR STYLE — SHOP PERFUMES, SLIPPERS & ACCESSORIES
 </div>
 
@@ -708,8 +708,8 @@ DISCOVER YOUR STYLE — SHOP PERFUMES, SLIPPERS & ACCESSORIES
 <img id="storeLogoImage" alt="Kikis Amber Touch Logo">
 
 <span id="logoFallback">
-KIKIS AMBER TOUCH
-<small>STYLE • FRAGRANCE • ACCESSORIES</small>
+<span id="headerStoreName">KIKIS AMBER TOUCH</span>
+<small id="headerStoreTagline">STYLE • FRAGRANCE • ACCESSORIES</small>
 </span>
 </a>
 
@@ -736,8 +736,8 @@ KIKIS AMBER TOUCH
     Leave a <span>Lasting</span> Impression.
 </h1>
 
-<p>
-Explore carefully selected perfumes, men’s slippers, and belt and wallet combos.
+<p id="heroDescription">
+Explore carefully selected perfumes, men’s slippers, belt and wallet combos, and accessories.
 Find the pieces that complete your style, all in one place.
 </p>
 
@@ -790,7 +790,12 @@ Find the pieces that complete your style, all in one place.
         <a class="collection-card" href="shop.html?collection=belt_wallet_combo">
             <small>THE COMPLETE LOOK</small>
             <h3>Belt & Wallet Combo</h3>
-            <span>SHOP ACCESSORIES →</span>
+            <span>SHOP BELTS & WALLETS →</span>
+        </a>
+        <a class="collection-card" href="shop.html?collection=accessories">
+            <small>THE FINISHING TOUCH</small>
+            <h3>Accessories</h3>
+            <span>EXPLORE ACCESSORIES →</span>
         </a>
     </div>
 </section>
@@ -837,9 +842,9 @@ find what expresses your style.
 </main>
 
 <footer>
-<strong>KIKIS AMBER TOUCH</strong>
-<p>Fragrance, footwear and accessories — chosen for your style.</p>
-<p>WhatsApp: 0503192094</p>
+<strong id="footerStoreName">KIKIS AMBER TOUCH</strong>
+<p id="footerStoreTagline">Fragrance, footwear and accessories — chosen for your style.</p>
+<p>WhatsApp: <a id="footerWhatsApp" href="https://wa.me/233503192094">0503192094</a></p>
 <p>© <span id="year"></span> Kikis Amber Touch. All Rights Reserved.</p>
 </footer>
 
@@ -847,6 +852,7 @@ find what expresses your style.
 <a
 class="whatsapp"
 href="https://wa.me/233503192094"
+id="floatingWhatsApp"
 target="_blank"
 rel="noopener"
 aria-label="Chat with Kikis Amber Touch on WhatsApp"
@@ -879,7 +885,6 @@ console.error("Cart count error:",error);
 updateCartCount();
 </script>
 <script type="module">
-
 import { createClient } from
 "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
@@ -888,75 +893,116 @@ const supabase = createClient(
     "sb_publishable_ANZvxJnS89wrYo0MTx6LRA_Nu2XPss5"
 );
 
-async function loadHomepageSettings() {
+function setText(id, value) {
+    const element = document.getElementById(id);
+    if (element && value !== null && value !== undefined && String(value).trim()) {
+        element.textContent = value;
+    }
+}
 
+function toWhatsAppUrl(number) {
+    const digits = String(number || "").replace(/\\D/g, "");
+    if (!digits) return "https://wa.me/233503192094";
+    // Store numbers are expected in international format or Ghana local format.
+    const international = digits.startsWith("0")
+        ? "233" + digits.slice(1)
+        : digits.startsWith("233") ? digits : digits;
+    return "https://wa.me/" + international;
+}
+
+async function loadHomepageSettings() {
     const logo = document.getElementById("storeLogoImage");
     const fallback = document.getElementById("logoFallback");
     const hero = document.querySelector(".hero");
     const featured = document.getElementById("featuredProductImage");
 
     try {
-
         const { data, error } = await supabase
             .from("store_settings")
-            .select("logo_url, featured_image_url")
+            .select("store_name, store_tagline, logo_url, featured_image_url, whatsapp_number, store_open, accept_orders")
             .eq("id", 1)
             .maybeSingle();
 
         if (error) throw error;
+        if (!data) {
+            console.warn("No store_settings row found with id 1.");
+            return;
+        }
 
-        // HEADER LOGO
+        // Store name and tagline
+        if (data.store_name) {
+            setText("headerStoreName", data.store_name);
+            setText("footerStoreName", data.store_name);
+            document.title = data.store_name + " | Fashion & Fragrance";
+            const description = document.querySelector('meta[name="description"]');
+            if (description) description.content = "Shop perfumes, men's slippers, belt and wallet combos, and accessories at " + data.store_name + " in Ghana.";
+        }
+        if (data.store_tagline) {
+            setText("headerStoreTagline", data.store_tagline);
+            setText("footerStoreTagline", data.store_tagline);
+            setText("brandMessage", data.store_tagline);
+        }
 
-        if (data?.logo_url) {
-
+        // Header logo and subtle hero watermark
+        if (data.logo_url) {
             logo.onload = () => {
                 logo.style.display = "block";
                 fallback.style.display = "none";
             };
-
             logo.onerror = () => {
                 logo.style.display = "none";
                 fallback.style.display = "block";
             };
-
             logo.src = data.logo_url;
-
-            // LOGO AS HERO BACKGROUND
-
-            hero.style.setProperty(
-                "--hero-logo-bg",
-                `url("${data.logo_url}")`
-            );
-
+            if (hero) {
+                hero.style.setProperty("--hero-logo-bg", 'url("' + data.logo_url.replace(/["\\\\]/g, "") + '")');
+            }
         }
 
-        // FEATURED PRODUCT IMAGE
-
-        if (data?.featured_image_url) {
-
+        // Homepage featured image
+        if (featured && data.featured_image_url) {
             featured.src = data.featured_image_url;
-
-        } else {
-
-            featured.alt = "Featured fragrance image coming soon";
-
+            featured.alt = "Featured collection from " + (data.store_name || "Kikis Amber Touch");
+        } else if (featured) {
             featured.removeAttribute("src");
-
+            featured.alt = "Featured image coming soon";
         }
 
+        // WhatsApp contact details
+        if (data.whatsapp_number) {
+            const waUrl = toWhatsAppUrl(data.whatsapp_number);
+            const floating = document.getElementById("floatingWhatsApp");
+            const footerLink = document.getElementById("footerWhatsApp");
+            if (floating) floating.href = waUrl;
+            if (footerLink) {
+                footerLink.href = waUrl;
+                footerLink.textContent = data.whatsapp_number;
+            }
+        }
+
+        // Store availability and order acceptance notices
+        const announcement = document.getElementById("announcementBar");
+        if (announcement) {
+            if (data.store_open === false) {
+                announcement.textContent = "OUR STORE IS CURRENTLY CLOSED — PLEASE CHECK BACK SOON";
+            } else if (data.accept_orders === false) {
+                announcement.textContent = "WE ARE OPEN — ONLINE ORDERS ARE TEMPORARILY PAUSED";
+            }
+        }
+
+        // Disable purchase-oriented calls to action when the store is closed.
+        if (data.store_open === false || data.accept_orders === false) {
+            document.querySelectorAll('a.btn, .featured-product, .collection-card').forEach(link => {
+                link.setAttribute("aria-label", "Store ordering is currently unavailable");
+                if (link.classList.contains("btn")) link.textContent = "STORE CURRENTLY UNAVAILABLE";
+            });
+        }
     } catch (error) {
-
-        console.error(
-            "Homepage settings could not load:",
-            error
-        );
-
+        console.error("Homepage settings could not load:", error);
     }
-
 }
 
 loadHomepageSettings();
-
 </script>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
