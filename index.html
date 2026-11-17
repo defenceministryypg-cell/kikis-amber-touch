@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Discover elegant and luxurious fragrances at Kikis Amber Touch. Shop your favourite perfumes in Ghana.">
-<title>Kikis Amber Touch | Luxury Fragrances</title>
+<meta name="description" content="Shop perfumes, men’s slippers, and belt and wallet combos at Kikis Amber Touch in Ghana.">
+<title>Kikis Amber Touch | Fashion & Fragrance</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -630,6 +631,66 @@ letter-spacing:1px;
         transform: scale(1);
     }
 }
+
+/* SHOP COLLECTIONS */
+.collections-section {
+    background: #fff;
+}
+.collections-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+}
+.collection-card {
+    min-height: 245px;
+    padding: 34px 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    text-align: left;
+    color: white;
+    background: linear-gradient(145deg, #28231b, #11100e);
+    border: 1px solid rgba(198,161,91,.55);
+    transition: transform .3s ease, border-color .3s ease;
+}
+.collection-card:nth-child(2) {
+    background: linear-gradient(145deg, #3b3328, #171512);
+}
+.collection-card:nth-child(3) {
+    background: linear-gradient(145deg, #51432e, #191612);
+}
+.collection-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--gold);
+}
+.collection-card small {
+    color: var(--champagne);
+    letter-spacing: 2px;
+    font-size: 10px;
+    margin-bottom: 13px;
+}
+.collection-card h3 {
+    font-family: Georgia, serif;
+    font-size: 27px;
+    font-weight: normal;
+    margin-bottom: 12px;
+}
+.collection-card span {
+    color: #e6dfd2;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+@media(max-width:768px) {
+    .collections-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+    .collection-card {
+        min-height: 185px;
+        padding: 25px;
+    }
+}
+
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -638,7 +699,7 @@ letter-spacing:1px;
 <body>
 
 <div class="announcement">
-DISCOVER YOUR SIGNATURE SCENT — KIKIS AMBER TOUCH
+DISCOVER YOUR STYLE — SHOP PERFUMES, SLIPPERS & ACCESSORIES
 </div>
 
 <header>
@@ -648,7 +709,7 @@ DISCOVER YOUR SIGNATURE SCENT — KIKIS AMBER TOUCH
 
 <span id="logoFallback">
 KIKIS AMBER TOUCH
-<small>LUXURY FRAGRANCES</small>
+<small>STYLE • FRAGRANCE • ACCESSORIES</small>
 </span>
 </a>
 
@@ -676,9 +737,8 @@ KIKIS AMBER TOUCH
 </h1>
 
 <p>
-Discover fragrances that express your personality,
-elevate your presence and make every moment unforgettable.
-Your signature scent begins here.
+Explore carefully selected perfumes, men’s slippers, and belt and wallet combos.
+Find the pieces that complete your style, all in one place.
 </p>
 
 <a href="shop.html" class="btn">EXPLORE OUR COLLECTION</a>
@@ -690,13 +750,13 @@ Your signature scent begins here.
 <section class="benefits">
 
 <div class="benefit">
-<h3>Luxury Fragrances</h3>
+<h3>Perfumes & Fragrances</h3>
 <p>Beautiful scents for every occasion.</p>
 </div>
 
 <div class="benefit">
-<h3>Easy Shopping</h3>
-<p>Choose your favourite fragrance with ease.</p>
+<h3>More Than Fragrances</h3>
+<p>Shop footwear and accessories in one place.</p>
 </div>
 
 <div class="benefit">
@@ -705,25 +765,55 @@ Your signature scent begins here.
 </div>
 
 </section>
+
+<!-- SHOP BY COLLECTION -->
+<section class="section collections-section">
+    <div class="section-heading">
+        <small>SHOP BY CATEGORY</small>
+        <h2>Explore Our Collections</h2>
+        <p>Choose a collection and discover products made to complement your style.</p>
+    </div>
+
+    <div class="collections-grid">
+        <a class="collection-card" href="shop.html?collection=perfumes">
+            <small>THE SIGNATURE COLLECTION</small>
+            <h3>Perfumes</h3>
+            <span>EXPLORE FRAGRANCES →</span>
+        </a>
+
+        <a class="collection-card" href="shop.html?collection=mens_slippers">
+            <small>EVERYDAY COMFORT</small>
+            <h3>Men’s Slippers</h3>
+            <span>SHOP FOOTWEAR →</span>
+        </a>
+
+        <a class="collection-card" href="shop.html?collection=belt_wallet_combo">
+            <small>THE COMPLETE LOOK</small>
+            <h3>Belt & Wallet Combo</h3>
+            <span>SHOP ACCESSORIES →</span>
+        </a>
+    </div>
+</section>
+
 <!-- FEATURED PRODUCT -->
 
 <section class="section featured-section">
 
     <div class="section-heading">
 
-        <small>THE FEATURED FRAGRANCE</small>
+        <small>FEATURED COLLECTION</small>
 
-        <h2>Discover Our Signature</h2>
+        <h2>Discover Our Collections</h2>
 
         <p>
-            A closer look at a fragrance selected by Kikis Amber Touch.
+            Explore selected products from Kikis Amber Touch.
         </p>
 
     </div>
 
     <a href="shop.html"
        class="featured-product"
-       aria-label="Explore our fragrance collection">
+       aria-label="Explore our collections">
 
         <img
             id="featuredProductImage"
@@ -736,19 +826,19 @@ Your signature scent begins here.
 </section>
 <!-- BRAND MESSAGE -->
 <section class="brand-banner">
-<h2>Your Scent. Your Identity.</h2>
+<h2>Your Style. Your Statement.</h2>
 <p>
-More than just a fragrance. It's the impression you leave
-wherever you go.
+From signature fragrances to everyday footwear and accessories,
+find what expresses your style.
 </p>
-<a href="shop.html" class="btn">SHOP OUR COLLECTION</a>
+<a href="shop.html" class="btn">SHOP ALL COLLECTIONS</a>
 </section>
 
 </main>
 
 <footer>
 <strong>KIKIS AMBER TOUCH</strong>
-<p>Luxury fragrances. Elegance in every drop.</p>
+<p>Fragrance, footwear and accessories — chosen for your style.</p>
 <p>WhatsApp: 0503192094</p>
 <p>© <span id="year"></span> Kikis Amber Touch. All Rights Reserved.</p>
 </footer>
