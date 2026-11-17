@@ -79,7 +79,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 
 <aside class="sidebar">
  <div class="logo">KIKIS<br>AMBER TOUCH<small>ADMINISTRATION</small></div>
-   <nav class="nav">
+    <nav class="nav">
         <a href="admin.html" class="active">Dashboard</a>
         <a href="products.html">Manage Products</a>
         <a href="settings.html">Store Settings</a>
@@ -88,7 +88,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
         <a href="customers.html">Customers</a>
         <a href="campaigns.html">Campaigns</a>
     </nav>
-</aside>>
+</aside>
 
 <main class="main">
 
@@ -282,7 +282,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 
 </form>
 
-<footer>Kikis Amber Touch © 2026. Store Settings.</footer>
+<footer>Kikis Amber Touch © <span id="footerYear">2026</span>. Store Settings.</footer>
 </main>
 
 <div id="loginOverlay">
@@ -321,7 +321,7 @@ let removeFeaturedImageRequested=false;
 
 const DEFAULTS={
  storeName:"KIKIS AMBER TOUCH",
- storeTagline:"Luxury fragrances. Elegance in every drop.",
+ storeTagline:"Perfumes, men’s slippers, belt & wallet combos, and everyday accessories.",
  storeEmail:"",
  storePhone:"0503192094",
  storeAddress:"",
@@ -440,12 +440,12 @@ async function loadSettings(){
  setStatus("saveStatus","Store settings loaded.","success");
 }
 
-async function uploadLogo(file){
+async function uploadAsset(file, prefix="asset"){
  const extension=file.name.split(".").pop().toLowerCase();
  const safeExtension=["png","jpg","jpeg","webp"].includes(extension)
   ?extension:"png";
 
- const path=`${adminUser.id}/${crypto.randomUUID()}.${safeExtension}`;
+ const path=`${adminUser.id}/${prefix}-${crypto.randomUUID()}.${safeExtension}`;
 
  const {error}=await supabase.storage
   .from(BUCKET)
@@ -476,7 +476,7 @@ async function saveSettings(event){
 
   if(selectedLogoFile){
    setStatus("logoStatus","Uploading logo...");
-   logoUrl=await uploadLogo(selectedLogoFile);
+   logoUrl=await uploadAsset(selectedLogoFile, "logo");
   }
 
   if(removeLogoRequested){
@@ -490,7 +490,7 @@ if(selectedFeaturedImageFile){
         "Uploading featured image..."
     );
 
-    featuredImageUrl=await uploadLogo(selectedFeaturedImageFile);
+    featuredImageUrl=await uploadAsset(selectedFeaturedImageFile, "featured");
 }
 
 if(removeFeaturedImageRequested){
@@ -680,7 +680,12 @@ $("resetButton").addEventListener("click",()=>{
  removeLogoRequested=true;
  $("storeLogo").value="";
  showLogo("");
- setStatus("logoStatus","Logo will be removed when you save.");
+ selectedFeaturedImageFile=null;
+ removeFeaturedImageRequested=true;
+ $("featuredImage").value="";
+ showFeaturedImage("");
+ setStatus("logoStatus","Default settings selected. Saving...");
+ $("settingsForm").requestSubmit();
 });
 
 $("loginForm").addEventListener("submit",async event=>{
