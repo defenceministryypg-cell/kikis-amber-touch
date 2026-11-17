@@ -417,122 +417,13 @@ footer strong {
         font-size: 15px;
     }
 }
-    
-/* FINAL HEADER AND MOBILE RESPONSIVENESS FIX */
-
-/* Desktop logo */
-.logo {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-}
-
-.logo img {
-    width: 170px;
-    max-width: 100%;
-    height: 58px;
-    object-fit: contain;
-}
-
-/* Mobile */
-@media (max-width: 768px) {
-
-    header {
-        min-height: 64px;
-        padding: 9px 4%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        flex-wrap: nowrap;
-    }
-
-    .logo {
-        flex: 1 1 auto;
-        min-width: 0;
-        max-width: calc(100% - 48px);
-        overflow: hidden;
-        font-size: 14px;
-        line-height: 1.15;
-    }
-
-    .logo img {
-        width: 100px;
-        max-width: 100%;
-        height: 40px;
-        object-fit: contain;
-        flex-shrink: 1;
-    }
-
-    .logo span {
-        font-size: 8px;
-        letter-spacing: 1.5px;
-        text-align: left;
-        margin-top: 0;
-        white-space: nowrap;
-    }
-
-    .menu-toggle {
-        display: block;
-        flex: 0 0 38px;
-        width: 38px;
-        height: 42px;
-        margin-left: auto;
-        padding: 0;
-        font-size: 25px;
-        line-height: 1;
-        cursor: pointer;
-    }
-
-    nav {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background: var(--black);
-        flex-direction: column;
-        align-items: stretch;
-        padding: 18px 5%;
-        gap: 18px;
-    }
-
-    nav.active {
-        display: flex;
-    }
-
-    nav a {
-        width: 100%;
-        padding: 8px 0;
-    }
-
-    nav .cart-link {
-        width: fit-content;
-        padding: 9px 14px;
-    }
-}
-
-/* Very small phones */
-@media (max-width: 380px) {
-
-    header {
-        padding-left: 3%;
-        padding-right: 3%;
-    }
-
-    .logo img {
-        width: 86px;
-        height: 36px;
-    }
-}
-
 </style>
 </head>
 
 <body>
 
 <div class="announcement">
-    LUXURY FRAGRANCES • ELEGANCE IN EVERY DROP
+    PERFUMES • MEN'S SLIPPERS • BELT & WALLET COMBOS
 </div>
 
 <header>
@@ -542,7 +433,7 @@ footer strong {
 
     <span id="logoFallback">
         KIKIS AMBER TOUCH
-        <small>LUXURY FRAGRANCES</small>
+        <small>STYLE • SCENT • ACCESSORIES</small>
     </span>
 </a>
 
@@ -553,8 +444,8 @@ footer strong {
         <a href="shop.html">SHOP</a>
         <a href="cart.html" class="cart-link">
             MY CART (<span id="cart-count">0</span>)
-             <a href="track-order.html">Track Order</a>
         </a>
+        <a href="track-order.html">TRACK ORDER</a>
     </nav>
 
 </header>
@@ -562,7 +453,7 @@ footer strong {
 <section class="page-banner">
     <small>YOUR SELECTION</small>
     <h1>Shopping Cart</h1>
-    <p>Review your selected fragrances before checkout.</p>
+    <p>Review your selected items before checkout.</p>
 </section>
 
 <main class="cart-container">
@@ -630,12 +521,12 @@ footer strong {
         <h2>Your cart is empty</h2>
 
         <p>
-            You haven't added any fragrances to your cart yet.
-            Explore our collection and find your favourite scent.
+            You haven't added any products to your cart yet.
+            Explore our collections and find something you love.
         </p>
 
         <a href="shop.html" class="shop-btn">
-            EXPLORE PERFUMES
+            EXPLORE THE STORE
         </a>
 
     </div>
@@ -644,7 +535,7 @@ footer strong {
 
 <footer>
     <strong>KIKIS AMBER TOUCH</strong>
-    <p>Luxury fragrances. Elegance in every drop.</p>
+    <p>Perfumes, men's slippers and accessories — selected for your style.</p>
     <p>WhatsApp: 0503192094</p>
     <p>© <span id="year"></span> Kikis Amber Touch. All Rights Reserved.</p>
 </footer>
@@ -717,6 +608,22 @@ function money(amount) {
     return "GH₵ " + Number(amount || 0).toFixed(2);
 }
 
+function formatCategory(value) {
+    const labels = {
+        mens_slippers: "Men's Slippers",
+        belt_wallet_combo: "Belt & Wallet Combo",
+        men: "Men's Perfume",
+        women: "Women's Perfume",
+        unisex: "Unisex Perfume",
+        luxury: "Luxury Perfume",
+        body_mist: "Body Mist",
+        oud: "Oud"
+    };
+    const key = String(value || "").trim().toLowerCase()
+        .replace(/[\s-]+/g, "_");
+    return labels[key] || (key ? key.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase()) : "");
+}
+
 function updateCartCount() {
     const count = getCart().reduce(
         (sum, item) => sum + Number(item.quantity || 0), 0
@@ -736,7 +643,7 @@ async function refreshCartProducts() {
 
     const { data, error } = await supabase
         .from("products")
-        .select("id,name,price,image_url,stock,status")
+        .select("id,name,category,price,image_url,stock,status")
         .in("id", ids);
 
     if (error) {
@@ -772,8 +679,10 @@ async function refreshCartProducts() {
             id: String(product.id),
             product_id: String(product.id),
             name: product.name,
+            category: product.category || item.category || "",
             price: Number(product.price),
             image: product.image_url || "",
+            stock: Number(product.stock),
             quantity
         });
     });
@@ -831,6 +740,10 @@ function displayCart() {
         const name = document.createElement("h3");
         name.textContent = item.name;
 
+        const category = document.createElement("p");
+        category.textContent = formatCategory(item.category);
+        category.style.cssText = "font-size:12px;color:#777;margin:0 0 8px;";
+
         const unitPrice = document.createElement("div");
         unitPrice.className = "price";
         unitPrice.textContent = money(price);
@@ -850,7 +763,9 @@ function displayCart() {
         increase.onclick = () => changeQuantity(index, 1);
 
         quantityBox.append(decrease, quantityValue, increase);
-        details.append(name, unitPrice, quantityBox);
+        details.append(name);
+        if (category.textContent) details.append(category);
+        details.append(unitPrice, quantityBox);
 
         const totalBox = document.createElement("div");
         totalBox.className = "item-total";
@@ -885,9 +800,12 @@ window.changeQuantity = function(index, amount) {
     if (!item) return;
 
     const newQuantity = Number(item.quantity) + amount;
+    const availableStock = Number(item.stock);
 
     if (newQuantity <= 0) {
         cart.splice(index, 1);
+    } else if (Number.isFinite(availableStock) && availableStock > 0) {
+        item.quantity = Math.min(newQuantity, availableStock);
     } else {
         item.quantity = newQuantity;
     }
