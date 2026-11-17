@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Discover elegant and luxurious fragrances at Kikis Amber Touch. Shop your favourite perfumes in Ghana.">
+<meta name="description" content="Shop perfumes, men’s slippers, belt and wallet combos, and accessories at Kikis Amber Touch in Ghana.">
 <title>Track Your Order | Kikis Amber Touch</title>
 
 <style>
@@ -717,7 +717,7 @@ footer strong {
 
 <footer>
     <strong>KIKIS AMBER TOUCH</strong>
-    <p>Luxury fragrances. Elegance in every drop.</p>
+    <p>Perfumes, men’s slippers, belt &amp; wallet combos, and more.</p>
     <p>WhatsApp: 0503192094</p>
     <p>© <span id="year"></span> Kikis Amber Touch. All Rights Reserved.</p>
 </footer>
@@ -982,16 +982,41 @@ function displayOrder(order) {
         const row = document.createElement("div");
         row.className = "product";
 
-        const name = document.createElement("span");
+        const details = document.createElement("div");
+        details.style.display = "flex";
+        details.style.flexDirection = "column";
+        details.style.gap = "5px";
+        details.style.minWidth = "0";
 
+        const name = document.createElement("span");
         name.textContent =
-            item.product_name + " × " + item.quantity;
+            (item.product_name || "Product") + " × " + item.quantity;
+
+        details.appendChild(name);
+
+        if (item.category) {
+            const category = document.createElement("small");
+            const categoryNames = {
+                perfumes: "Perfume",
+                perfume: "Perfume",
+                mens_slippers: "Men’s Slippers",
+                "men's slippers": "Men’s Slippers",
+                belt_wallet_combo: "Belt & Wallet Combo",
+                accessories: "Accessories"
+            };
+            const key = String(item.category).trim().toLowerCase();
+            category.textContent = categoryNames[key] || String(item.category).replace(/[_-]/g, " ");
+            category.style.color = "#888";
+            category.style.fontSize = "11px";
+            category.style.textTransform = "capitalize";
+            details.appendChild(category);
+        }
 
         const price = document.createElement("strong");
 
         price.textContent = money(item.line_total);
 
-        row.append(name, price);
+        row.append(details, price);
 
         $("productList").appendChild(row);
 
