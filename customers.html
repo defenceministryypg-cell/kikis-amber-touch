@@ -478,7 +478,7 @@ footer {
         <small>ADMINISTRATION</small>
     </div>
 
-  <nav class="nav">
+   <nav class="nav">
         <a href="admin.html" class="active">Dashboard</a>
         <a href="products.html">Manage Products</a>
         <a href="settings.html">Store Settings</a>
@@ -487,6 +487,7 @@ footer {
         <a href="customers.html">Customers</a>
         <a href="campaigns.html">Campaigns</a>
     </nav>
+
 </aside>
 
 <!-- MAIN CONTENT -->
@@ -501,9 +502,9 @@ footer {
     <section class="welcome">
         <h2>Know your customers. Build lasting relationships.</h2>
         <p>
-            View customers from your existing orders, understand their
-            purchase history and follow up with them.
-            Customer records are grouped by phone number where available.
+            View customers across your store, review their purchase history
+            for perfumes, men’s slippers, belt and wallet combos, and accessories,
+            and follow up with them. Customer records are grouped by phone number where available.
         </p>
     </section>
 
@@ -620,7 +621,7 @@ footer {
     <footer>
         Kikis Amber Touch &copy;
         <span id="year"></span>.
-        Customer Management.
+        Perfumes, Men’s Slippers, Belt & Wallet Combos and Accessories.
     </footer>
 
 </main>
@@ -695,6 +696,20 @@ function esc(value) {
 
 function money(value) {
     return "GH₵ " + Number(value || 0).toFixed(2);
+}
+
+function categoryLabel(value) {
+    const key = String(value || "").trim().toLowerCase().replace(/[\s-]+/g, "_");
+    const labels = {
+        perfumes: "Perfumes",
+        perfume: "Perfumes",
+        mens_slippers: "Men’s Slippers",
+        men_slippers: "Men’s Slippers",
+        belt_wallet_combo: "Belt & Wallet Combos",
+        belts_wallets: "Belt & Wallet Combos",
+        accessories: "Accessories"
+    };
+    return labels[key] || String(value || "").replace(/[_-]+/g, " ");
 }
 
 function dateText(value) {
@@ -962,6 +977,7 @@ function showCustomer(key) {
                     ${items.map(item => `
                         <li>
                             ${esc(item.product_name || "Product")}
+                            ${item.category ? `(${esc(categoryLabel(item.category))})` : ""}
                             × ${Number(item.quantity || 0)}
                             — ${money(item.line_total)}
                         </li>
