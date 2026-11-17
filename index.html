@@ -730,16 +730,13 @@ DISCOVER YOUR STYLE — SHOP PERFUMES, SLIPPERS & ACCESSORIES
 <section class="hero">
 <div class="hero-content">
 
-<div class="eyebrow">WELCOME TO KIKIS AMBER TOUCH</div>
+<div class="eyebrow" id="homepageWelcomeHeading">WELCOME TO KIKIS AMBER TOUCH</div>
 
 <h1 id="animatedHeading">
     Leave a <span>Lasting</span> Impression.
 </h1>
 
-<p id="heroDescription">
-Explore carefully selected perfumes, men’s slippers, belt and wallet combos, and accessories.
-Find the pieces that complete your style, all in one place.
-</p>
+<p id="heroDescription">Explore carefully selected perfumes, men’s slippers, belt and wallet combos, and accessories. Find the pieces that complete your style, all in one place.</p>
 
 <a href="shop.html" class="btn">EXPLORE OUR COLLECTION</a>
 
@@ -919,7 +916,7 @@ async function loadHomepageSettings() {
     try {
         const { data, error } = await supabase
             .from("store_settings")
-            .select("store_name, store_tagline, logo_url, featured_image_url, whatsapp_number, store_open, accept_orders")
+            .select("store_name, store_tagline, homepage_welcome_heading, homepage_welcome_description, logo_url, featured_image_url, whatsapp_number, store_open, accept_orders")
             .eq("id", 1)
             .maybeSingle();
 
@@ -927,6 +924,14 @@ async function loadHomepageSettings() {
         if (!data) {
             console.warn("No store_settings row found with id 1.");
             return;
+        }
+
+        // Homepage welcome copy
+        if (data.homepage_welcome_heading) {
+            setText("homepageWelcomeHeading", data.homepage_welcome_heading);
+        }
+        if (data.homepage_welcome_description) {
+            setText("heroDescription", data.homepage_welcome_description);
         }
 
         // Store name and tagline
