@@ -183,7 +183,7 @@ footer{text-align:center;color:#888;font-size:12px;margin:30px 0 5px}
 
 <aside class="sidebar">
  <div class="logo">
-  KIKIS<br>AMBER TOUCH<br>
+  <span id="sidebarStoreName">KIKIS AMBER TOUCH</span><br>
   <small>ADMINISTRATION</small>
  </div>
 
@@ -381,7 +381,7 @@ footer{text-align:center;color:#888;font-size:12px;margin:30px 0 5px}
      <input type="checkbox" id="consentCheck">
      <span>
       I confirm that the selected customers have agreed to receive
-      promotional or marketing messages from Kikis Amber Touch.
+      promotional or marketing messages from {store}.
      </span>
     </label>
 
@@ -412,7 +412,7 @@ footer{text-align:center;color:#888;font-size:12px;margin:30px 0 5px}
    <section class="panel">
     <h2>Official Store Link</h2>
     <p style="font-size:13px;line-height:1.7">
-     Kikis Amber Touch
+     <span id="officialStoreName">Kikis Amber Touch</span>
     </p>
     <p style="font-size:13px;font-weight:bold;color:#987337;overflow-wrap:anywhere">
      https://kikis-amber-touch.vercel.app/
@@ -426,7 +426,7 @@ footer{text-align:center;color:#888;font-size:12px;margin:30px 0 5px}
  </div>
 
  <footer>
-  Kikis Amber Touch &copy; <span id="year"></span>. Campaign Management.
+  <span id="footerStoreName">Kikis Amber Touch</span> &copy; <span id="year"></span>. Campaign Management.
  </footer>
 
 </main>
@@ -434,7 +434,7 @@ footer{text-align:center;color:#888;font-size:12px;margin:30px 0 5px}
 <!-- LOGIN -->
 <div id="loginOverlay">
  <form class="login-card" id="loginForm">
-  <h2>KIKIS AMBER TOUCH</h2>
+  <h2 id="loginStoreName">KIKIS AMBER TOUCH</h2>
   <p>Administrator Login</p>
 
   <label for="email">Email Address</label>
@@ -460,6 +460,23 @@ const supabase=createClient(
 const SHOP_LINK="https://kikis-amber-touch.vercel.app/";
 
 const $=id=>document.getElementById(id);
+let dynamicStoreName="{store}";
+
+/* Read branding after admin authentication so store_settings RLS can allow it. */
+async function loadCampaignStoreName(){
+ const {data,error}=await supabase
+  .from("store_settings")
+  .select("store_name")
+  .eq("id",1)
+  .maybeSingle();
+ if(error) throw error;
+ const name=String(data?.store_name||"").trim();
+ if(!name) throw new Error("Store name is empty in Store Settings (store_settings, id=1).");
+ dynamicStoreName=name;
+ document.title="Campaigns | "+name;
+ ["sidebarStoreName","loginStoreName","footerStoreName","officialStoreName"]
+  .forEach(id=>{const el=$(id);if(el)el.textContent=name;});
+}
 
 let currentAdmin=null;
 let customers=[];
@@ -473,7 +490,7 @@ const templates={
   title:"New Year Greetings",
   message:`Happy New Year, {name}! 🎉
 
-From all of us at Kikis Amber Touch, we wish you a wonderful year filled with happiness, success and beautiful moments.
+From all of us at {store}, we wish you a wonderful year filled with happiness, success and beautiful moments.
 
 Thank you for being part of our journey. We look forward to serving you again.
 
@@ -481,7 +498,7 @@ Explore our products:
 {shop}
 
 With love,
-Kikis Amber Touch.`
+{store}.`
  },
 
  christmas:{
@@ -490,13 +507,13 @@ Kikis Amber Touch.`
 
 May this beautiful season bring you joy, peace and happiness.
 
-Thank you for choosing Kikis Amber Touch. We truly appreciate your support and wish you and your family a wonderful Christmas.
+Thank you for choosing {store}. We truly appreciate your support and wish you and your family a wonderful Christmas.
 
 Explore our products for the season:
 {shop}
 
 Warm wishes,
-Kikis Amber Touch.`
+{store}.`
  },
 
  easter:{
@@ -505,20 +522,20 @@ Kikis Amber Touch.`
 
 May this season bring you renewed hope, peace and happiness.
 
-Thank you for supporting Kikis Amber Touch. We appreciate having you as part of our family.
+Thank you for supporting {store}. We appreciate having you as part of our family.
 
 Explore our collection:
 {shop}
 
 With warm wishes,
-Kikis Amber Touch.`
+{store}.`
  },
 
  valentine:{
   title:"Valentine's Day Campaign",
   message:`Happy Valentine's Day, {name}! ❤️
 
-Make this special season even more memorable with a beautiful fragrance from Kikis Amber Touch.
+Make this special season even more memorable with a beautiful fragrance from {store}.
 
 Whether it is a gift for someone special or a treat for yourself, we have something lovely for you.
 
@@ -526,7 +543,7 @@ Explore our collection:
 {shop}
 
 With love,
-Kikis Amber Touch.`
+{store}.`
  },
 
  mothers:{
@@ -535,13 +552,13 @@ Kikis Amber Touch.`
 
 Today we celebrate the love, strength and sacrifices of mothers.
 
-Kikis Amber Touch wishes you a beautiful and memorable celebration.
+{store} wishes you a beautiful and memorable celebration.
 
 Explore our collection:
 {shop}
 
 With appreciation,
-Kikis Amber Touch.`
+{store}.`
  },
 
  fathers:{
@@ -550,62 +567,62 @@ Kikis Amber Touch.`
 
 Today we celebrate fathers and the important role they play.
 
-Kikis Amber Touch wishes you a wonderful celebration filled with happiness and appreciation.
+{store} wishes you a wonderful celebration filled with happiness and appreciation.
 
 Discover our products:
 {shop}
 
 Warm wishes,
-Kikis Amber Touch.`
+{store}.`
  },
 
  blackfriday:{
   title:"Black Friday Promotion",
   message:`Hello {name}! 🛍️
 
-Something special is happening at Kikis Amber Touch!
+Something special is happening at {store}!
 
 Our Black Friday offers are here. It is a great opportunity to discover great products at special promotional prices.
 
 Visit our shop and explore the offers:
 {shop}
 
-Kikis Amber Touch.`
+{store}.`
  },
 
  birthday:{
   title:"Birthday Greetings",
   message:`Happy Birthday, {name}! 🎂🎉
 
-Everyone at Kikis Amber Touch wishes you a beautiful birthday filled with happiness, love and unforgettable memories.
+Everyone at {store} wishes you a beautiful birthday filled with happiness, love and unforgettable memories.
 
 Thank you for being part of our customer family.
 
 Have a wonderful celebration!
 
 With love,
-Kikis Amber Touch.`
+{store}.`
  },
 
  promotion:{
   title:"Special Promotion",
   message:`Hello {name}! ✨
 
-We have something special for you at Kikis Amber Touch!
+We have something special for you at {store}!
 
 Enjoy our latest promotions and discover products that match your style.
 
 Visit our online shop to explore our collection:
 {shop}
 
-Thank you for choosing Kikis Amber Touch.`
+Thank you for choosing {store}.`
  },
 
  newproduct:{
   title:"New Arrivals Announcement",
   message:`Hello {name}! 🌸
 
-New products have arrived at Kikis Amber Touch!
+New products have arrived at {store}!
 
 Discover our latest additions and find something that suits your style.
 
@@ -613,14 +630,14 @@ Explore the new collection here:
 {shop}
 
 We look forward to serving you.
-Kikis Amber Touch.`
+{store}.`
  },
 
  thankyou:{
   title:"Customer Appreciation",
   message:`Hello {name}! 💛
 
-We just want to say a big thank you for choosing Kikis Amber Touch.
+We just want to say a big thank you for choosing {store}.
 
 Your support means a lot to us, and we appreciate having you as part of our growing family.
 
@@ -630,14 +647,14 @@ Visit our shop:
 {https://kikis-amber-touch.vercel.app/}
 
 With appreciation,
-Kikis Amber Touch.`
+{store}.`
  },
 
  custom:{
   title:"Custom Campaign",
   message:`Hello {name}!
 
-We have something special for you from Kikis Amber Touch.
+We have something special for you from {store}.
 
 Visit our online shop:
 {shop}
@@ -811,9 +828,13 @@ function updateCampaignStats(){
 }
 
 function getMessage(customer){
+ const customerName=customer?.name||"Customer";
  return $("message").value
-  .replaceAll("{name}",customer.name||"Customer")
-  .replaceAll("{shop}",SHOP_LINK);
+  .replaceAll("{name}",customerName)
+  .replaceAll("{shop}",SHOP_LINK)
+  .replaceAll("{store}",dynamicStoreName)
+  // Also update older/custom messages that still contain the previous brand name.
+  .replace(/Kikis Amber Touch/gi,dynamicStoreName);
 }
 
 function updatePreview(){
@@ -821,7 +842,10 @@ function updatePreview(){
 
  if(!customer){
   $("messagePreview").textContent=
-   $("message").value.replaceAll("{shop}",SHOP_LINK);
+   $("message").value
+    .replaceAll("{shop}",SHOP_LINK)
+    .replaceAll("{store}",dynamicStoreName)
+    .replace(/Kikis Amber Touch/gi,dynamicStoreName);
   return;
  }
 
@@ -903,7 +927,7 @@ function openNextChat(){
  const customer=campaignQueue[campaignIndex];
  const number=normaliseGhanaNumber(customer.phone);
 
- const message=getMessage(customer);
+ const message=getMessage(customer).replaceAll(/{store}|{store}/g,dynamicStoreName);
 
  const url=`https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 
@@ -940,6 +964,12 @@ async function start(){
  }
 
  currentAdmin=user;
+ try{
+  await loadCampaignStoreName();
+ }catch(brandingError){
+  console.error("Store branding could not be loaded:",brandingError);
+  $("error").textContent="Signed in, but the store name could not load: "+brandingError.message;
+ }
  $("loginOverlay").style.display="none";
 
  try{
@@ -994,7 +1024,8 @@ $("previewButton").addEventListener("click",updatePreview);
 
 $("copyButton").addEventListener("click",async()=>{
  try{
-  await navigator.clipboard.writeText($("message").value.replaceAll("{shop}",SHOP_LINK));
+  const customer=customers.find(c=>selected.has(c.key))||customers[0]||null;
+   await navigator.clipboard.writeText(getMessage(customer));
   alert("Message copied.");
  }catch{
   alert("Unable to copy automatically. Please select and copy the message.");
