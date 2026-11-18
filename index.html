@@ -842,7 +842,7 @@ find what expresses your style.
 <strong id="footerStoreName">KIKIS AMBER TOUCH</strong>
 <p id="footerStoreTagline">Fragrance, footwear and accessories — chosen for your style.</p>
 <p>WhatsApp: <a id="footerWhatsApp" href="https://wa.me/233503192094">0503192094</a></p>
-<p>© <span id="year"></span> Kikis Amber Touch. All Rights Reserved.</p>
+<p>© <span id="year"></span> <span id="footerCopyrightText">Kikis Amber Touch. All Rights Reserved.</span></p>
 </footer>
 
 <!-- WHATSAPP CHAT -->
@@ -916,7 +916,7 @@ async function loadHomepageSettings() {
     try {
         const { data, error } = await supabase
             .from("store_settings")
-            .select("store_name, store_tagline, homepage_welcome_heading, homepage_welcome_description, logo_url, featured_image_url, whatsapp_number, store_open, accept_orders")
+            .select("store_name, store_tagline, footer_copyright_text, homepage_welcome_heading, homepage_welcome_description, logo_url, featured_image_url, whatsapp_number, store_open, accept_orders")
             .eq("id", 1)
             .maybeSingle();
 
@@ -941,6 +941,9 @@ async function loadHomepageSettings() {
             document.title = data.store_name + " | Fashion & Fragrance";
             const description = document.querySelector('meta[name="description"]');
             if (description) description.content = "Shop perfumes, men's slippers, belt and wallet combos, and accessories at " + data.store_name + " in Ghana.";
+        }
+        if (data.footer_copyright_text) {
+            setText("footerCopyrightText", data.footer_copyright_text);
         }
         if (data.store_tagline) {
             setText("headerStoreTagline", data.store_tagline);
