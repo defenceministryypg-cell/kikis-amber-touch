@@ -534,14 +534,15 @@ footer strong {
 </main>
 
 <footer>
-    <strong>KIKIS AMBER TOUCH</strong>
-    <p>Perfumes, men's slippers and accessories — selected for your style.</p>
-    <p>WhatsApp: 0503192094</p>
-    <p>© <span id="year"></span> Kikis Amber Touch. All Rights Reserved.</p>
+    <strong id="footerStoreName">KIKIS AMBER TOUCH</strong>
+    <p id="footerStoreTagline">Perfumes, men's slippers and accessories — selected for your style.</p>
+    <p>WhatsApp: <a id="footerWhatsApp" href="https://wa.me/233503192094" target="_blank" rel="noopener">0503192094</a></p>
+    <p>© <span id="year"></span> <span id="footerCopyrightName">Kikis Amber Touch</span>. All Rights Reserved.</p>
 </footer>
 
 <a
     class="whatsapp"
+    id="floatingWhatsApp"
     href="https://wa.me/233503192094"
     target="_blank"
     rel="noopener"
@@ -589,6 +590,46 @@ async function loadStoreLogo() {
 }
 
 loadStoreLogo();
+
+// Load the business name, tagline and WhatsApp contact from store settings.
+async function loadStoreFooter() {
+    try {
+        const { data, error } = await supabase
+            .from("store_settings")
+            .select("store_name,store_tagline,whatsapp_number")
+            .eq("id", 1)
+            .maybeSingle();
+
+        if (error) throw error;
+        if (!data) return;
+
+        const storeName = String(data.store_name || "KIKIS AMBER TOUCH").trim();
+        const tagline = String(
+            data.store_tagline || "Perfumes, men's slippers and accessories — selected for your style."
+        ).trim();
+
+        document.getElementById("footerStoreName").textContent = storeName;
+        document.getElementById("footerCopyrightName").textContent = storeName;
+        document.getElementById("footerStoreTagline").textContent = tagline;
+        document.title = "My Shopping Cart | " + storeName;
+
+        const rawNumber = String(data.whatsapp_number || "0503192094").trim();
+        const digits = rawNumber.replace(/\\D/g, "");
+        const internationalNumber = digits.startsWith("0")
+            ? "233" + digits.slice(1)
+            : (digits.startsWith("233") ? digits : digits);
+
+        const footerWhatsApp = document.getElementById("footerWhatsApp");
+        const floatingWhatsApp = document.getElementById("floatingWhatsApp");
+        footerWhatsApp.textContent = rawNumber;
+        footerWhatsApp.href = "https://wa.me/" + internationalNumber;
+        floatingWhatsApp.href = "https://wa.me/" + internationalNumber;
+    } catch (error) {
+        console.error("Store footer settings could not be loaded:", error);
+    }
+}
+
+loadStoreFooter();
 
 const $ = id => document.getElementById(id);
 
