@@ -1,1961 +1,860 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Shop | Kikis Amber Touch</title>
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-
-
 <style>
-
 *{margin:0;padding:0;box-sizing:border-box}
-
 :root{--black:#11100e;--gold:#c6a15b;--cream:#f8f5ef;--white:#fff}
-
 body{font-family:Arial,sans-serif;background:var(--cream);color:var(--black)}
-
 a{text-decoration:none;color:inherit}
-
 .announcement{background:var(--gold);text-align:center;padding:10px;font-size:11px;letter-spacing:2px}
-
 header{background:var(--black);color:white;padding:18px 7%;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-
 .logo{font-family:Georgia,serif;color:var(--gold);font-size:21px}
-
 .logo span{display:block;font-family:Arial;color:white;font-size:9px;letter-spacing:4px;text-align:center;margin-top:5px}
-
 .logo img{display:none;width:170px;max-height:65px;object-fit:contain}
-
 nav{display:flex;align-items:center;gap:25px;font-size:13px}
-
 nav a:hover{color:var(--gold)}
-
 .cart-link{border:1px solid var(--gold);padding:10px 16px;color:var(--gold)}
-
 .menu-toggle{display:none;background:none;color:white;border:none;font-size:25px}
-
 .shop-banner{background:linear-gradient(90deg,#17130e,#51402a);color:white;padding:65px 7%;text-align:center}
-
 .shop-banner small{color:var(--gold);letter-spacing:4px}
-
 .shop-banner h1{font-family:Georgia,serif;font-weight:normal;font-size:48px;margin:15px 0}
-
 .shop-banner p{color:#ddd;font-size:14px}
-
 .shop-container{padding:55px 7%}
-
 .shop-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;gap:15px}
-
 .shop-heading h2{font-family:Georgia,serif;font-size:28px;font-weight:normal}
-
 .filters{display:flex;gap:12px;margin-bottom:35px;flex-wrap:wrap}
-
 .filters input,.filters select{padding:14px;border:1px solid #ddd;background:white;outline:none;font-size:13px}
-
 .filters input{flex:1;min-width:200px}
-
 .filters select{min-width:160px}
-
-    .shop-category-switch{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 24px}
-
-    .shop-category-switch button{border:1px solid #c6a15b;background:#fff;color:#11100e;padding:12px 18px;cursor:pointer;font-size:11px;letter-spacing:1px;font-weight:bold;transition:.2s}
-
-    .shop-category-switch button.active,.shop-category-switch button:hover{background:#11100e;color:#c6a15b}
-
+.shop-category-switch{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 24px}
+.shop-category-switch button{border:1px solid #c6a15b;background:#fff;color:#11100e;padding:12px 18px;cursor:pointer;font-size:11px;letter-spacing:1px;font-weight:bold;transition:.2s}
+.shop-category-switch button.active,.shop-category-switch button:hover{background:#11100e;color:#c6a15b}
 .shop-category-switch button:focus-visible{outline:2px solid #11100e;outline-offset:3px}
-
-    .filters select[hidden]{display:none}
-
+.filters select[hidden]{display:none}
 .products{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
-
 .product-card{background:white;overflow:hidden;transition:.3s;border:1px solid #eee}
-
 .product-card:hover{transform:translateY(-5px);box-shadow:0 10px 25px #00000012}
-
 .product-image{height:310px;background:#f8f5ef;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
-
 .product-image img{width:100%;height:100%;object-fit:contain;object-position:center;padding:0;display:block;transform:scale(1.25)}
-
 .product-info{padding:17px}
-
 .category{font-size:10px;color:#a17d40;text-transform:uppercase;letter-spacing:1.5px}
-
 .product-info h3{font-family:Georgia,serif;font-size:18px;margin:10px 0}
-
 .product-description{color:#777;font-size:12px;line-height:1.65;margin:9px 0 5px;overflow-wrap:anywhere}
-
 .product-description.collapsed{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;overflow:hidden}
-
 .description-toggle{display:inline-block;border:0;background:transparent;color:#9c783d;font-size:11px;font-weight:bold;cursor:pointer;padding:3px 0 12px}
-
 .description-toggle:hover{text-decoration:underline}
-
 .price{font-weight:bold;color:#9c783d;font-size:17px;margin-bottom:15px}
-
 .quantity{display:flex;align-items:center;gap:12px;margin-bottom:15px}
-
 .quantity button{width:28px;height:28px;border:1px solid #ddd;background:white;cursor:pointer;font-size:17px}
-
 .quantity span{font-size:14px}
-
 .add-btn{width:100%;padding:13px;border:none;background:var(--black);color:white;cursor:pointer;font-size:11px;letter-spacing:1px;transition:.3s}
-
 .add-btn:hover{background:var(--gold);color:black}
-
 .empty-message{text-align:center;padding:50px 10px;color:#777;display:none}
-
 footer{background:#080807;color:#aaa;padding:35px 7%;text-align:center;font-size:12px;line-height:2}
-
 footer strong{color:var(--gold)}
-
 .whatsapp{position:fixed;right:20px;bottom:20px;background:#25D366;color:white;width:58px;height:58px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:35px;z-index:200;box-shadow:0 4px 15px #0003;transition:.3s ease}
-
 .whatsapp:hover{background:#1ebe5d;transform:scale(1.07)}
-
-
-
 /* PRODUCT DISCOUNT DISPLAY */
-
 .product-image .sale-badge{
-
-    position:absolute;
-
-    top:12px;
-
-    left:12px;
-
-    z-index:2;
-
-    background:#11100e;
-
-    color:#e5c985;
-
-    padding:8px 11px;
-
-    font-size:10px;
-
-    font-weight:bold;
-
-    letter-spacing:1px;
-
-    border:1px solid #c6a15b;
-
+position:absolute;
+top:12px;
+left:12px;
+z-index:2;
+background:#11100e;
+color:#e5c985;
+padding:8px 11px;
+font-size:10px;
+font-weight:bold;
+letter-spacing:1px;
+border:1px solid #c6a15b;
 }
-
 .price .old-price{
-
-    color:#888;
-
-    text-decoration:line-through;
-
-    font-size:13px;
-
-    font-weight:normal;
-
-    margin-right:8px;
-
+color:#888;
+text-decoration:line-through;
+font-size:13px;
+font-weight:normal;
+margin-right:8px;
 }
-
 .price .new-price{color:#9c783d}
-
 .price .saving-label{
-
-    display:block;
-
-    color:#287342;
-
-    font-size:11px;
-
-    font-weight:normal;
-
-    margin-top:4px;
-
+display:block;
+color:#287342;
+font-size:11px;
+font-weight:normal;
+margin-top:4px;
 }
-
-
-
 /* TABLET */
-
 @media(max-width:1000px){
-
-    .products{grid-template-columns:repeat(3,1fr)}
-
-    .product-image{height:290px}
-
+.products{grid-template-columns:repeat(3,1fr)}
+.product-image{height:290px}
 }
-
-
-
 /* MOBILE */
-
 @media(max-width:768px){
-
-    header{padding:15px 5%}
-
-    .logo{font-size:17px}
-
-    .menu-toggle{display:block;cursor:pointer}
-
-    nav{
-
-        display:none;
-
-        position:absolute;
-
-        top:100%;
-
-        left:0;
-
-        background:var(--black);
-
-        width:100%;
-
-        flex-direction:column;
-
-        padding:25px
-
-    }
-
-    nav.active{display:flex}
-
-    .shop-banner h1{font-size:36px}
-
-    .products{grid-template-columns:repeat(2,1fr);gap:12px}
-
-    .product-image{height:240px}
-
-    .product-image img{transform:scale(1.2)}
-
-    .product-info{padding:12px}
-
-    .product-info h3{font-size:15px}
-
-    .shop-container{padding:40px 5%}
-
-    .shop-heading h2{font-size:23px}
-
+header{padding:15px 5%}
+.logo{font-size:17px}
+.menu-toggle{display:block;cursor:pointer}
+nav{
+display:none;
+position:absolute;
+top:100%;
+left:0;
+background:var(--black);
+width:100%;
+flex-direction:column;
+padding:25px
 }
-
-
-
+nav.active{display:flex}
+.shop-banner h1{font-size:36px}
+.products{grid-template-columns:repeat(2,1fr);gap:12px}
+.product-image{height:240px}
+.product-image img{transform:scale(1.2)}
+.product-info{padding:12px}
+.product-info h3{font-size:15px}
+.shop-container{padding:40px 5%}
+.shop-heading h2{font-size:23px}
+}
 /* SMALL PHONES */
-
 @media(max-width:380px){
-
-    .products{grid-template-columns:1fr}
-
-    .product-image{height:280px}
-
+.products{grid-template-columns:1fr}
+.product-image{height:280px}
 }
-
-
-
 /* HEADER AND MOBILE RESPONSIVENESS */
-
 .logo{display:flex;align-items:center;flex-shrink:0}
-
 .logo img{width:170px;max-width:100%;height:58px;object-fit:contain}
-
-
-
 @media(max-width:768px){
-
-    header{
-
-        min-height:64px;
-
-        padding:9px 4%;
-
-        display:flex;
-
-        align-items:center;
-
-        justify-content:space-between;
-
-        gap:8px;
-
-        flex-wrap:nowrap
-
-    }
-
-    .logo{
-
-        flex:1 1 auto;
-
-        min-width:0;
-
-        max-width:calc(100% - 48px);
-
-        overflow:hidden;
-
-        font-size:14px;
-
-        line-height:1.15
-
-    }
-
-    .logo img{
-
-        width:100px;
-
-        max-width:100%;
-
-        height:40px;
-
-        object-fit:contain;
-
-        flex-shrink:1
-
-    }
-
-    .logo span{
-
-        font-size:8px;
-
-        letter-spacing:1.5px;
-
-        text-align:left;
-
-        margin-top:0;
-
-        white-space:nowrap
-
-    }
-
-    .menu-toggle{
-
-        display:block;
-
-        flex:0 0 38px;
-
-        width:38px;
-
-        height:42px;
-
-        margin-left:auto;
-
-        padding:0;
-
-        font-size:25px;
-
-        line-height:1;
-
-        cursor:pointer
-
-    }
-
-    nav{
-
-        display:none;
-
-        position:absolute;
-
-        top:100%;
-
-        left:0;
-
-        width:100%;
-
-        background:var(--black);
-
-        flex-direction:column;
-
-        align-items:stretch;
-
-        padding:18px 5%;
-
-        gap:18px
-
-    }
-
-    nav.active{display:flex}
-
-    nav a{width:100%;padding:8px 0}
-
-    nav .cart-link{width:fit-content;padding:9px 14px}
-
+header{
+min-height:64px;
+padding:9px 4%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:8px;
+flex-wrap:nowrap
 }
-
-
-
+.logo{
+flex:1 1 auto;
+min-width:0;
+max-width:calc(100% - 48px);
+overflow:hidden;
+font-size:14px;
+line-height:1.15
+}
+.logo img{
+width:100px;
+max-width:100%;
+height:40px;
+object-fit:contain;
+flex-shrink:1
+}
+.logo span{
+font-size:8px;
+letter-spacing:1.5px;
+text-align:left;
+margin-top:0;
+white-space:nowrap
+}
+.menu-toggle{
+display:block;
+flex:0 0 38px;
+width:38px;
+height:42px;
+margin-left:auto;
+padding:0;
+font-size:25px;
+line-height:1;
+cursor:pointer
+}
+nav{
+display:none;
+position:absolute;
+top:100%;
+left:0;
+width:100%;
+background:var(--black);
+flex-direction:column;
+align-items:stretch;
+padding:18px 5%;
+gap:18px
+}
+nav.active{display:flex}
+nav a{width:100%;padding:8px 0}
+nav .cart-link{width:fit-content;padding:9px 14px}
+}
 @media(max-width:380px){
-
-    header{padding-left:3%;padding-right:3%}
-
-    .logo img{width:86px;height:36px}
-
+header{padding-left:3%;padding-right:3%}
+.logo img{width:86px;height:36px}
 }
-
 </style>
-
 </head>
-
 <body>
-
-
-
 <div class="announcement">
-
-    PERFUMES • MEN'S SLIPPERS • BELT & WALLET COMBOS • ACCESSORIES
-
+PERFUMES • MEN'S SLIPPERS • BELT & WALLET COMBOS • ACCESSORIES
 </div>
-
-
-
 <header>
-
-    <a href="index.html" class="logo" id="storeLogoLink">
-
-        <img id="storeLogoImage" alt="Kikis Amber Touch Logo">
-
-        <span id="logoFallback">
-
-            KIKIS AMBER TOUCH
-
-            <small>STYLE • FRAGRANCE • ACCESSORIES</small>
-
-        </span>
-
-    </a>
-
-
-
-    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-
-
-
-    <nav id="navigation">
-
-        <a href="index.html">HOME</a>
-
-        <a href="shop.html">SHOP</a>
-
-        <a href="cart.html" class="cart-link">
-
-            MY CART (<span id="cart-count">0</span>)
-
-        </a>
-
-        <a href="track-order.html">TRACK ORDER</a>
-
-    </nav>
-
-</header>
-
-
-
-<section class="shop-banner">
-
-    <small>EXPLORE OUR COLLECTIONS</small>
-
-    <h1 id="shop-banner-title">Shop All Collections</h1>
-
-    <p id="shop-banner-description">Discover perfumes, men’s slippers, and accessories for every occasion.</p>
-
-</section>
-
-
-
-<main class="shop-container">
-
-
-
-    <div class="shop-heading">
-
-        <h2 id="collection-title">All Products</h2>
-
-        <span id="product-count"></span>
-
-    </div>
-
-
-
-    <div class="shop-category-switch" role="group" aria-label="Shop categories">
-
-        <button type="button" class="active" data-shop-category="all">ALL PRODUCTS</button>
-
-        <button type="button" data-shop-category="perfumes">PERFUMES</button>
-
-        <button type="button" data-shop-category="mens_slippers">MEN'S SLIPPERS</button>
-
-        <button type="button" data-shop-category="belt_wallet_combo">BELT &amp; WALLET COMBO</button>
-        <button type="button" data-shop-category="accessories">ACCESSORIES</button>
-
-    </div>
-
-
-
-    <div class="filters">
-
-        <input type="search" id="search"
-
-            placeholder="Search products...">
-
-
-
-        <select id="category" aria-label="Filter perfume audience">
-
-            <option value="all">All Perfumes</option>
-
-            <option value="men">Men</option>
-
-            <option value="women">Women</option>
-
-            <option value="unisex">Unisex</option>
-
-        </select>
-
-
-
-        <select id="sort">
-
-            <option value="default">Sort Products</option>
-
-            <option value="low">Price: Low to High</option>
-
-            <option value="high">Price: High to Low</option>
-
-            <option value="name">Name: A - Z</option>
-
-        </select>
-
-    </div>
-
-
-
-    <div class="products" id="products"></div>
-
-
-
-    <div class="empty-message" id="empty">
-
-        <h3>No products found.</h3>
-
-        <p>Try another search or choose a different shop category.</p>
-
-    </div>
-
-
-
-</main>
-
-
-
-<footer>
-
-    <strong>KIKIS AMBER TOUCH</strong>
-
-    <p>Fragrance, footwear and accessories — chosen for your style.</p>
-
-    <p>WhatsApp: 0503192094</p>
-
-    <p>© <span id="year"></span> Kikis Amber Touch. All Rights Reserved.</p>
-
-</footer>
-
-
-
-<a class="whatsapp"
-
-   href="https://wa.me/233503192094"
-
-   target="\_blank"
-
-   rel="noopener"
-
-   aria-label="Chat with Kikis Amber Touch on WhatsApp">
-
-    <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
-
+<a href="index.html" class="logo" id="storeLogoLink">
+<img id="storeLogoImage" alt="Kikis Amber Touch Logo">
+<span id="logoFallback">
+<span id="headerStoreName">KIKIS AMBER TOUCH</span>
+<small id="headerStoreTagline">STYLE • FRAGRANCE • ACCESSORIES</small>
+</span>
 </a>
-
-
-
+<button class="menu-toggle" onclick="toggleMenu()">☰</button>
+<nav id="navigation">
+<a href="index.html">HOME</a>
+<a href="shop.html">SHOP</a>
+<a href="cart.html" class="cart-link">
+MY CART (<span id="cart-count">0</span>)
+</a>
+<a href="track-order.html">TRACK ORDER</a>
+</nav>
+</header>
+<section class="shop-banner">
+<small>EXPLORE OUR COLLECTIONS</small>
+<h1 id="shop-banner-title">Shop All Collections</h1>
+<p id="shop-banner-description">Discover perfumes, men’s slippers, and accessories for every occasion.</p>
+</section>
+<main class="shop-container">
+<div class="shop-heading">
+<h2 id="collection-title">All Products</h2>
+<span id="product-count"></span>
+</div>
+<div class="shop-category-switch" role="group" aria-label="Shop categories">
+<button type="button" class="active" data-shop-category="all">ALL PRODUCTS</button>
+<button type="button" data-shop-category="perfumes">PERFUMES</button>
+<button type="button" data-shop-category="mens_slippers">MEN'S SLIPPERS</button>
+<button type="button" data-shop-category="belt_wallet_combo">BELT &amp; WALLET COMBO</button>
+<button type="button" data-shop-category="accessories">ACCESSORIES</button>
+</div>
+<div class="filters">
+<input type="search" id="search"
+placeholder="Search products...">
+<select id="category" aria-label="Filter perfume audience">
+<option value="all">All Perfumes</option>
+<option value="men">Men</option>
+<option value="women">Women</option>
+<option value="unisex">Unisex</option>
+</select>
+<select id="sort">
+<option value="default">Sort Products</option>
+<option value="low">Price: Low to High</option>
+<option value="high">Price: High to Low</option>
+<option value="name">Name: A - Z</option>
+</select>
+</div>
+<div class="products" id="products"></div>
+<div class="empty-message" id="empty">
+<h3>No products found.</h3>
+<p>Try another search or choose a different shop category.</p>
+</div>
+</main>
+<footer>
+<strong id="footerStoreName">KIKIS AMBER TOUCH</strong>
+<p id="footerStoreTagline">Fragrance, footwear and accessories — chosen for your style.</p>
+<p>WhatsApp: <a id="footerWhatsApp" href="https://wa.me/233503192094">0503192094</a></p>
+<p>© <span id="year"></span> <span id="footerCopyrightName">Kikis Amber Touch</span>. All Rights Reserved.</p>
+</footer>
+<a id="floatingWhatsApp" class="whatsapp"
+href="https://wa.me/233503192094"
+target="\\_blank"
+rel="noopener"
+aria-label="Chat with Kikis Amber Touch on WhatsApp">
+<i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+</a>
 <script type="module">
-
 import { createClient } from
-
 "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
-
-
-
 /* =========================================
-
-   SUPABASE CONNECTION
-
-========================================= */
-
-
-
+SUPABASE CONNECTION
+\========================================= */
 const supabase = createClient(
-
-    "https://mgxeyjyhuzbsgnbpbkst.supabase.co",
-
-    "sb_publishable_ANZvxJnS89wrYo0MTx6LRA_Nu2XPss5"
-
+"https://mgxeyjyhuzbsgnbpbkst.supabase.co",
+"sb_publishable_ANZvxJnS89wrYo0MTx6LRA_Nu2XPss5"
 );
-
-
-
 /* =========================================
-
-   LOAD STORE LOGO
-
-========================================= */
-
-
-
-async function loadStoreLogo() {
-
-    const image = document.getElementById("storeLogoImage");
-
-    const fallback = document.getElementById("logoFallback");
-
-
-
-    try {
-
-        const { data, error } = await supabase
-
-            .from("store_settings")
-
-            .select("logo_url")
-
-            .eq("id", 1)
-
-            .maybeSingle();
-
-
-
-        if (error) throw error;
-
-
-
-        if (data?.logo_url) {
-
-            image.onload = () => {
-
-                image.style.display = "block";
-
-                fallback.style.display = "none";
-
-            };
-
-
-
-            image.onerror = () => {
-
-                image.style.display = "none";
-
-                fallback.style.display = "block";
-
-                console.error("Could not load store logo.");
-
-            };
-
-
-
-            image.src = data.logo_url;
-
-        }
-
-    } catch (error) {
-
-        console.error("Store logo loading failed:", error);
-
-    }
-
+LOAD STORE LOGO
+\========================================= */
+function setStoreText(id, value) {
+const element = document.getElementById(id);
+if (element && value !== null && value !== undefined && String(value).trim()) {
+element.textContent = value;
 }
-
-
-
-loadStoreLogo();
-
-
-
+}
+function toWhatsAppUrl(number) {
+const digits = String(number || "").replace(/\D/g, "");
+if (!digits) return "https://wa.me/233503192094";
+const international = digits.startsWith("0")
+? "233" + digits.slice(1)
+: digits.startsWith("233") ? digits : digits;
+return "https://wa.me/" + international;
+}
+async function loadStoreSettings() {
+const image = document.getElementById("storeLogoImage");
+const fallback = document.getElementById("logoFallback");
+try {
+const { data, error } = await supabase
+.from("store_settings")
+.select("store_name, store_tagline, logo_url, whatsapp_number")
+.eq("id", 1)
+.maybeSingle();
+if (error) throw error;
+if (!data) return;
+const storeName = data.store_name || "Kikis Amber Touch";
+setStoreText("headerStoreName", storeName);
+setStoreText("footerStoreName", storeName);
+setStoreText("footerCopyrightName", storeName);
+document.title = "Shop | " + storeName;
+if (data.store_tagline) {
+setStoreText("headerStoreTagline", data.store_tagline);
+setStoreText("footerStoreTagline", data.store_tagline);
+}
+if (data.logo_url && image && fallback) {
+image.onload = () => {
+image.style.display = "block";
+fallback.style.display = "none";
+};
+image.onerror = () => {
+image.style.display = "none";
+fallback.style.display = "block";
+console.error("Could not load store logo.");
+};
+image.src = data.logo_url;
+}
+if (data.whatsapp_number) {
+const whatsappUrl = toWhatsAppUrl(data.whatsapp_number);
+const floating = document.getElementById("floatingWhatsApp");
+const footerLink = document.getElementById("footerWhatsApp");
+if (floating) floating.href = whatsappUrl;
+if (footerLink) {
+footerLink.href = whatsappUrl;
+footerLink.textContent = data.whatsapp_number;
+}
+}
+} catch (error) {
+console.error("Store settings loading failed:", error);
+}
+}
+loadStoreSettings();
 /* =========================================
-
-   GLOBAL VARIABLES
-
-========================================= */
-
-
-
+GLOBAL VARIABLES
+\========================================= */
 let perfumeProducts = [];
-
 let quantities = {};
-
 let activeShopCategory = "all";
-
-
-
 const SHOP_CATEGORIES = {
-
-    all: {
-
-        title: "All Products",
-
-        bannerTitle: "Shop All Collections",
-
-        bannerDescription: "Discover perfumes, men’s slippers, and accessories for every occasion.",
-
-        searchPlaceholder: "Search products..."
-
-    },
-
-    perfumes: {
-
-        title: "Our Perfume Collection",
-
-        bannerTitle: "Find Your Signature Scent",
-
-        bannerDescription: "Explore beautiful fragrances for every personality and occasion.",
-
-        searchPlaceholder: "Search for a perfume..."
-
-    },
-
-    mens_slippers: {
-
-        title: "Men's Slippers",
-
-        bannerTitle: "Step Out in Comfort",
-
-        bannerDescription: "Discover men’s slippers that bring comfort and style together.",
-
-        searchPlaceholder: "Search men's slippers..."
-
-    },
-
-    belt_wallet_combo: {
-
-        title: "Belt & Wallet Combos",
-
-        bannerTitle: "Complete Your Look",
-
-        bannerDescription: "Explore belt and wallet combinations for a polished everyday style.",
-
-        searchPlaceholder: "Search belts and wallet combos..."
-
-    },
-
-    accessories: {
-        title: "Accessories",
-        bannerTitle: "The Finishing Touch",
-        bannerDescription: "Explore accessories to complete your everyday style.",
-        searchPlaceholder: "Search accessories..."
-    }
-
+all: {
+title: "All Products",
+bannerTitle: "Shop All Collections",
+bannerDescription: "Discover perfumes, men’s slippers, and accessories for every occasion.",
+searchPlaceholder: "Search products..."
+},
+perfumes: {
+title: "Our Perfume Collection",
+bannerTitle: "Find Your Signature Scent",
+bannerDescription: "Explore beautiful fragrances for every personality and occasion.",
+searchPlaceholder: "Search for a perfume..."
+},
+mens_slippers: {
+title: "Men's Slippers",
+bannerTitle: "Step Out in Comfort",
+bannerDescription: "Discover men’s slippers that bring comfort and style together.",
+searchPlaceholder: "Search men's slippers..."
+},
+belt_wallet_combo: {
+title: "Belt & Wallet Combos",
+bannerTitle: "Complete Your Look",
+bannerDescription: "Explore belt and wallet combinations for a polished everyday style.",
+searchPlaceholder: "Search belts and wallet combos..."
+},
+accessories: {
+title: "Accessories",
+bannerTitle: "The Finishing Touch",
+bannerDescription: "Explore accessories to complete your everyday style.",
+searchPlaceholder: "Search accessories..."
+}
 };
-
-
-
 function normalizeShopCategory(value) {
-
-    const category = String(value || "")
-
-        .toLowerCase()
-
-        .trim()
-
-        .replace(/&/g, "and")
-
-        .replace(/['’]/g, "")
-
-        .replace(/[^a-z0-9]+/g, "_");
-
-
-
-    // All perfume audience/type categories belong to the Perfumes collection.
-
-    const perfumeCategories = [
-
-        "men", "mens", "women", "womens", "unisex",
-
-        "perfume", "perfumes", "fragrance", "fragrances",
-
-        "luxury", "body_mist", "body_mists", "oud"
-
-    ];
-
-    if (perfumeCategories.includes(category)) return "perfumes";
-
-
-
-    if ([
-
-        "mens_slipper", "men_slipper", "mens_slippers",
-
-        "men_slippers", "slippers", "slipper"
-
-    ].includes(category)) return "mens_slippers";
-
-
-
-    if ([
-
-        "belt_wallet_combo", "belt_and_wallet_combo",
-
-        "belt_wallet", "belts_wallets", "belt_and_wallet",
-
-        "belt_and_wallets", "belt_wallet_combos"
-
-    ].includes(category)) return "belt_wallet_combo";
-
-
-
-    if (["accessory", "accessories"].includes(category)) return "accessories";
-
-    return category;
-
+const category = String(value || "")
+.toLowerCase()
+.trim()
+.replace(/&/g, "and")
+.replace(/['’]/g, "")
+.replace(/[^a-z0-9]+/g, "_");
+// All perfume audience/type categories belong to the Perfumes collection.
+const perfumeCategories = [
+"men", "mens", "women", "womens", "unisex",
+"perfume", "perfumes", "fragrance", "fragrances",
+"luxury", "body_mist", "body_mists", "oud"
+];
+if (perfumeCategories.includes(category)) return "perfumes";
+if ([
+"mens_slipper", "men_slipper", "mens_slippers",
+"men_slippers", "slippers", "slipper"
+].includes(category)) return "mens_slippers";
+if ([
+"belt_wallet_combo", "belt_and_wallet_combo",
+"belt_wallet", "belts_wallets", "belt_and_wallet",
+"belt_and_wallets", "belt_wallet_combos"
+].includes(category)) return "belt_wallet_combo";
+if (["accessory", "accessories"].includes(category)) return "accessories";
+return category;
 }
-
-
-
 function formatProductCategory(value) {
-
-    const category = String(value || "").trim().toLowerCase();
-
-    const labels = {
-
-        men: "Men's Perfume",
-
-        women: "Women's Perfume",
-
-        unisex: "Unisex Perfume",
-
-        luxury: "Luxury Perfume",
-
-        body_mist: "Body Mist",
-
-        oud: "Oud",
-
-        mens_slippers: "Men's Slippers",
-
-        belt_wallet_combo: "Belt & Wallet Combo",
-        accessories: "Accessories"
-
-    };
-
-    return labels[category] ||
-
-        category.replace(/[_-]+/g, " ").replace(/\b\w/g, letter => letter.toUpperCase());
-
+const category = String(value || "").trim().toLowerCase();
+const labels = {
+men: "Men's Perfume",
+women: "Women's Perfume",
+unisex: "Unisex Perfume",
+luxury: "Luxury Perfume",
+body_mist: "Body Mist",
+oud: "Oud",
+mens_slippers: "Men's Slippers",
+belt_wallet_combo: "Belt & Wallet Combo",
+accessories: "Accessories"
+};
+return labels[category] ||
+category.replace(/[_-]+/g, " ").replace(/\b\w/g, letter => letter.toUpperCase());
 }
-
-
-
 function getInitialShopCategory() {
-
-    const params = new URLSearchParams(window.location.search);
-
-    const requested = params.get("collection") || params.get("category") || "all";
-
-    const normalized = normalizeShopCategory(requested);
-
-    return Object.prototype.hasOwnProperty.call(SHOP_CATEGORIES, normalized)
-
-        ? normalized
-
-        : "all";
-
+const params = new URLSearchParams(window.location.search);
+const requested = params.get("collection") || params.get("category") || "all";
+const normalized = normalizeShopCategory(requested);
+return Object.prototype.hasOwnProperty.call(SHOP_CATEGORIES, normalized)
+? normalized
+: "all";
 }
-
-
-
 // Initialize only after SHOP_CATEGORIES has been declared.
-
 activeShopCategory = getInitialShopCategory();
-
-
-
 const $ = id => document.getElementById(id);
-
-
-
 /* =========================================
-
-   HTML SECURITY
-
-========================================= */
-
-
-
+HTML SECURITY
+\========================================= */
 function escapeHTML(value) {
-
-    return String(value ?? "").replace(/[&<>"']/g, char => ({
-
-        "&": "&amp;",
-
-        "<": "&lt;",
-
-        ">": "&gt;",
-
-        '"': "&quot;",
-
-        "'": "&#039;"
-
-    })[char]);
-
+return String(value ?? "").replace(/[&<>"']/g, char => ({
+"&": "&amp;",
+"<": "&lt;",
+">": "&gt;",
+'"': "&quot;",
+"'": "&#039;"
+})[char]);
 }
-
-
-
 /* =========================================
-
-   CURRENCY
-
-========================================= */
-
-
-
+CURRENCY
+\========================================= */
 function money(value) {
-
-    return "GH₵ " + Number(value || 0).toFixed(2);
-
+return "GH₵ " + Number(value || 0).toFixed(2);
 }
-
-
-
 /* =========================================
-
-   CART STORAGE
-
-========================================= */
-
-
-
+CART STORAGE
+\========================================= */
 function getCart() {
-
-    try {
-
-        return JSON.parse(localStorage.getItem("kikisCart") || "[]");
-
-    } catch {
-
-        return [];
-
-    }
-
+try {
+return JSON.parse(localStorage.getItem("kikisCart") || "[]");
+} catch {
+return [];
 }
-
-
-
+}
 function saveCart(cart) {
-
-    localStorage.setItem("kikisCart", JSON.stringify(cart));
-
-    updateCartCount();
-
-}
-
-
-
-function updateCartCount() {
-
-    const total = getCart().reduce(
-
-        (sum, item) => sum + Number(item.quantity || 0), 0
-
-    );
-
-
-
-    $("cart-count").textContent = total;
-
-}
-
-
-
-/* =========================================
-
-   PRODUCT-LEVEL DISCOUNT PRICING
-
-
-
-   Discounts are stored directly in:
-
-   products.discount_active
-
-   products.discount_percent
-
-========================================= */
-
-
-
-function getProductPricing(product) {
-
-    const originalPrice = Number(product.price || 0);
-
-
-
-    const discountActive =
-
-        product.discount_active === true &&
-
-        Number(product.discount_percent || 0) > 0;
-
-
-
-    const discountPercent = discountActive
-
-        ? Number(product.discount_percent)
-
-        : 0;
-
-
-
-    const discountedPrice = discountActive
-
-        ? Number(
-
-            (originalPrice * (1 - discountPercent / 100)).toFixed(2)
-
-          )
-
-        : originalPrice;
-
-
-
-    return {
-
-        price: discountedPrice,
-
-        originalPrice,
-
-        discountActive,
-
-        discountPercent,
-
-        saving: Number(
-
-            (originalPrice - discountedPrice).toFixed(2)
-
-        )
-
-    };
-
-}
-
-
-
-/* =========================================
-
-   LOAD PRODUCTS FROM SUPABASE
-
-========================================= */
-
-
-
-async function loadProducts() {
-
-    const container = $("products");
-
-
-
-    container.innerHTML = `
-
-        <p style="grid-column:1/-1;text-align:center;padding:40px">
-
-            Loading products...
-
-        </p>
-
-    `;
-
-
-
-    const { data, error } = await supabase
-
-        .from("products")
-
-        .select(`
-
-            id,
-
-            name,
-
-            description,
-
-            category,
-
-            product_category,
-            price,
-
-            image_url,
-
-            stock,
-
-            status,
-
-            discount_active,
-
-            discount_percent
-
-        `)
-
-        .eq("status", "active")
-
-        .gt("stock", 0)
-
-        .order("created_at", { ascending: false });
-
-
-
-    if (error) {
-
-        console.error("Supabase product loading error:", error);
-
-
-
-        container.innerHTML = `
-
-            <p style="grid-column:1/-1;text-align:center;padding:40px">
-
-                We could not load the products right now.
-
-                Please refresh the page.
-
-            </p>
-
-        `;
-
-
-
-        $("product-count").textContent = "0 products";
-
-        $("empty").style.display = "none";
-
-        return;
-
-    }
-
-
-
-    perfumeProducts = (data || []).map(product => ({
-
-        id: String(product.id),
-
-        name: product.name || "Product",
-
-        category: String(product.category || "").toLowerCase(),
-
-        product_category: String(product.product_category || "").toLowerCase(),
-        price: Number(product.price || 0),
-
-        image: product.image_url || "",
-
-        stock: Number(product.stock || 0),
-
-        description: product.description || "",
-
-        discount_active: product.discount_active === true,
-
-        discount_percent: Number(product.discount_percent || 0)
-
-    }));
-
-
-
-    displayProducts();
-
-}
-
-/* =========================================
-
-   DISPLAY PRODUCTS
-
-========================================= */
-
-
-
-function displayProducts() {
-
-    const search = $("search").value.trim().toLowerCase();
-
-    const perfumeAudience = $("category").value;
-
-    const sort = $("sort").value;
-
-
-
-    let filtered = perfumeProducts.filter(product => {
-
-        const productShopCategory = normalizeShopCategory(product.product_category || product.category);
-
-        const matchesShopCategory = activeShopCategory === "all" || productShopCategory === activeShopCategory;
-
-        const matchesAudience = activeShopCategory !== "perfumes" || perfumeAudience === "all" || product.category === perfumeAudience;
-
-        const matchesSearch =
-
-            product.name.toLowerCase().includes(search) ||
-
-            product.description.toLowerCase().includes(search);
-
-
-
-        return matchesSearch && matchesShopCategory && matchesAudience;
-
-    });
-
-
-
-    // SORT BY DISCOUNTED PRICE
-
-
-
-    if (sort === "low") {
-
-        filtered.sort(
-
-            (a, b) =>
-
-                getProductPricing(a).price -
-
-                getProductPricing(b).price
-
-        );
-
-    }
-
-
-
-    if (sort === "high") {
-
-        filtered.sort(
-
-            (a, b) =>
-
-                getProductPricing(b).price -
-
-                getProductPricing(a).price
-
-        );
-
-    }
-
-
-
-    if (sort === "name") {
-
-        filtered.sort((a, b) =>
-
-            a.name.localeCompare(b.name)
-
-        );
-
-    }
-
-
-
-    const container = $("products");
-
-    container.innerHTML = "";
-
-
-
-    const collectionSettings = SHOP_CATEGORIES[activeShopCategory];
-
-    $("collection-title").textContent = collectionSettings.title;
-
-    $("search").placeholder = collectionSettings.searchPlaceholder;
-
-    $("category").hidden = activeShopCategory !== "perfumes";
-
-
-
-    const bannerTitle = $("shop-banner-title");
-
-    const bannerDescription = $("shop-banner-description");
-
-    if (bannerTitle) bannerTitle.textContent = collectionSettings.bannerTitle;
-
-    if (bannerDescription) bannerDescription.textContent = collectionSettings.bannerDescription;
-
-
-
-    document.querySelectorAll("[data-shop-category]").forEach(button => {
-
-        button.classList.toggle(
-
-            "active",
-
-            button.dataset.shopCategory === activeShopCategory
-
-        );
-
-    });
-
-
-
-    $("product-count").textContent =
-
-        filtered.length + " products";
-
-
-
-    $("empty").style.display =
-
-        filtered.length ? "none" : "block";
-
-
-
-    filtered.forEach(product => {
-
-        const quantity = quantities[product.id] || 1;
-
-
-
-        const pricing = getProductPricing(product);
-
-
-
-        const hasDiscount =
-
-            pricing.price < pricing.originalPrice;
-
-
-
-        const imageMarkup = product.image
-
-            ? `
-
-                <img
-
-                    src="${escapeHTML(product.image)}"
-
-                    alt="${escapeHTML(product.name)}"
-
-                    onerror="this.style.display='none'"
-
-                >
-
-            `
-
-            : `
-
-                <div style="
-
-                    height:100%;
-
-                    display:flex;
-
-                    align-items:center;
-
-                    justify-content:center;
-
-                    color:#777;
-
-                    font-size:12px
-
-                ">
-
-                    Image coming soon
-
-                </div>
-
-            `;
-
-
-
-        const card = document.createElement("div");
-
-        card.className = "product-card";
-
-
-
-        card.innerHTML = `
-
-            <div class="product-image">
-
-
-
-                ${
-
-                    hasDiscount
-
-                    ? `
-
-                        <span class="sale-badge">
-
-                            ${pricing.discountPercent}% OFF
-
-                        </span>
-
-                    `
-
-                    : ""
-
-                }
-
-
-
-                ${imageMarkup}
-
-
-
-            </div>
-
-
-
-            <div class="product-info">
-
-
-
-                <span class="category">
-
-                    ${escapeHTML(formatProductCategory(product.product_category || product.category))}
-
-                </span>
-
-
-
-                <h3>${escapeHTML(product.name)}</h3>
-
-
-
-                <p
-
-                    class="product-description collapsed"
-
-                    id="description-${escapeHTML(product.id)}"
-
-                >
-
-                    ${escapeHTML(
-
-                        product.description ||
-
-                        "Description coming soon. Please contact us for more details about this product."
-
-                    )}
-
-                </p>
-
-
-
-                ${
-
-                    product.description &&
-
-                    product.description.trim().length > 100
-
-                    ? `
-
-                        <button
-
-                            class="description-toggle"
-
-                            type="button"
-
-                            onclick="toggleDescription('${escapeHTML(product.id)}', this)"
-
-                            aria-expanded="false"
-
-                        >
-
-                            READ MORE
-
-                        </button>
-
-                    `
-
-                    : ""
-
-                }
-
-
-
-                <div class="price">
-
-
-
-                    ${
-
-                        hasDiscount
-
-                        ? `
-
-                            <span class="old-price">
-
-                                ${money(pricing.originalPrice)}
-
-                            </span>
-
-
-
-                            <span class="new-price">
-
-                                ${money(pricing.price)}
-
-                            </span>
-
-
-
-                            <span class="saving-label">
-
-                                You save ${money(pricing.saving)}
-
-                            </span>
-
-                        `
-
-                        : money(product.price)
-
-                    }
-
-
-
-                </div>
-
-
-
-                <div class="quantity">
-
-
-
-                    <button
-
-                        type="button"
-
-                        aria-label="Decrease quantity"
-
-                        onclick="changeQuantity('${product.id}', -1)"
-
-                    >−</button>
-
-
-
-                    <span id="quantity-${product.id}">
-
-                        ${quantity}
-
-                    </span>
-
-
-
-                    <button
-
-                        type="button"
-
-                        aria-label="Increase quantity"
-
-                        onclick="changeQuantity('${product.id}', 1)"
-
-                    >+</button>
-
-
-
-                </div>
-
-
-
-                <button
-
-                    class="add-btn"
-
-                    type="button"
-
-                    onclick="addToCart('${product.id}')"
-
-                >
-
-                    ADD TO CART
-
-                </button>
-
-
-
-            </div>
-
-        `;
-
-
-
-        container.appendChild(card);
-
-    });
-
-}
-
-
-
-/* =========================================
-
-   EXPAND OR COLLAPSE DESCRIPTION
-
-========================================= */
-
-
-
-window.toggleDescription = function(id, button) {
-
-    const description = $("description-" + id);
-
-
-
-    if (!description || !button) return;
-
-
-
-    const isCollapsed =
-
-        description.classList.toggle("collapsed");
-
-
-
-    button.textContent =
-
-        isCollapsed ? "READ MORE" : "READ LESS";
-
-
-
-    button.setAttribute(
-
-        "aria-expanded",
-
-        String(!isCollapsed)
-
-    );
-
-};
-
-
-
-/* =========================================
-
-   CHANGE QUANTITY
-
-========================================= */
-
-
-
-window.changeQuantity = function(id, amount) {
-
-    const product = perfumeProducts.find(
-
-        item => item.id === String(id)
-
-    );
-
-
-
-    if (!product) return;
-
-
-
-    const current = quantities[product.id] || 1;
-
-
-
-    quantities[product.id] = Math.max(
-
-        1,
-
-        Math.min(product.stock, current + amount)
-
-    );
-
-
-
-    const label = $("quantity-" + product.id);
-
-
-
-    if (label) {
-
-        label.textContent = quantities[product.id];
-
-    }
-
-};
-
-
-
-/* =========================================
-
-   ADD PRODUCT TO CART
-
-========================================= */
-
-
-
-window.addToCart = function(id) {
-
-    const product = perfumeProducts.find(
-
-        item => item.id === String(id)
-
-    );
-
-
-
-    if (!product) return;
-
-
-
-    const quantity = quantities[product.id] || 1;
-
-
-
-    const cart = getCart();
-
-
-
-    const existing = cart.find(
-
-        item => String(item.id) === product.id
-
-    );
-
-
-
-    const alreadyInCart = existing
-
-        ? Number(existing.quantity || 0)
-
-        : 0;
-
-
-
-    if (alreadyInCart + quantity > product.stock) {
-
-        alert(
-
-            `Only ${product.stock} unit(s) of ${product.name} are currently available.`
-
-        );
-
-        return;
-
-    }
-
-
-
-    const pricing = getProductPricing(product);
-
-
-
-    if (existing) {
-
-
-
-        existing.quantity = alreadyInCart + quantity;
-
-        existing.name = product.name;
-
-        existing.price = pricing.price;
-
-        existing.original_price = pricing.originalPrice;
-
-
-
-        existing.discount_active =
-
-            pricing.discountActive;
-
-
-
-        existing.discount_percent =
-
-            pricing.discountPercent;
-
-
-
-        existing.image = product.image;
-
-
-
-    existing.category = product.category;
-        existing.product_category = product.product_category;
-
-        } else {
-
-
-
-        cart.push({
-
-            id: product.id,
-
-            product_id: product.id,
-
-            name: product.name,
-
-            price: pricing.price,
-
-            original_price: pricing.originalPrice,
-
-            discount_active: pricing.discountActive,
-
-            discount_percent: pricing.discountPercent,
-
-            image: product.image,
-
-            category: product.category,
-            product_category: product.product_category,
-            quantity
-
-        });
-
-
-
-    }
-
-
-
-    saveCart(cart);
-
-
-
-    quantities[product.id] = 1;
-
-
-
-    displayProducts();
-
-
-
-    alert(product.name + " added to your cart!");
-
-};
-
-
-
-/* =========================================
-
-   SHOP CATEGORY SWITCHER
-
-========================================= */
-
-
-
-document.querySelectorAll("[data-shop-category]").forEach(button => {
-
-    button.addEventListener("click", () => {
-
-        activeShopCategory = button.dataset.shopCategory;
-
-        $("category").value = "all";
-
-        $("search").value = "";
-
-
-
-        const url = new URL(window.location.href);
-
-        if (activeShopCategory === "all") {
-
-            url.searchParams.delete("collection");
-
-            url.searchParams.delete("category");
-
-        } else {
-
-            url.searchParams.set("collection", activeShopCategory);
-
-            url.searchParams.delete("category");
-
-        }
-
-        window.history.replaceState({}, "", url);
-
-        displayProducts();
-
-    });
-
-});
-
-
-
-/* =========================================
-
-   FILTER EVENTS
-
-========================================= */
-
-
-
-$("search").addEventListener(
-
-    "input",
-
-    displayProducts
-
-);
-
-
-
-$("category").addEventListener(
-
-    "change",
-
-    displayProducts
-
-);
-
-
-
-$("sort").addEventListener(
-
-    "change",
-
-    displayProducts
-
-);
-
-
-
-/* =========================================
-
-   MOBILE MENU
-
-========================================= */
-
-
-
-window.toggleMenu = function() {
-
-    $("navigation").classList.toggle("active");
-
-};
-
-
-
-/* =========================================
-
-   INITIAL PAGE LOAD
-
-========================================= */
-
-
-
-$("year").textContent =
-
-    new Date().getFullYear();
-
-
-
+localStorage.setItem("kikisCart", JSON.stringify(cart));
 updateCartCount();
-
-
-
+}
+function updateCartCount() {
+const total = getCart().reduce(
+(sum, item) => sum + Number(item.quantity || 0), 0
+);
+$("cart-count").textContent = total;
+}
+/* =========================================
+PRODUCT-LEVEL DISCOUNT PRICING
+Discounts are stored directly in:
+products.discount_active
+products.discount_percent
+\========================================= */
+function getProductPricing(product) {
+const originalPrice = Number(product.price || 0);
+const discountActive =
+product.discount_active === true &&
+Number(product.discount_percent || 0) > 0;
+const discountPercent = discountActive
+? Number(product.discount_percent)
+: 0;
+const discountedPrice = discountActive
+? Number(
+(originalPrice * (1 - discountPercent / 100)).toFixed(2)
+)
+: originalPrice;
+return {
+price: discountedPrice,
+originalPrice,
+discountActive,
+discountPercent,
+saving: Number(
+(originalPrice - discountedPrice).toFixed(2)
+)
+};
+}
+/* =========================================
+LOAD PRODUCTS FROM SUPABASE
+\========================================= */
+async function loadProducts() {
+const container = $("products");
+container.innerHTML = `
+<p style="grid-column:1/-1;text-align:center;padding:40px">
+Loading products...
+</p>
+`;
+const { data, error } = await supabase
+.from("products")
+.select(`
+id,
+name,
+description,
+category,
+product_category,
+price,
+image_url,
+stock,
+status,
+discount_active,
+discount_percent
+`)
+.eq("status", "active")
+.gt("stock", 0)
+.order("created_at", { ascending: false });
+if (error) {
+console.error("Supabase product loading error:", error);
+container.innerHTML = `
+<p style="grid-column:1/-1;text-align:center;padding:40px">
+We could not load the products right now.
+Please refresh the page.
+</p>
+`;
+$("product-count").textContent = "0 products";
+$("empty").style.display = "none";
+return;
+}
+perfumeProducts = (data || []).map(product => ({
+id: String(product.id),
+name: product.name || "Product",
+category: String(product.category || "").toLowerCase(),
+product_category: String(product.product_category || "").toLowerCase(),
+price: Number(product.price || 0),
+image: product.image_url || "",
+stock: Number(product.stock || 0),
+description: product.description || "",
+discount_active: product.discount_active === true,
+discount_percent: Number(product.discount_percent || 0)
+}));
+displayProducts();
+}
+/* =========================================
+DISPLAY PRODUCTS
+\========================================= */
+function displayProducts() {
+const search = $("search").value.trim().toLowerCase();
+const perfumeAudience = $("category").value;
+const sort = $("sort").value;
+let filtered = perfumeProducts.filter(product => {
+const productShopCategory = normalizeShopCategory(product.product_category || product.category);
+const matchesShopCategory = activeShopCategory === "all" || productShopCategory === activeShopCategory;
+const matchesAudience = activeShopCategory !== "perfumes" || perfumeAudience === "all" || product.category === perfumeAudience;
+const matchesSearch =
+product.name.toLowerCase().includes(search) ||
+product.description.toLowerCase().includes(search);
+return matchesSearch && matchesShopCategory && matchesAudience;
+});
+// SORT BY DISCOUNTED PRICE
+if (sort === "low") {
+filtered.sort(
+(a, b) =>
+getProductPricing(a).price -
+getProductPricing(b).price
+);
+}
+if (sort === "high") {
+filtered.sort(
+(a, b) =>
+getProductPricing(b).price -
+getProductPricing(a).price
+);
+}
+if (sort === "name") {
+filtered.sort((a, b) =>
+a.name.localeCompare(b.name)
+);
+}
+const container = $("products");
+container.innerHTML = "";
+const collectionSettings = SHOP_CATEGORIES[activeShopCategory];
+$("collection-title").textContent = collectionSettings.title;
+$("search").placeholder = collectionSettings.searchPlaceholder;
+$("category").hidden = activeShopCategory !== "perfumes";
+const bannerTitle = $("shop-banner-title");
+const bannerDescription = $("shop-banner-description");
+if (bannerTitle) bannerTitle.textContent = collectionSettings.bannerTitle;
+if (bannerDescription) bannerDescription.textContent = collectionSettings.bannerDescription;
+document.querySelectorAll("[data-shop-category]").forEach(button => {
+button.classList.toggle(
+"active",
+button.dataset.shopCategory === activeShopCategory
+);
+});
+$("product-count").textContent =
+filtered.length + " products";
+$("empty").style.display =
+filtered.length ? "none" : "block";
+filtered.forEach(product => {
+const quantity = quantities[product.id] || 1;
+const pricing = getProductPricing(product);
+const hasDiscount =
+pricing.price < pricing.originalPrice;
+const imageMarkup = product.image
+? `
+<img
+src="${escapeHTML(product.image)}"
+alt="${escapeHTML(product.name)}"
+onerror="this.style.display='none'"
+>
+`
+: `
+<div style="
+height:100%;
+display:flex;
+align-items:center;
+justify-content:center;
+color:#777;
+font-size:12px
+">
+Image coming soon
+</div>
+`;
+const card = document.createElement("div");
+card.className = "product-card";
+card.innerHTML = `
+<div class="product-image">
+${
+hasDiscount
+? `
+<span class="sale-badge">
+${pricing.discountPercent}% OFF
+</span>
+`
+: ""
+}
+${imageMarkup}
+</div>
+<div class="product-info">
+<span class="category">
+${escapeHTML(formatProductCategory(product.product_category || product.category))}
+</span>
+<h3>${escapeHTML(product.name)}</h3>
+<p
+class="product-description collapsed"
+id="description-${escapeHTML(product.id)}"
+>
+${escapeHTML(
+product.description ||
+"Description coming soon. Please contact us for more details about this product."
+)}
+</p>
+${
+product.description &&
+product.description.trim().length > 100
+? `
+<button
+class="description-toggle"
+type="button"
+onclick="toggleDescription('${escapeHTML(product.id)}', this)"
+aria-expanded="false"
+>
+READ MORE
+</button>
+`
+: ""
+}
+<div class="price">
+${
+hasDiscount
+? `
+<span class="old-price">
+${money(pricing.originalPrice)}
+</span>
+<span class="new-price">
+${money(pricing.price)}
+</span>
+<span class="saving-label">
+You save ${money(pricing.saving)}
+</span>
+`
+: money(product.price)
+}
+</div>
+<div class="quantity">
+<button
+type="button"
+aria-label="Decrease quantity"
+onclick="changeQuantity('${product.id}', -1)"
+>−</button>
+<span id="quantity-${product.id}">
+${quantity}
+</span>
+<button
+type="button"
+aria-label="Increase quantity"
+onclick="changeQuantity('${product.id}', 1)"
+>+</button>
+</div>
+<button
+class="add-btn"
+type="button"
+onclick="addToCart('${product.id}')"
+>
+ADD TO CART
+</button>
+</div>
+`;
+container.appendChild(card);
+});
+}
+/* =========================================
+EXPAND OR COLLAPSE DESCRIPTION
+\========================================= */
+window.toggleDescription = function(id, button) {
+const description = $("description-" + id);
+if (!description || !button) return;
+const isCollapsed =
+description.classList.toggle("collapsed");
+button.textContent =
+isCollapsed ? "READ MORE" : "READ LESS";
+button.setAttribute(
+"aria-expanded",
+String(!isCollapsed)
+);
+};
+/* =========================================
+CHANGE QUANTITY
+\========================================= */
+window.changeQuantity = function(id, amount) {
+const product = perfumeProducts.find(
+item => item.id === String(id)
+);
+if (!product) return;
+const current = quantities[product.id] || 1;
+quantities[product.id] = Math.max(
+1,
+Math.min(product.stock, current + amount)
+);
+const label = $("quantity-" + product.id);
+if (label) {
+label.textContent = quantities[product.id];
+}
+};
+/* =========================================
+ADD PRODUCT TO CART
+\========================================= */
+window.addToCart = function(id) {
+const product = perfumeProducts.find(
+item => item.id === String(id)
+);
+if (!product) return;
+const quantity = quantities[product.id] || 1;
+const cart = getCart();
+const existing = cart.find(
+item => String(item.id) === product.id
+);
+const alreadyInCart = existing
+? Number(existing.quantity || 0)
+: 0;
+if (alreadyInCart + quantity > product.stock) {
+alert(
+`Only ${product.stock} unit(s) of ${product.name} are currently available.`
+);
+return;
+}
+const pricing = getProductPricing(product);
+if (existing) {
+existing.quantity = alreadyInCart + quantity;
+existing.name = product.name;
+existing.price = pricing.price;
+existing.original_price = pricing.originalPrice;
+existing.discount_active =
+pricing.discountActive;
+existing.discount_percent =
+pricing.discountPercent;
+existing.image = product.image;
+existing.category = product.category;
+existing.product_category = product.product_category;
+} else {
+cart.push({
+id: product.id,
+product_id: product.id,
+name: product.name,
+price: pricing.price,
+original_price: pricing.originalPrice,
+discount_active: pricing.discountActive,
+discount_percent: pricing.discountPercent,
+image: product.image,
+category: product.category,
+product_category: product.product_category,
+quantity
+});
+}
+saveCart(cart);
+quantities[product.id] = 1;
+displayProducts();
+alert(product.name + " added to your cart!");
+};
+/* =========================================
+SHOP CATEGORY SWITCHER
+\========================================= */
+document.querySelectorAll("[data-shop-category]").forEach(button => {
+button.addEventListener("click", () => {
+activeShopCategory = button.dataset.shopCategory;
+$("category").value = "all";
+$("search").value = "";
+const url = new URL(window.location.href);
+if (activeShopCategory === "all") {
+url.searchParams.delete("collection");
+url.searchParams.delete("category");
+} else {
+url.searchParams.set("collection", activeShopCategory);
+url.searchParams.delete("category");
+}
+window.history.replaceState({}, "", url);
+displayProducts();
+});
+});
+/* =========================================
+FILTER EVENTS
+\========================================= */
+$("search").addEventListener(
+"input",
+displayProducts
+);
+$("category").addEventListener(
+"change",
+displayProducts
+);
+$("sort").addEventListener(
+"change",
+displayProducts
+);
+/* =========================================
+MOBILE MENU
+\========================================= */
+window.toggleMenu = function() {
+$("navigation").classList.toggle("active");
+};
+/* =========================================
+INITIAL PAGE LOAD
+\========================================= */
+$("year").textContent =
+new Date().getFullYear();
+updateCartCount();
 loadProducts();
-
-
-
 </script>
-
-
-
 </body>
-
 </html>
