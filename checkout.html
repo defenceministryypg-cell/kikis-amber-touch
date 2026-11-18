@@ -307,6 +307,18 @@ nav a:hover {
     gap: 10px;
 }
 
+
+.promo-checkout-note {
+    margin: 12px 0 16px;
+    padding: 12px;
+    background: #f9f6ef;
+    border: 1px solid #e6d9bd;
+    color: #287343;
+    font-size: 12px;
+    line-height: 1.6;
+}
+.summary-row[hidden], .promo-checkout-note[hidden] { display: none; }
+
 .summary-total {
     border-top: 1px solid #ddd;
     padding-top: 20px;
@@ -643,9 +655,21 @@ footer strong {
     </div>
 
     <div class="summary-row">
-        <span>Subtotal</span>
+        <span>Subtotal (after product offers)</span>
         <span id="subtotal">GH₵ 0.00</span>
     </div>
+
+    <div class="summary-row" id="product-savings-row" hidden>
+        <span>Product savings</span>
+        <span id="product-savings">− GH₵ 0.00</span>
+    </div>
+
+    <div class="summary-row" id="promo-savings-row" hidden>
+        <span>Promo discount</span>
+        <span id="promo-savings">− GH₵ 0.00</span>
+    </div>
+
+    <div class="promo-checkout-note" id="checkout-promo-note" hidden></div>
 
     <div class="summary-row">
         <span>Delivery</span>
@@ -876,6 +900,149 @@ function saveCart(cart) {
 
 let cart = getCart();
 
+let activePromotions = [];
+let appliedPromoCode = String(
+    localStorage.getItem("kikisAppliedPromo") || ""
+).trim().toUpperCase();
+
+function promotionIsCurrent(promotion) {
+    const now = Date.now();
+    const start = promotion.start_date ? new Date(promotion.start_date).getTime() : 0;
+    const end = promotion.end_date ? new Date(promotion.end_date).getTime() : Infinity;
+
+    return promotion.is_active === true &&
+        (!start || (!Number.isNaN(start) && start <= now)) &&
+        (!end || (!Number.isNaN(end) && end >= now));
+}
+
+async function loadCheckoutPromotions() {
+    try {
+        const { data, error } = await supabase
+            .from("promotions")
+            .select("id,title,promo_code,discount_type,discount_value,applies_to,product_ids,start_date,end_date,description,is_active")
+            .eq("is_active", true);
+
+        if (error) throw error;
+        activePromotions = (data || []).filter(promotionIsCurrent);
+    } catch (error) {
+        console.error("Checkout promotions could not be loaded:", error);
+        activePromotions = [];
+    }
+}
+
+function promotionAppliesToItem(promotion, item) {
+    if (String(promotion.applies_to || "all").toLowerCase() === "all") {
+        return true;
+    }
+
+    const ids = Array.isArray(promotion.product_ids)
+        ? promotion.product_ids.map(String)
+        : [];
+
+    return ids.includes(String(item.product_id || item.id));
+}
+
+function getCheckoutPromoForItem(item) {
+    if (!appliedPromoCode) return null;
+
+    const basePrice = Number(item.price || 0);
+    let bestPromotion = null;
+    let bestSaving = 0;
+
+    activePromotions.forEach(promotion => {
+        const code = String(promotion.promo_code || "").trim().toUpperCase();
+
+        if (
+            code !== appliedPromoCode ||
+            !code ||
+            !promotionAppliesToItem(promotion, item)
+        ) return;
+
+        const value = Math.max(0, Number(promotion.discount_value || 0));
+        const type = String(promotion.discount_type || "").toLowerCase();
+
+        const saving = type === "percentage"
+            ? basePrice * Math.min(value, 100) / 100
+            : type === "fixed"
+                ? Math.min(value, basePrice)
+                : 0;
+
+        if (saving > bestSaving) {
+            bestSaving = saving;
+            bestPromotion = promotion;
+        }
+    });
+
+    return bestPromotion ? {
+        promotion: bestPromotion,
+        saving: Number(bestSaving.toFixed(2)),
+        finalPrice: Number((basePrice - bestSaving).toFixed(2))
+    } : null;
+}
+
+function getProductSavings() {
+    return cart.reduce((sum, item) => {
+        const original = Number(item.original_price ?? item.price ?? 0);
+        const current = Number(item.price || 0);
+        return sum + Math.max(0, original - current) * Number(item.quantity || 0);
+    }, 0);
+}
+
+function getPromoSavings() {
+    return cart.reduce((sum, item) => {
+        const promo = getCheckoutPromoForItem(item);
+        return sum + (promo ? promo.saving * Number(item.quantity || 0) : 0);
+    }, 0);
+}
+
+function getPromoEligibleTotal() {
+    return cart.reduce((sum, item) => {
+        const promo = getCheckoutPromoForItem(item);
+        const price = promo ? promo.finalPrice : Number(item.price || 0);
+        return sum + price * Number(item.quantity || 0);
+    }, 0);
+}
+
+function validateCheckoutPromo() {
+    if (!appliedPromoCode) return { valid: false, message: "" };
+
+    const matches = activePromotions.filter(promotion =>
+        String(promotion.promo_code || "").trim().toUpperCase() === appliedPromoCode
+    );
+
+    if (!matches.length) {
+        return { valid: false, message: "The promo code is no longer active or has expired." };
+    }
+
+    const eligible = cart.some(item =>
+        matches.some(promotion => promotionAppliesToItem(promotion, item))
+    );
+
+    if (!eligible) {
+        return { valid: false, message: "The promo code does not apply to the products in this order." };
+    }
+
+    if (getPromoSavings() <= 0) {
+        return { valid: false, message: "The promo code does not provide a discount on this order." };
+    }
+
+    return { valid: true, message: "Promo code " + appliedPromoCode + " has been applied." };
+}
+
+function clearInvalidCheckoutPromo() {
+    const result = validateCheckoutPromo();
+
+    if (appliedPromoCode && !result.valid) {
+        appliedPromoCode = "";
+        localStorage.removeItem("kikisAppliedPromo");
+        return result.message;
+    }
+
+    return "";
+}
+
+
+
 /* =========================================
    SUBTOTAL
 ========================================= */
@@ -945,6 +1112,7 @@ async function refreshCartProducts() {
             name,
             description,
             category,
+            product_category,
             price,
             image_url,
             stock,
@@ -1014,6 +1182,7 @@ async function refreshCartProducts() {
             product_id: String(product.id),
             name: product.name,
             category: product.category || item.category || "",
+            product_category: product.product_category || item.product_category || "",
             original_price: originalPrice,
             discount_active: discountActive,
             discount_percent: discountPercent,
@@ -1159,61 +1328,36 @@ function applyStoreSettings() {
 ========================================= */
 
 function displayOrder() {
-    const container =
-        document.getElementById("order-items");
-
+    const container = document.getElementById("order-items");
     container.innerHTML = "";
 
     let count = 0;
 
     cart.forEach(item => {
         const quantity = Number(item.quantity || 0);
-        const price = Number(item.price || 0);
-
+        const promo = getCheckoutPromoForItem(item);
+        const unitPrice = promo ? promo.finalPrice : Number(item.price || 0);
         count += quantity;
 
         const row = document.createElement("div");
         row.className = "order-item";
 
         const description = document.createElement("span");
-
-        description.textContent =
-            (item.name || "Product") + " × " + quantity;
+        description.textContent = (item.name || "Product") + " × " + quantity;
 
         const category = document.createElement("small");
-        category.textContent = categoryLabel(item.category);
-        category.style.cssText =
-            "display:block;color:#947039;font-size:11px;margin-top:4px;";
+        category.textContent = categoryLabel(item.product_category || item.category);
+        category.style.cssText = "display:block;color:#947039;font-size:11px;margin-top:4px;";
         description.appendChild(category);
 
         const amount = document.createElement("strong");
+        amount.textContent = money(unitPrice * quantity);
 
-        if (
-            item.discount_active &&
-            Number(item.original_price) > price
-        ) {
-            const originalAmount = money(
-                Number(item.original_price) * quantity
-            );
-
-            const discountedAmount = money(
-                price * quantity
-            );
-
-            amount.innerHTML = `
-                <span style="display:block;text-decoration:line-through;color:#999;font-size:11px;font-weight:normal">
-                    ${originalAmount}
-                </span>
-                <span style="display:block;color:#287343">
-                    ${discountedAmount}
-                </span>
-                <span style="display:block;color:#287343;font-size:10px;font-weight:normal">
-                    ${Number(item.discount_percent)}% OFF
-                </span>
-            `;
-        } else {
-            amount.textContent =
-                money(price * quantity);
+        if (promo) {
+            const note = document.createElement("small");
+            note.textContent = "Promo applied";
+            note.style.cssText = "display:block;color:#287343;font-size:10px;text-align:right;margin-top:4px;";
+            amount.appendChild(note);
         }
 
         row.append(description, amount);
@@ -1221,45 +1365,71 @@ function displayOrder() {
     });
 
     const subtotal = getSubtotal();
-    const delivery = getDeliveryFee(subtotal);
-    const total = subtotal + delivery;
+    const productSavings = getProductSavings();
+    const promoSavings = getPromoSavings();
+    const discountedSubtotal = Math.max(0, subtotal - promoSavings);
+    const delivery = getDeliveryFee(discountedSubtotal);
+    const total = discountedSubtotal + delivery;
 
     document.getElementById("item-count").textContent = count;
+    document.getElementById("subtotal").textContent = money(subtotal);
 
-    document.getElementById("subtotal").textContent =
-        money(subtotal);
+    const productRow = document.getElementById("product-savings-row");
+    const promoRow = document.getElementById("promo-savings-row");
+    productRow.hidden = productSavings <= 0;
+    promoRow.hidden = promoSavings <= 0;
+    document.getElementById("product-savings").textContent = "− " + money(productSavings);
+    document.getElementById("promo-savings").textContent = "− " + money(promoSavings);
+
+    const promoNote = document.getElementById("checkout-promo-note");
+    const promoResult = validateCheckoutPromo();
+    if (appliedPromoCode && promoResult.valid) {
+        promoNote.hidden = false;
+        promoNote.textContent = promoResult.message;
+    } else {
+        promoNote.hidden = true;
+        promoNote.textContent = "";
+    }
 
     const freeDelivery =
         Number(storeSettings.freeDelivery) > 0 &&
-        subtotal >= Number(storeSettings.freeDelivery) &&
+        discountedSubtotal >= Number(storeSettings.freeDelivery) &&
         cart.length > 0;
 
     document.getElementById("delivery-fee").textContent =
         freeDelivery ? "FREE" : money(delivery);
+    document.getElementById("grand-total").textContent = money(total);
 
-    document.getElementById("grand-total").textContent =
-        money(total);
+    localStorage.setItem("kikisCheckoutSummary", JSON.stringify({
+        items: cart.map(item => {
+            const promo = getCheckoutPromoForItem(item);
+            return {
+                ...item,
+                promo_discount: promo ? promo.saving : 0,
+                checkout_price: promo ? promo.finalPrice : Number(item.price || 0)
+            };
+        }),
+        subtotal: Number(subtotal.toFixed(2)),
+        product_discount: Number(productSavings.toFixed(2)),
+        promo_code: appliedPromoCode || null,
+        promo_discount: Number(promoSavings.toFixed(2)),
+        delivery_fee: Number(delivery.toFixed(2)),
+        total: Number(total.toFixed(2))
+    }));
 
     if (cart.length === 0) {
-        const button =
-            document.getElementById("submit-btn");
-
+        const button = document.getElementById("submit-btn");
         button.disabled = true;
         button.textContent = "YOUR CART IS EMPTY";
-    } else if (
-        storeSettings.storeOpen &&
-        storeSettings.acceptOrders
-    ) {
-        const selectedPayment =
-            document.querySelector('input[name="payment"]:checked');
-
+    } else if (storeSettings.storeOpen && storeSettings.acceptOrders) {
+        const selectedPayment = document.querySelector('input[name="payment"]:checked');
         if (selectedPayment && selectedPayment.value === "momo") {
             document.getElementById("submit-btn").disabled = false;
-            document.getElementById("submit-btn").textContent =
-                "SUBMIT ORDER VIA WHATSAPP";
+            document.getElementById("submit-btn").textContent = "SUBMIT ORDER VIA WHATSAPP";
         }
     }
 }
+
 /* =========================================
    PAYMENT METHOD
 ========================================= */
@@ -1476,8 +1646,29 @@ checkoutForm.addEventListener("submit", async function (event) {
         const receiptPath =
             await uploadReceipt(receipt, orderReference);
 
+        // Recheck promotion status at the moment the order is submitted.
+        await loadCheckoutPromotions();
+
+        const promoValidation = validateCheckoutPromo();
+        if (appliedPromoCode && !promoValidation.valid) {
+            throw new Error(promoValidation.message);
+        }
+
+        const checkoutSubtotal = getSubtotal();
+        const checkoutProductDiscount = getProductSavings();
+        const checkoutPromoDiscount = getPromoSavings();
+        const checkoutDiscountedSubtotal = Math.max(0, checkoutSubtotal - checkoutPromoDiscount);
+        const checkoutDelivery = getDeliveryFee(checkoutDiscountedSubtotal);
+        const checkoutTotal = checkoutDiscountedSubtotal + checkoutDelivery;
+
         const customerForDatabase = {
             ...customer,
+            promo_code: appliedPromoCode || null,
+            product_discount: Number(checkoutProductDiscount.toFixed(2)),
+            promo_discount: Number(checkoutPromoDiscount.toFixed(2)),
+            expected_subtotal: Number(checkoutSubtotal.toFixed(2)),
+            expected_delivery_fee: Number(checkoutDelivery.toFixed(2)),
+            expected_total: Number(checkoutTotal.toFixed(2)),
             receipt_path: receiptPath,
             receipt_file_name: receipt.name,
             order_reference: orderReference,
@@ -1529,19 +1720,24 @@ checkoutForm.addEventListener("submit", async function (event) {
             savedOrder?.order_id ||
             orderReference;
 
+        const expectedSubtotal = getSubtotal();
+        const expectedPromoDiscount = getPromoSavings();
+        const expectedDiscountedSubtotal = Math.max(0, expectedSubtotal - expectedPromoDiscount);
+        const expectedDelivery = getDeliveryFee(expectedDiscountedSubtotal);
+        const expectedTotal = expectedDiscountedSubtotal + expectedDelivery;
+
         const finalTotal = Number(
             savedOrder?.total ??
             savedOrder?.grand_total ??
-            getSubtotal() + getDeliveryFee()
+            expectedTotal
         );
 
         const finalSubtotal = Number(
-            savedOrder?.subtotal ?? getSubtotal()
+            savedOrder?.subtotal ?? expectedSubtotal
         );
 
         const finalDelivery = Number(
-            savedOrder?.delivery_fee ??
-            getDeliveryFee(finalSubtotal)
+            savedOrder?.delivery_fee ?? expectedDelivery
         );
 
         const order = {
@@ -1551,6 +1747,9 @@ checkoutForm.addEventListener("submit", async function (event) {
             products: cart,
             items: cart,
             subtotal: finalSubtotal,
+            productDiscount: getProductSavings(),
+            promoCode: appliedPromoCode || null,
+            promoDiscount: expectedPromoDiscount,
             deliveryFee: finalDelivery,
             total: finalTotal,
             amount: finalTotal,
@@ -1608,6 +1807,9 @@ Discounted Unit Price: ${money(item.price)}
         message +=
 `*PAYMENT SUMMARY*
 Subtotal: ${money(finalSubtotal)}
+Product Savings: ${money(getProductSavings())}
+Promo Code: ${appliedPromoCode || "None"}
+Promo Discount: ${money(expectedPromoDiscount)}
 Delivery Fee: ${finalDelivery === 0 ? "FREE" : money(finalDelivery)}
 *ORDER TOTAL: ${money(finalTotal)}*
 
@@ -1672,8 +1874,17 @@ try {
 
     applyStoreSettings();
 
-    // Recalculate cart prices and delivery using current database data.
+    // Load current promotions, then refresh product prices and calculate checkout.
+    await loadCheckoutPromotions();
+    const invalidPromoMessage = clearInvalidCheckoutPromo();
     await refreshCartProducts();
+
+    if (invalidPromoMessage) {
+        const promoNote = document.getElementById("checkout-promo-note");
+        promoNote.hidden = false;
+        promoNote.style.color = "#b13b32";
+        promoNote.textContent = invalidPromoMessage;
+    }
 
 } catch (error) {
     console.error(error);
