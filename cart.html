@@ -1,737 +1,1649 @@
 
+
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
 
 <title>My Shopping Cart | Kikis Amber Touch</title>
 
+
+
 <style>
+
 * {
+
     margin: 0;
+
     padding: 0;
+
     box-sizing: border-box;
+
 }
+
+
 
 :root {
+
     --black: #11100e;
+
     --gold: #c6a15b;
+
     --cream: #f8f5ef;
+
     --white: #fff;
+
 }
+
+
 
 body {
+
     font-family: Arial, sans-serif;
+
     background: var(--cream);
+
     color: var(--black);
+
 }
+
+
 
 a {
+
     text-decoration: none;
+
     color: inherit;
+
 }
+
+
 
 .announcement {
+
     background: var(--gold);
+
     text-align: center;
+
     padding: 10px;
+
     font-size: 11px;
+
     letter-spacing: 2px;
+
 }
+
+
 
 header {
+
     background: var(--black);
+
     color: white;
+
     padding: 18px 7%;
+
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
+
     position: sticky;
+
     top: 0;
+
     z-index: 100;
+
 }
+
+
 
 .logo {
+
     font-family: Georgia, serif;
+
     color: var(--gold);
+
     font-size: 21px;
+
 }
+
+
 
 .logo span {
+
     display: block;
+
     font-family: Arial;
+
     color: white;
+
     font-size: 9px;
+
     letter-spacing: 4px;
+
     text-align: center;
+
     margin-top: 5px;
+
 }
+
 .logo img {
+
     display: none;
+
     width: 170px;
+
     max-height: 65px;
+
     object-fit: contain;
+
 }
+
+
 
 @media (max-width: 768px) {
+
     .logo img {
+
         width: 135px;
+
         max-height: 55px;
+
     }
+
 }
+
+
 
 nav {
+
     display: flex;
+
     align-items: center;
+
     gap: 25px;
+
     font-size: 13px;
+
 }
+
+
 
 nav a:hover {
+
     color: var(--gold);
+
 }
+
+
 
 .cart-link {
+
     border: 1px solid var(--gold);
+
     padding: 10px 16px;
+
     color: var(--gold);
+
 }
 
+
+
 .menu-toggle {
+
     display: none;
+
     background: none;
+
     color: white;
+
     border: none;
+
     font-size: 25px;
+
 }
+
+
 
 /* PAGE BANNER */
 
+
+
 .page-banner {
+
     background: linear-gradient(90deg, #17130e, #51402a);
+
     color: white;
+
     text-align: center;
+
     padding: 55px 20px;
+
 }
+
+
 
 .page-banner small {
+
     color: var(--gold);
+
     letter-spacing: 4px;
+
 }
 
+
+
 .page-banner h1 {
+
     font-family: Georgia, serif;
+
     font-size: 42px;
+
     font-weight: normal;
+
     margin: 15px 0;
+
 }
+
+
 
 /* CART LAYOUT */
 
+
+
 .cart-container {
+
     max-width: 1200px;
+
     margin: auto;
+
     padding: 55px 25px;
+
 }
+
+
 
 .cart-layout {
+
     display: grid;
+
     grid-template-columns: 1fr 350px;
+
     gap: 30px;
+
     align-items: start;
+
 }
+
+
 
 .cart-products,
+
 .summary {
+
     background: white;
+
     padding: 25px;
+
     border: 1px solid #eee;
+
 }
+
+
 
 .cart-products h2,
+
 .summary h2 {
+
     font-family: Georgia, serif;
+
     font-size: 24px;
+
     font-weight: normal;
+
     margin-bottom: 25px;
+
 }
+
+
 
 .cart-item {
+
     display: grid;
+
     grid-template-columns: 110px 1fr auto;
+
     gap: 20px;
+
     align-items: center;
+
     padding: 20px 0;
+
     border-bottom: 1px solid #eee;
+
 }
+
+
 
 .cart-item img {
+
     width: 110px;
+
     height: 120px;
+
     object-fit: cover;
+
     background: #eee9df;
+
 }
+
+
 
 .item-details h3 {
+
     font-family: Georgia, serif;
+
     font-size: 18px;
+
     margin-bottom: 8px;
+
 }
+
+
 
 .item-details .price {
+
     color: #9c783d;
+
     font-weight: bold;
+
     margin-bottom: 14px;
+
 }
+
+
 
 .quantity {
+
     display: flex;
+
     align-items: center;
+
     gap: 12px;
+
 }
+
+
 
 .quantity button {
+
     width: 29px;
+
     height: 29px;
+
     border: 1px solid #ddd;
+
     background: white;
+
     cursor: pointer;
+
     font-size: 17px;
+
 }
+
+
 
 .quantity span {
+
     min-width: 15px;
+
     text-align: center;
+
 }
+
+
 
 .item-total {
+
     text-align: right;
+
 }
+
+
 
 .item-total strong {
+
     font-size: 16px;
+
 }
 
+
+
 .remove-btn {
+
     display: block;
+
     border: none;
+
     background: none;
+
     color: #b13b32;
+
     cursor: pointer;
+
     margin-top: 15px;
+
     font-size: 12px;
+
 }
+
+
 
 /* SUMMARY */
 
+
+
 .summary {
+
     position: sticky;
+
     top: 105px;
+
 }
+
+
 
 .summary-row {
+
     display: flex;
+
     justify-content: space-between;
+
     margin-bottom: 20px;
+
     font-size: 14px;
+
     color: #666;
+
 }
+
+
 
 .summary-row.total {
+
     border-top: 1px solid #ddd;
+
     padding-top: 20px;
+
     color: var(--black);
+
     font-size: 18px;
+
     font-weight: bold;
+
 }
+
+
 
 .checkout-btn {
+
     display: block;
+
     width: 100%;
+
     padding: 16px;
+
     background: var(--black);
+
     color: white;
+
     text-align: center;
+
     border: none;
+
     cursor: pointer;
+
     font-size: 12px;
+
     letter-spacing: 1px;
+
     margin-top: 20px;
+
 }
+
+
 
 .checkout-btn:hover {
+
     background: var(--gold);
+
     color: var(--black);
+
 }
 
+
+
 .continue-btn {
+
     display: block;
+
     text-align: center;
+
     margin-top: 20px;
+
     font-size: 13px;
+
     color: #8d6b34;
+
 }
+
+
 
 /* EMPTY CART */
 
+
+
 .empty-cart {
+
     text-align: center;
+
     padding: 55px 15px;
+
     display: none;
+
 }
+
+
 
 .empty-cart .icon {
+
     font-size: 55px;
+
     margin-bottom: 15px;
+
 }
+
+
 
 .empty-cart h2 {
+
     font-family: Georgia, serif;
+
     font-size: 27px;
+
     margin-bottom: 12px;
+
 }
+
+
 
 .empty-cart p {
+
     color: #777;
+
     font-size: 14px;
+
     margin-bottom: 25px;
+
 }
 
+
+
 .shop-btn {
+
     display: inline-block;
+
     background: var(--black);
+
     color: white;
+
     padding: 14px 28px;
+
     font-size: 12px;
+
 }
+
+
 
 /* FOOTER */
 
+
+
 footer {
+
     background: #080807;
+
     color: #aaa;
+
     text-align: center;
+
     padding: 35px 7%;
+
     font-size: 12px;
+
     line-height: 2;
+
 }
+
+
 
 footer strong {
+
     color: var(--gold);
+
 }
 
+
+
 .whatsapp {
+
     position: fixed;
+
     right: 20px;
+
     bottom: 20px;
+
     background: #25D366;
+
     color: white;
+
     width: 55px;
+
     height: 55px;
+
     display: flex;
+
     align-items: center;
+
     justify-content: center;
+
     border-radius: 50%;
+
     font-size: 26px;
+
     z-index: 200;
+
+}
+
+
+
+
+/* PROMO CODE AND DISCOUNT BREAKDOWN */
+.promo-box {
+    margin: 22px 0;
+    padding: 17px;
+    background: #faf8f3;
+    border: 1px solid #e8dfce;
+}
+.promo-box label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 13px;
+    font-weight: bold;
+}
+.promo-input-row { display: flex; gap: 8px; }
+.promo-input-row input {
+    min-width: 0;
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #d8d0c2;
+    outline: none;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+.promo-input-row input:focus { border-color: var(--gold); }
+.promo-input-row button {
+    padding: 0 16px;
+    border: 0;
+    background: var(--black);
+    color: white;
+    cursor: pointer;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+.promo-input-row button:hover { background: var(--gold); color: var(--black); }
+.promo-message { margin-top: 9px; color: #777; font-size: 11px; line-height: 1.5; }
+.promo-message.success { color: #287342; }
+.promo-message.error { color: #b13b32; }
+.discount-row { color: #287342; }
+.discount-row[hidden] { display: none; }
+@media(max-width: 480px) {
+    .promo-input-row { flex-direction: column; }
+    .promo-input-row button { min-height: 42px; }
 }
 
 @media(max-width: 800px) {
 
+
+
     header {
+
         padding: 15px 5%;
+
     }
+
+
 
     .logo {
+
         font-size: 17px;
+
     }
+
+
 
     .menu-toggle {
+
         display: block;
+
         cursor: pointer;
+
     }
+
+
 
     nav {
+
         display: none;
+
         position: absolute;
+
         top: 100%;
+
         left: 0;
+
         width: 100%;
+
         background: var(--black);
+
         flex-direction: column;
+
         padding: 25px;
+
     }
+
+
 
     nav.active {
+
         display: flex;
+
     }
+
+
 
     .cart-layout {
+
         grid-template-columns: 1fr;
+
     }
+
+
 
     .summary {
+
         position: static;
+
     }
 
+
+
     .cart-container {
+
         padding: 35px 15px;
+
     }
+
 }
+
+
 
 @media(max-width: 480px) {
 
+
+
     .page-banner h1 {
+
         font-size: 32px;
+
     }
+
+
 
     .cart-products,
+
     .summary {
+
         padding: 16px;
+
     }
+
+
 
     .cart-item {
+
         grid-template-columns: 85px 1fr;
+
         gap: 12px;
+
     }
+
+
 
     .cart-item img {
+
         width: 85px;
+
         height: 100px;
+
     }
+
+
 
     .item-total {
+
         grid-column: 2;
+
         text-align: left;
+
         display: flex;
+
         align-items: center;
+
         justify-content: space-between;
+
     }
+
+
 
     .remove-btn {
+
         margin-top: 0;
+
     }
 
+
+
     .item-details h3 {
+
         font-size: 15px;
+
     }
+
 }
+
 </style>
+
 </head>
+
+
 
 <body>
 
+
+
 <div class="announcement">
+
     PERFUMES • MEN'S SLIPPERS • BELT & WALLET COMBOS
+
 </div>
+
+
 
 <header>
 
+
+
    <a href="index.html" class="logo" id="storeLogoLink">
+
     <img id="storeLogoImage" alt="Kikis Amber Touch Logo">
 
+
+
     <span id="logoFallback">
+
         KIKIS AMBER TOUCH
+
         <small>STYLE • SCENT • ACCESSORIES</small>
+
     </span>
+
 </a>
+
+
 
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
 
+
+
     <nav id="navigation">
+
         <a href="index.html">HOME</a>
+
         <a href="shop.html">SHOP</a>
+
         <a href="cart.html" class="cart-link">
+
             MY CART (<span id="cart-count">0</span>)
+
         </a>
+
         <a href="track-order.html">TRACK ORDER</a>
+
     </nav>
+
+
 
 </header>
 
+
+
 <section class="page-banner">
+
     <small>YOUR SELECTION</small>
+
     <h1>Shopping Cart</h1>
+
     <p>Review your selected items before checkout.</p>
+
 </section>
+
+
 
 <main class="cart-container">
 
+
+
     <div class="cart-layout" id="cart-layout">
+
+
 
         <!-- CART ITEMS -->
 
+
+
         <section class="cart-products">
+
+
 
             <h2>Your Shopping Items</h2>
 
+
+
             <div id="cart-items"></div>
+
+
 
         </section>
 
+
+
         <!-- ORDER SUMMARY -->
+
+
 
         <aside class="summary">
 
+
+
             <h2>Order Summary</h2>
 
+
+
             <div class="summary-row">
+
                 <span>Items</span>
+
                 <span id="total-items">0</span>
+
             </div>
 
+
+
             <div class="summary-row">
+
                 <span>Subtotal</span>
+
                 <span id="subtotal">GH₵ 0.00</span>
+
             </div>
 
-            <div class="summary-row">
-                <span>Delivery</span>
-                <span>Calculated later</span>
+            <div class="promo-box">
+                <label for="promo-code">Have a promo code?</label>
+                <div class="promo-input-row">
+                    <input id="promo-code" type="text" placeholder="Enter promo code" autocomplete="off">
+                    <button type="button" id="apply-promo-btn">APPLY</button>
+                </div>
+                <p id="promo-message" class="promo-message" aria-live="polite">Enter a valid promotion code to enjoy your discount.</p>
             </div>
+
+            <div class="summary-row discount-row" id="product-discount-row" hidden>
+                <span>Product savings</span>
+                <span id="product-discount">− GH₵ 0.00</span>
+            </div>
+            <div class="summary-row discount-row" id="promo-discount-row" hidden>
+                <span>Promo discount</span>
+                <span id="promo-discount">− GH₵ 0.00</span>
+            </div>
+
+
+
+            <div class="summary-row">
+
+                <span>Delivery</span>
+
+                <span>Calculated later</span>
+
+            </div>
+
+
 
             <div class="summary-row total">
+
                 <span>Total</span>
+
                 <span id="grand-total">GH₵ 0.00</span>
+
             </div>
 
+
+
             <button
+
                 class="checkout-btn"
+
                 id="checkout-btn"
+
                 onclick="goToCheckout()"
+
             >
+
                 PROCEED TO CHECKOUT
+
             </button>
 
+
+
             <a href="shop.html" class="continue-btn">
+
                 ← Continue Shopping
+
             </a>
+
+
 
         </aside>
 
+
+
     </div>
+
+
 
     <!-- EMPTY CART -->
 
+
+
     <div class="empty-cart" id="empty-cart">
+
+
 
         <div class="icon">🛍</div>
 
+
+
         <h2>Your cart is empty</h2>
 
+
+
         <p>
+
             You haven't added any products to your cart yet.
+
             Explore our collections and find something you love.
+
         </p>
 
+
+
         <a href="shop.html" class="shop-btn">
+
             EXPLORE THE STORE
+
         </a>
+
+
 
     </div>
 
+
+
 </main>
 
+
+
 <footer>
+
     <strong id="footerStoreName">KIKIS AMBER TOUCH</strong>
+
     <p id="footerStoreTagline">Perfumes, men's slippers and accessories — selected for your style.</p>
+
     <p>WhatsApp: <a id="footerWhatsApp" href="https://wa.me/233503192094" target="_blank" rel="noopener">0503192094</a></p>
+
     <p>© <span id="year"></span> <span id="footerCopyrightName">Kikis Amber Touch</span>. All Rights Reserved.</p>
+
 </footer>
 
+
+
 <a
+
     class="whatsapp"
+
     id="floatingWhatsApp"
+
     href="https://wa.me/233503192094"
+
     target="_blank"
+
     rel="noopener"
+
 >◉</a>
 
 
+
+
+
 <script type="module">
+
 import { createClient } from
+
 "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
+
+
 const supabase = createClient(
+
     "https://mgxeyjyhuzbsgnbpbkst.supabase.co",
+
     "sb_publishable_ANZvxJnS89wrYo0MTx6LRA_Nu2XPss5"
+
 );
+
 async function loadStoreLogo() {
+
     const image = document.getElementById("storeLogoImage");
+
     const fallback = document.getElementById("logoFallback");
 
+
+
     try {
+
         const { data, error } = await supabase
+
             .from("store_settings")
+
             .select("logo_url")
+
             .eq("id", 1)
+
             .maybeSingle();
+
+
 
         if (error) throw error;
 
+
+
         if (data?.logo_url) {
+
             image.onload = () => {
+
                 image.style.display = "block";
+
                 fallback.style.display = "none";
+
             };
+
+
 
             image.onerror = () => {
+
                 image.style.display = "none";
+
                 fallback.style.display = "block";
+
                 console.error("Could not load store logo.");
+
             };
 
+
+
             image.src = data.logo_url;
+
         }
+
     } catch (error) {
+
         console.error("Store logo loading failed:", error);
+
     }
+
 }
+
+
 
 loadStoreLogo();
 
+
+
 // Load the business name, tagline and WhatsApp contact from store settings.
+
 async function loadStoreFooter() {
+
     try {
+
         const { data, error } = await supabase
+
             .from("store_settings")
+
             .select("store_name,store_tagline,whatsapp_number")
+
             .eq("id", 1)
+
             .maybeSingle();
 
+
+
         if (error) throw error;
+
         if (!data) return;
 
+
+
         const storeName = String(data.store_name || "KIKIS AMBER TOUCH").trim();
+
         const tagline = String(
+
             data.store_tagline || "Perfumes, men's slippers and accessories — selected for your style."
+
         ).trim();
 
+
+
         document.getElementById("footerStoreName").textContent = storeName;
+
         document.getElementById("footerCopyrightName").textContent = storeName;
+
         document.getElementById("footerStoreTagline").textContent = tagline;
+
         document.title = "My Shopping Cart | " + storeName;
 
+
+
         const rawNumber = String(data.whatsapp_number || "0503192094").trim();
-        const digits = rawNumber.replace(/\\D/g, "");
+
+        const digits = rawNumber.replace(/\D/g, "");
+
         const internationalNumber = digits.startsWith("0")
+
             ? "233" + digits.slice(1)
+
             : (digits.startsWith("233") ? digits : digits);
 
+
+
         const footerWhatsApp = document.getElementById("footerWhatsApp");
+
         const floatingWhatsApp = document.getElementById("floatingWhatsApp");
+
         footerWhatsApp.textContent = rawNumber;
+
         footerWhatsApp.href = "https://wa.me/" + internationalNumber;
+
         floatingWhatsApp.href = "https://wa.me/" + internationalNumber;
+
     } catch (error) {
+
         console.error("Store footer settings could not be loaded:", error);
+
     }
+
 }
+
+
 
 loadStoreFooter();
 
+
+
 const $ = id => document.getElementById(id);
 
+
+
 function getCart() {
+
     try {
+
         return JSON.parse(localStorage.getItem("kikisCart") || "[]");
+
     } catch {
+
         return [];
+
     }
+
 }
+
+
 
 function saveCart(cart) {
+
     localStorage.setItem("kikisCart", JSON.stringify(cart));
+
 }
+
+
 
 function money(amount) {
+
     return "GH₵ " + Number(amount || 0).toFixed(2);
+
 }
+
+
 
 function formatCategory(value) {
+
     const labels = {
+
         mens_slippers: "Men's Slippers",
+
         belt_wallet_combo: "Belt & Wallet Combo",
+
         men: "Men's Perfume",
+
         women: "Women's Perfume",
+
         unisex: "Unisex Perfume",
+
         luxury: "Luxury Perfume",
+
         body_mist: "Body Mist",
+
         oud: "Oud"
+
     };
+
     const key = String(value || "").trim().toLowerCase()
+
         .replace(/[\s-]+/g, "_");
+
     return labels[key] || (key ? key.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase()) : "");
+
 }
+
+
 
 function updateCartCount() {
+
     const count = getCart().reduce(
+
         (sum, item) => sum + Number(item.quantity || 0), 0
+
     );
+
     $("cart-count").textContent = count;
+
 }
 
+
+
 // Refresh product details and prices from Supabase
+
 async function refreshCartProducts() {
+
     let cart = getCart();
+
+
 
     if (!cart.length) return;
 
+
+
     const ids = [...new Set(
+
         cart.map(item => String(item.product_id || item.id))
+
     )];
 
+
+
     const { data, error } = await supabase
+
         .from("products")
-        .select("id,name,category,price,image_url,stock,status")
+
+        .select("id,name,category,product_category,price,image_url,stock,status,discount_active,discount_percent")
+
         .in("id", ids);
 
+
+
     if (error) {
+
         console.error("Could not verify cart products:", error);
+
         $("cart-items").innerHTML =
+
             "<p>We couldn't verify your products. Please refresh the page.</p>";
+
         $("checkout-btn").disabled = true;
+
         return;
+
     }
 
+
+
     const latestProducts = new Map(
+
         (data || []).map(product => [String(product.id), product])
+
     );
+
+
 
     const validCart = [];
 
+
+
     cart.forEach(item => {
+
         const id = String(item.product_id || item.id);
+
         const product = latestProducts.get(id);
 
+
+
         if (!product || product.status !== "active" ||
+
             Number(product.stock) <= 0) {
+
             return;
+
         }
 
+
+
         const quantity = Math.min(
+
             Math.max(1, Number(item.quantity) || 1),
+
             Number(product.stock)
+
         );
 
+
+
         validCart.push({
+
             ...item,
+
             id: String(product.id),
+
             product_id: String(product.id),
+
             name: product.name,
+
             category: product.category || item.category || "",
+            product_category: product.product_category || item.product_category || "",
+
             price: Number(product.price),
+            discount_active: product.discount_active === true,
+            discount_percent: Number(product.discount_percent || 0),
+
             image: product.image_url || "",
+
             stock: Number(product.stock),
+
             quantity
+
         });
+
     });
 
+
+
     saveCart(validCart);
+
 }
 
-// Display cart
+
+
+// Promotions are loaded from the same Supabase table used by the shop page.
+let activePromotions = [];
+let appliedPromoCode = String(localStorage.getItem("kikisAppliedPromo") || "").trim().toUpperCase();
+
+function promotionIsCurrent(promotion) {
+    const now = Date.now();
+    const start = promotion.start_date ? new Date(promotion.start_date).getTime() : 0;
+    const end = promotion.end_date ? new Date(promotion.end_date).getTime() : Infinity;
+    return promotion.is_active === true &&
+        (!start || (!Number.isNaN(start) && start <= now)) &&
+        (!end || (!Number.isNaN(end) && end >= now));
+}
+
+async function loadCartPromotions() {
+    try {
+        const { data, error } = await supabase
+            .from("promotions")
+            .select("id,title,promo_code,discount_type,discount_value,applies_to,product_ids,start_date,end_date,description,is_active")
+            .eq("is_active", true);
+        if (error) throw error;
+        activePromotions = (data || []).filter(promotionIsCurrent);
+    } catch (error) {
+        console.error("Promotions could not be loaded:", error);
+        activePromotions = [];
+    }
+}
+
+function getProductBasePricing(item) {
+    const originalPrice = Number(item.price || 0);
+    const active = item.discount_active === true && Number(item.discount_percent || 0) > 0;
+    const percent = active ? Math.min(100, Number(item.discount_percent)) : 0;
+    const price = Number((originalPrice * (1 - percent / 100)).toFixed(2));
+    return { originalPrice, price, saving: Number((originalPrice - price).toFixed(2)) };
+}
+
+function promotionAppliesToItem(promotion, item) {
+    if (String(promotion.applies_to || "all").toLowerCase() === "all") return true;
+    const ids = Array.isArray(promotion.product_ids) ? promotion.product_ids.map(String) : [];
+    return ids.includes(String(item.product_id || item.id));
+}
+
+function getPromoForItem(item) {
+    if (!appliedPromoCode) return null;
+    const base = getProductBasePricing(item);
+    let best = null;
+    let bestSaving = 0;
+
+    activePromotions.forEach(promotion => {
+        const code = String(promotion.promo_code || "").trim().toUpperCase();
+        if (!code || code !== appliedPromoCode || !promotionAppliesToItem(promotion, item)) return;
+
+        const value = Math.max(0, Number(promotion.discount_value || 0));
+        const type = String(promotion.discount_type || "").toLowerCase();
+        const saving = type === "percentage"
+            ? base.price * Math.min(value, 100) / 100
+            : type === "fixed" ? Math.min(value, base.price) : 0;
+
+        if (saving > bestSaving) {
+            best = promotion;
+            bestSaving = saving;
+        }
+    });
+
+    return best ? {
+        promotion: best,
+        saving: Number(bestSaving.toFixed(2)),
+        finalPrice: Number((base.price - bestSaving).toFixed(2))
+    } : null;
+}
+
+function validatePromoCode(code) {
+    const normalized = String(code || "").trim().toUpperCase();
+    if (!normalized) return { valid: false, message: "Please enter a promo code." };
+
+    const matches = activePromotions.filter(p =>
+        String(p.promo_code || "").trim().toUpperCase() === normalized
+    );
+    if (!matches.length) return { valid: false, message: "This promo code is invalid, inactive or has expired." };
+
+    const cart = getCart();
+    const eligibleItems = cart.filter(item => matches.some(p => promotionAppliesToItem(p, item)));
+    if (!eligibleItems.length) {
+        return { valid: false, message: "This code does not apply to the products currently in your cart." };
+    }
+
+    const hasDiscount = eligibleItems.some(item => matches.some(p => {
+        if (!promotionAppliesToItem(p, item)) return false;
+        const value = Number(p.discount_value || 0);
+        const type = String(p.discount_type || "").toLowerCase();
+        return value > 0 && (type === "percentage" || type === "fixed");
+    }));
+    return hasDiscount
+        ? { valid: true, message: "Promo code applied successfully." }
+        : { valid: false, message: "This code does not provide a discount on the items in your cart." };
+}
+
+function applyPromoCode() {
+    const result = validatePromoCode($("promo-code").value);
+    const message = $("promo-message");
+
+    if (result.valid) {
+        appliedPromoCode = $("promo-code").value.trim().toUpperCase();
+        localStorage.setItem("kikisAppliedPromo", appliedPromoCode);
+    } else {
+        appliedPromoCode = "";
+        localStorage.removeItem("kikisAppliedPromo");
+    }
+
+    displayCart();
+    $("promo-message").textContent = result.message;
+    $("promo-message").className = "promo-message " + (result.valid ? "success" : "error");
+    $("promo-code").value = appliedPromoCode;
+}
+
 function displayCart() {
     const cart = getCart();
     const container = $("cart-items");
@@ -744,11 +1656,16 @@ function displayCart() {
     if (!cart.length) {
         layout.style.display = "none";
         empty.style.display = "block";
-
         $("total-items").textContent = 0;
         $("subtotal").textContent = money(0);
         $("grand-total").textContent = money(0);
+        $("product-discount-row").hidden = true;
+        $("promo-discount-row").hidden = true;
         $("checkout-btn").disabled = true;
+        $("promo-code").value = "";
+        $("promo-message").textContent = "Add products to your cart before applying a code.";
+        $("promo-message").className = "promo-message";
+        localStorage.removeItem("kikisCheckoutSummary");
         return;
     }
 
@@ -758,55 +1675,80 @@ function displayCart() {
 
     let subtotal = 0;
     let totalItems = 0;
+    let productSavings = 0;
+    let promoSavings = 0;
+    const checkoutItems = [];
 
     cart.forEach((item, index) => {
-        const quantity = Number(item.quantity);
-        const price = Number(item.price);
-        const itemTotal = price * quantity;
+        const quantity = Math.max(1, Number(item.quantity) || 1);
+        const base = getProductBasePricing(item);
+        const promo = getPromoForItem(item);
+        const finalUnitPrice = promo ? promo.finalPrice : base.price;
+        const itemTotal = Number((finalUnitPrice * quantity).toFixed(2));
 
-        subtotal += itemTotal;
+        subtotal += base.originalPrice * quantity;
+        productSavings += base.saving * quantity;
+        if (promo) promoSavings += promo.saving * quantity;
         totalItems += quantity;
+
+        checkoutItems.push({
+            ...item,
+            original_price: base.originalPrice,
+            product_discounted_price: base.price,
+            promo_discount: promo ? promo.saving : 0,
+            price: finalUnitPrice
+        });
 
         const image = document.createElement("img");
         image.src = item.image || "";
-        image.alt = item.name || "Perfume";
-
-        image.onerror = function() {
-            this.style.visibility = "hidden";
-        };
+        image.alt = item.name || "Product";
+        image.onerror = function() { this.style.visibility = "hidden"; };
 
         const details = document.createElement("div");
         details.className = "item-details";
 
         const name = document.createElement("h3");
-        name.textContent = item.name;
+        name.textContent = item.name || "Product";
 
         const category = document.createElement("p");
-        category.textContent = formatCategory(item.category);
+        category.textContent = formatCategory(item.product_category || item.category);
         category.style.cssText = "font-size:12px;color:#777;margin:0 0 8px;";
 
         const unitPrice = document.createElement("div");
         unitPrice.className = "price";
-        unitPrice.textContent = money(price);
+        unitPrice.textContent = money(finalUnitPrice) + " each";
+
+        details.append(name);
+        if (category.textContent) details.append(category);
+        details.append(unitPrice);
+
+        if (base.saving > 0 || promo) {
+            const note = document.createElement("p");
+            note.style.cssText = "font-size:11px;color:#287342;margin:5px 0 10px;";
+            note.textContent = promo ? "Product offer and promo discount included" : "Product discount included";
+            details.append(note);
+        }
 
         const quantityBox = document.createElement("div");
         quantityBox.className = "quantity";
 
         const decrease = document.createElement("button");
+        decrease.type = "button";
         decrease.textContent = "−";
+        decrease.setAttribute("aria-label", "Decrease quantity");
         decrease.onclick = () => changeQuantity(index, -1);
 
         const quantityValue = document.createElement("span");
         quantityValue.textContent = quantity;
 
         const increase = document.createElement("button");
+        increase.type = "button";
         increase.textContent = "+";
+        increase.setAttribute("aria-label", "Increase quantity");
         increase.onclick = () => changeQuantity(index, 1);
 
         quantityBox.append(decrease, quantityValue, increase);
-        details.append(name);
-        if (category.textContent) details.append(category);
-        details.append(unitPrice, quantityBox);
+        details.append(quantityBox);
 
         const totalBox = document.createElement("div");
         totalBox.className = "item-total";
@@ -816,6 +1758,7 @@ function displayCart() {
 
         const remove = document.createElement("button");
         remove.className = "remove-btn";
+        remove.type = "button";
         remove.textContent = "Remove";
         remove.onclick = () => removeItem(index);
 
@@ -823,76 +1766,178 @@ function displayCart() {
 
         const itemElement = document.createElement("div");
         itemElement.className = "cart-item";
-
         itemElement.append(image, details, totalBox);
         container.appendChild(itemElement);
     });
 
+    const finalTotal = Math.max(0, subtotal - productSavings - promoSavings);
     $("total-items").textContent = totalItems;
     $("subtotal").textContent = money(subtotal);
-    $("grand-total").textContent = money(subtotal);
+    $("product-discount").textContent = "− " + money(productSavings);
+    $("promo-discount").textContent = "− " + money(promoSavings);
+    $("product-discount-row").hidden = productSavings <= 0;
+    $("promo-discount-row").hidden = promoSavings <= 0;
+    $("grand-total").textContent = money(finalTotal);
+
+    $("promo-code").value = appliedPromoCode;
+    if (appliedPromoCode && promoSavings > 0) {
+        $("promo-message").textContent = "Code " + appliedPromoCode + " is applied to eligible products.";
+        $("promo-message").className = "promo-message success";
+    } else if (appliedPromoCode) {
+        $("promo-message").textContent = "This code does not apply to the products in your cart.";
+        $("promo-message").className = "promo-message error";
+    }
+
+    // Checkout can read this calculated snapshot without changing the saved cart prices.
+    localStorage.setItem("kikisCheckoutSummary", JSON.stringify({
+        items: checkoutItems,
+        subtotal: Number(subtotal.toFixed(2)),
+        product_discount: Number(productSavings.toFixed(2)),
+        promo_code: appliedPromoCode || null,
+        promo_discount: Number(promoSavings.toFixed(2)),
+        total: Number(finalTotal.toFixed(2))
+    }));
 }
 
 // Change quantity
+
 window.changeQuantity = function(index, amount) {
+
     const cart = getCart();
+
     const item = cart[index];
+
+
 
     if (!item) return;
 
+
+
     const newQuantity = Number(item.quantity) + amount;
+
     const availableStock = Number(item.stock);
 
+
+
     if (newQuantity <= 0) {
+
         cart.splice(index, 1);
+
     } else if (Number.isFinite(availableStock) && availableStock > 0) {
+
         item.quantity = Math.min(newQuantity, availableStock);
+
     } else {
+
         item.quantity = newQuantity;
+
     }
 
+
+
     saveCart(cart);
+
     displayCart();
+
 };
 
+
+
 // Remove item
+
 window.removeItem = function(index) {
+
     const cart = getCart();
+
+
 
     cart.splice(index, 1);
 
+
+
     saveCart(cart);
+
     displayCart();
+
 };
+
+
 
 // Checkout
+
 window.goToCheckout = function() {
+
     const cart = getCart();
 
+
+
     if (!cart.length) {
+
         alert("Your shopping cart is empty.");
+
         return;
+
     }
 
+
+
     window.location.href = "checkout.html";
+
 };
+
+
 
 // Mobile navigation
+
 window.toggleMenu = function() {
+
     $("navigation").classList.toggle("active");
+
 };
 
+
+
+// Promo code interaction
+$("apply-promo-btn").addEventListener("click", applyPromoCode);
+$("promo-code").addEventListener("keydown", event => {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        applyPromoCode();
+    }
+});
+
 // Start
+
 $("year").textContent = new Date().getFullYear();
 
+
+
 async function initialiseCart() {
-    await refreshCartProducts();
+    await Promise.all([refreshCartProducts(), loadCartPromotions()]);
     displayCart();
+
+    if (appliedPromoCode) {
+        const result = validatePromoCode(appliedPromoCode);
+        if (!result.valid) {
+            appliedPromoCode = "";
+            localStorage.removeItem("kikisAppliedPromo");
+            displayCart();
+            $("promo-message").textContent = result.message;
+            $("promo-message").className = "promo-message error";
+        }
+    }
 }
 
+
+
 initialiseCart();
+
 </script>
 
 
+
+
+
 </body>
+
 </html>
