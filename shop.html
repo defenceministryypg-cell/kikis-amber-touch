@@ -87,6 +87,20 @@ font-size:11px;
 font-weight:normal;
 margin-top:4px;
 }
+
+/* ACTIVE STORE PROMOTIONS */
+.promotions-strip{display:none;background:#17130e;color:#fff;padding:22px 7%;border-bottom:1px solid #c6a15b}
+.promotions-strip.visible{display:block}
+.promotions-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;text-align:center}
+.promotion-item{padding:8px 18px;border:1px solid #8e713d;background:#211b12;min-width:220px}
+.promotion-item strong{display:block;color:#e5c985;font-family:Georgia,serif;font-size:17px;font-weight:normal;margin-bottom:5px}
+.promotion-item span{display:block;color:#eee;font-size:11px;line-height:1.6}
+.promotion-item code{color:#e5c985;font-weight:bold;font-size:12px;letter-spacing:1px}
+.product-image .promotion-badge{position:absolute;top:48px;left:12px;z-index:2;background:#c6a15b;color:#11100e;padding:7px 10px;font-size:9px;font-weight:bold;letter-spacing:.7px}
+.price .promotion-price{display:block;color:#9c783d;font-weight:bold}
+.price .promotion-note{display:block;color:#287342;font-size:10px;font-weight:normal;margin-top:4px}
+@media(max-width:768px){.promotions-strip{padding:16px 5%}.promotion-item{width:100%;max-width:420px}}
+
 /* TABLET */
 @media(max-width:1000px){
 .products{grid-template-columns:repeat(3,1fr)}
@@ -217,6 +231,9 @@ MY CART (<span id="cart-count">0</span>)
 <h1 id="shop-banner-title">Shop All Collections</h1>
 <p id="shop-banner-description">Discover perfumes, men’s slippers, and accessories for every occasion.</p>
 </section>
+<section class="promotions-strip" id="promotionsStrip" aria-label="Current promotions">
+  <div class="promotions-inner" id="promotionsInner"></div>
+</section>
 <main class="shop-container">
 <div class="shop-heading">
 <h2 id="collection-title">All Products</h2>
@@ -342,6 +359,7 @@ loadStoreSettings();
 GLOBAL VARIABLES
 \========================================= */
 let perfumeProducts = [];
+let activePromotions = [];
 let quantities = {};
 let activeShopCategory = "all";
 const SHOP_CATEGORIES = {
@@ -496,6 +514,65 @@ saving: Number(
 )
 };
 }
+
+/* =========================================
+LOAD AND DISPLAY ACTIVE ADMIN PROMOTIONS
+========================================= */
+function promotionIsCurrent(promotion) {
+ const now = Date.now();
+ const start = promotion.start_date ? new Date(promotion.start_date).getTime() : 0;
+ const end = promotion.end_date ? new Date(promotion.end_date).getTime() : Infinity;
+ return promotion.is_active === true &&
+   (!start || (!Number.isNaN(start) && start <= now)) &&
+   (!end || (!Number.isNaN(end) && end >= now));
+}
+function getPromotionForProduct(product) {
+ const productId = String(product.id);
+ const matches = activePromotions.filter(promotion => {
+   if (String(promotion.applies_to || "all").toLowerCase() === "all") return true;
+   const ids = Array.isArray(promotion.product_ids) ? promotion.product_ids.map(String) : [];
+   return ids.includes(productId);
+ });
+ let best = null, bestSaving = 0;
+ const basePrice = getProductPricing(product).price;
+ matches.forEach(promotion => {
+   const value = Math.max(0, Number(promotion.discount_value || 0));
+   const type = String(promotion.discount_type || "").toLowerCase();
+   const saving = type === "percentage" ? basePrice * Math.min(value, 100) / 100
+     : type === "fixed" ? Math.min(value, basePrice) : 0;
+   if (saving > bestSaving) { best = promotion; bestSaving = saving; }
+ });
+ return best ? {promotion:best, originalPrice:basePrice,
+   discountedPrice:Number((basePrice-bestSaving).toFixed(2)),
+   saving:Number(bestSaving.toFixed(2))} : null;
+}
+function renderPromotionsBanner() {
+ const strip=$("promotionsStrip"), inner=$("promotionsInner");
+ if (!strip || !inner) return;
+ if (!activePromotions.length) { strip.classList.remove("visible"); inner.innerHTML=""; return; }
+ inner.innerHTML=activePromotions.map(promotion=>{
+   const type=String(promotion.discount_type||"").toLowerCase();
+   const value=Number(promotion.discount_value||0);
+   const offer=type==="percentage"?`${value}% OFF`:`GH₵ ${value.toFixed(2)} OFF`;
+   const code=promotion.promo_code?`<code>CODE: ${escapeHTML(promotion.promo_code)}</code>`:"Offer applied to eligible products";
+   return `<div class="promotion-item"><strong>${escapeHTML(promotion.title||"Special Offer")} — ${offer}</strong><span>${escapeHTML(promotion.description||"Enjoy this limited-time offer.")}</span><span>${code}</span></div>`;
+ }).join("");
+ strip.classList.add("visible");
+}
+async function loadActivePromotions() {
+ try {
+   const {data,error}=await supabase.from("promotions")
+     .select("id,title,promo_code,discount_type,discount_value,applies_to,product_ids,start_date,end_date,description,is_active")
+     .eq("is_active",true);
+   if(error) throw error;
+   activePromotions=(data||[]).filter(promotionIsCurrent);
+   renderPromotionsBanner();
+   if(perfumeProducts.length) displayProducts();
+ } catch(error) {
+   activePromotions=[]; renderPromotionsBanner();
+   console.warn("Promotions could not be loaded:",error.message);
+ }
+}
 /* =========================================
 LOAD PRODUCTS FROM SUPABASE
 \========================================= */
@@ -609,8 +686,9 @@ filtered.length ? "none" : "block";
 filtered.forEach(product => {
 const quantity = quantities[product.id] || 1;
 const pricing = getProductPricing(product);
-const hasDiscount =
-pricing.price < pricing.originalPrice;
+const promotionPricing = getPromotionForProduct(product);
+const hasProductDiscount = pricing.price < pricing.originalPrice;
+const hasDiscount = hasProductDiscount || !!promotionPricing;
 const imageMarkup = product.image
 ? `
 <img
@@ -636,13 +714,18 @@ card.className = "product-card";
 card.innerHTML = `
 <div class="product-image">
 ${
-hasDiscount
+hasProductDiscount
 ? `
 <span class="sale-badge">
 ${pricing.discountPercent}% OFF
 </span>
 `
 : ""
+}
+${
+ promotionPricing
+ ? `<span class="promotion-badge">${String(promotionPricing.promotion.discount_type).toLowerCase() === "percentage" ? `${Number(promotionPricing.promotion.discount_value)}% PROMO` : "SPECIAL OFFER"}</span>`
+ : ""
 }
 ${imageMarkup}
 </div>
@@ -677,19 +760,19 @@ READ MORE
 }
 <div class="price">
 ${
-hasDiscount
-? `
-<span class="old-price">
-${money(pricing.originalPrice)}
-</span>
-<span class="new-price">
-${money(pricing.price)}
-</span>
-<span class="saving-label">
-You save ${money(pricing.saving)}
-</span>
-`
-: money(product.price)
+ promotionPricing
+ ? `
+ <span class="old-price">${money(promotionPricing.originalPrice)}</span>
+ <span class="promotion-price">${money(promotionPricing.discountedPrice)}</span>
+ <span class="promotion-note">${promotionPricing.promotion.promo_code ? `Use code ${escapeHTML(promotionPricing.promotion.promo_code)} at checkout` : `Promotion saving ${money(promotionPricing.saving)}`}</span>
+ `
+ : hasProductDiscount
+ ? `
+ <span class="old-price">${money(pricing.originalPrice)}</span>
+ <span class="new-price">${money(pricing.price)}</span>
+ <span class="saving-label">You save ${money(pricing.saving)}</span>
+ `
+ : money(product.price)
 }
 </div>
 <div class="quantity">
@@ -855,6 +938,8 @@ $("year").textContent =
 new Date().getFullYear();
 updateCartCount();
 loadProducts();
+loadActivePromotions();
+setInterval(loadActivePromotions, 5 * 60 * 1000);
 </script>
 </body>
 </html>
