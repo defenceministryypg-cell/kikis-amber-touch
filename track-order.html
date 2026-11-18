@@ -588,7 +588,7 @@ footer strong {
 <!-- HERO -->
 
 <section class="hero">
-    <small>KIKIS AMBER TOUCH</small>
+    <small id="heroStoreName">KIKIS AMBER TOUCH</small>
     <h1>Track Your Order</h1>
     <p>Your order journey, from confirmation to delivery.</p>
 </section>
@@ -716,10 +716,10 @@ footer strong {
 <!-- FOOTER -->
 
 <footer>
-    <strong>KIKIS AMBER TOUCH</strong>
-    <p>Perfumes, men’s slippers, belt &amp; wallet combos, and more.</p>
-    <p>WhatsApp: 0503192094</p>
-    <p>© <span id="year"></span> Kikis Amber Touch. All Rights Reserved.</p>
+    <strong id="footerStoreName">KIKIS AMBER TOUCH</strong>
+    <p id="footerStoreTagline">Perfumes, men’s slippers, belt &amp; wallet combos, and more.</p>
+    <p>WhatsApp: <span id="footerWhatsApp">0503192094</span></p>
+    <p>© <span id="year"></span> <span id="footerCopyrightName">Kikis Amber Touch</span>. All Rights Reserved.</p>
 </footer>
 
 <!-- SUPABASE AND TRACKING LOGIC -->
@@ -740,45 +740,68 @@ const supabase = createClient(
     SUPABASE_KEY
 );
 
-/* LOAD STORE LOGO */
+/* LOAD CURRENT STORE BRANDING FROM SUPABASE */
 
-async function loadStoreLogo() {
-
+async function loadStoreBranding() {
     const image = document.getElementById("storeLogoImage");
     const fallback = document.getElementById("logoFallback");
 
     try {
-
         const { data, error } = await supabase
             .from("store_settings")
-            .select("logo_url")
+            .select("store_name,store_tagline,whatsapp_number,logo_url")
             .eq("id", 1)
             .maybeSingle();
 
         if (error) throw error;
 
-        if (data?.logo_url) {
+        const storeName = String(data?.store_name || "KIKIS AMBER TOUCH").trim();
+        const tagline = String(data?.store_tagline || "LUXURY FRAGRANCES").trim();
+        const whatsapp = String(data?.whatsapp_number || "0503192094").trim();
 
-            image.onload = () => {
-                image.style.display = "block";
-                fallback.style.display = "none";
-            };
+        document.title = "Track Your Order | " + storeName;
 
-            image.onerror = () => {
-                image.style.display = "none";
-                fallback.style.display = "block";
-                console.error("Could not load store logo.");
-            };
-
-            image.src = data.logo_url;
+        // Update the visible header name while preserving its small tagline.
+        if (fallback) {
+            const small = fallback.querySelector("small");
+            fallback.childNodes[0].textContent = storeName;
+            if (small) small.textContent = tagline;
         }
 
+        const heroName = document.getElementById("heroStoreName");
+        if (heroName) heroName.textContent = storeName;
+
+        const footerName = document.getElementById("footerStoreName");
+        const footerTagline = document.getElementById("footerStoreTagline");
+        const footerWhatsApp = document.getElementById("footerWhatsApp");
+        const copyrightName = document.getElementById("footerCopyrightName");
+
+        if (footerName) footerName.textContent = storeName;
+        if (footerTagline) footerTagline.textContent = tagline;
+        if (footerWhatsApp) footerWhatsApp.textContent = whatsapp;
+        if (copyrightName) copyrightName.textContent = storeName;
+
+        if (data?.logo_url && image) {
+            image.onload = () => {
+                image.style.display = "block";
+                if (fallback) fallback.style.display = "none";
+            };
+            image.onerror = () => {
+                image.style.display = "none";
+                if (fallback) fallback.style.display = "block";
+                console.error("Could not load store logo.");
+            };
+            image.src = data.logo_url;
+        } else if (image && fallback) {
+            image.style.display = "none";
+            fallback.style.display = "block";
+        }
     } catch (error) {
-        console.error("Store logo loading failed:", error);
+        console.error("Store branding loading failed:", error);
     }
 }
 
-loadStoreLogo();
+loadStoreBranding();
 
 /* GENERAL HELPERS */
 
