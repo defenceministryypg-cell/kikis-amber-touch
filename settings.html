@@ -78,7 +78,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 <body>
 
 <aside class="sidebar">
- <div class="logo">KIKIS<br>AMBER TOUCH<small>ADMINISTRATION</small></div>
+ <div class="logo"><span id="adminSidebarStoreName">KIKIS AMBER TOUCH</span><small>ADMINISTRATION</small></div>
     <nav class="nav">
         <a href="admin.html" class="active">Dashboard</a>
         <a href="products.html">Manage Products</a>
@@ -113,8 +113,15 @@ button:disabled{opacity:.55;cursor:not-allowed}
   </div>
 
   <div class="form-group">
-   <label for="storeTagline">Store Tagline</label>
+   <label for="storeTagline">Store Tagline (Footer Description)</label>
    <input type="text" id="storeTagline">
+  </div>
+
+  <div class="form-group full">
+   <label for="footerCopyrightText">Footer Copyright Text</label>
+   <input type="text" id="footerCopyrightText" maxlength="180"
+          placeholder="Kikis Amber Touch. All Rights Reserved.">
+   <small style="display:block;color:#888;margin-top:7px;font-size:12px;">This appears after the © year at the bottom of your website.</small>
   </div>
 
   <div class="form-group">
@@ -299,12 +306,12 @@ button:disabled{opacity:.55;cursor:not-allowed}
 
 </form>
 
-<footer>Kikis Amber Touch © <span id="footerYear">2026</span>. Store Settings.</footer>
+<footer><span id="adminFooterStoreName">Kikis Amber Touch</span> © <span id="footerYear">2026</span>. Store Settings.</footer>
 </main>
 
 <div id="loginOverlay">
  <form class="login-card" id="loginForm">
-  <h2>KIKIS AMBER TOUCH</h2>
+  <h2 id="adminLoginStoreName">KIKIS AMBER TOUCH</h2>
   <p>Administrator Login</p>
   <label for="email">Email Address</label>
   <input id="email" type="email" required autocomplete="username">
@@ -338,7 +345,8 @@ let removeFeaturedImageRequested=false;
 
 const DEFAULTS={
  storeName:"KIKIS AMBER TOUCH",
- storeTagline:"Perfumes, men’s slippers, belt & wallet combos, and everyday accessories.",
+ storeTagline:"Fragrance, footwear and accessories — chosen for your style.",
+ footerCopyrightText:"Kikis Amber Touch. All Rights Reserved.",
  homepageWelcomeHeading:"WELCOME TO KIKIS AMBER TOUCH",
  homepageWelcomeDescription:"Explore carefully selected perfumes, men’s slippers, belt and wallet combos, and accessories. Find the pieces that complete your style, all in one place.",
  storeEmail:"",
@@ -393,9 +401,19 @@ function showFeaturedImage(url) {
     }
 }
 
+function updateAdminStoreName(name){
+ const storeName=String(name||DEFAULTS.storeName).trim()||DEFAULTS.storeName;
+ $("adminSidebarStoreName").textContent=storeName;
+ $("adminLoginStoreName").textContent=storeName;
+ $("adminFooterStoreName").textContent=storeName;
+ document.title="Store Settings | "+storeName;
+}
+
 function fillForm(row){
  $("storeName").value=row.store_name??DEFAULTS.storeName;
+ updateAdminStoreName($("storeName").value);
  $("storeTagline").value=row.store_tagline??DEFAULTS.storeTagline;
+ $("footerCopyrightText").value=row.footer_copyright_text??DEFAULTS.footerCopyrightText;
  $("homepageWelcomeHeading").value=row.homepage_welcome_heading??DEFAULTS.homepageWelcomeHeading;
  $("homepageWelcomeDescription").value=row.homepage_welcome_description??DEFAULTS.homepageWelcomeDescription;
  $("momoNumber").value=row.momo_number??DEFAULTS.momoNumber;
@@ -521,6 +539,7 @@ if(removeFeaturedImageRequested){
   const row={
    store_name:$("storeName").value.trim(),
    store_tagline:$("storeTagline").value.trim(),
+   footer_copyright_text:$("footerCopyrightText").value.trim(),
    homepage_welcome_heading:$("homepageWelcomeHeading").value.trim(),
    homepage_welcome_description:$("homepageWelcomeDescription").value.trim(),
    whatsapp_number:$("whatsappNumber").value.trim(),
@@ -542,6 +561,9 @@ if(removeFeaturedImageRequested){
    .eq("id",SETTINGS_ID);
 
   if(error)throw error;
+
+  // Keep the admin identity in sync immediately after saving.
+  updateAdminStoreName(row.store_name);
 
   const extras={
    storeEmail:$("storeEmail").value.trim(),
@@ -685,6 +707,7 @@ $("resetButton").addEventListener("click",()=>{
 
  $("storeName").value=DEFAULTS.storeName;
  $("storeTagline").value=DEFAULTS.storeTagline;
+ $("footerCopyrightText").value=DEFAULTS.footerCopyrightText;
  $("homepageWelcomeHeading").value=DEFAULTS.homepageWelcomeHeading;
  $("homepageWelcomeDescription").value=DEFAULTS.homepageWelcomeDescription;
  $("storeEmail").value=DEFAULTS.storeEmail;
